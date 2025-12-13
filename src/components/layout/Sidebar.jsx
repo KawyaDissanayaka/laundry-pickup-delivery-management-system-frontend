@@ -1,7 +1,8 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, ShoppingBag, Truck, Users, BarChart3, Settings, Map } from 'lucide-react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { LayoutDashboard, ShoppingBag, Truck, Users, BarChart3, Settings, Map, LogOut } from 'lucide-react';
 import { clsx } from 'clsx';
+import { useAuth } from '../../context/AuthContext';
 
 const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
@@ -14,6 +15,14 @@ const navItems = [
 ];
 
 export default function Sidebar() {
+    const { logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/admin/login');
+    };
+
     return (
         <aside className="w-64 bg-white border-r border-gray-200 min-h-screen hidden md:flex flex-col">
             <div className="p-6">
@@ -42,6 +51,17 @@ export default function Sidebar() {
                     </NavLink>
                 ))}
             </nav>
+
+            {/* Logout Button */}
+            <div className="px-4 pb-2">
+                <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm font-medium text-red-600 hover:bg-red-50"
+                >
+                    <LogOut className="h-5 w-5" />
+                    Logout
+                </button>
+            </div>
 
             <div className="p-4 border-t border-gray-200">
                 <div className="flex items-center gap-3">
