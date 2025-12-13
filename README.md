@@ -17,22 +17,7 @@ A single-page frontend application built with React, Vite, and Tailwind CSS for 
 - Clone URL: https://github.com/KawyaDissanayaka/laundry-pickup-delivery-management-system.git
 - View on GitHub: https://github.com/KawyaDissanayaka/laundry-pickup-delivery-management-system
 
----
 
-## Repository snapshot (local)
-
-These values were collected from your local clone. GitHub badge counts shown above will reflect the repository as visible on GitHub (stars, forks, issues, size) — they may take a short while to update after changes.
-
-- Branch: main
-- Last commit (full): cb1a4f96830bf59ed1e0809c842fed6769d187f2
-- Last commit (short): cb1a4f9
-- Last commit date: 2025-12-13 14:43:10 +0530
-- Last commit message: Add badges for forks, stars, and license
-- Remote URL: https://github.com/KawyaDissanayaka/laundry-pickup-delivery-management-system.git
-- Local repository size: 119.12 MB (124,914,880 bytes)
-- Local file count: 9,758
-
-Note: "Repo size" badges query GitHub's view of the repository; local disk size will differ (includes .git, build artifacts, node_modules if present locally, etc.).
 
 ---
 
