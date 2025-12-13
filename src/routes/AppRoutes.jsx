@@ -15,6 +15,10 @@ import CustomerDashboard from '../pages/CustomerDashboard';
 import ProtectedRoute from '../components/ProtectedRoute';
 import ProtectedAdminRoute from '../components/ProtectedAdminRoute';
 
+import Employees from '../pages/Employees';
+import RiderDashboard from '../pages/RiderDashboard';
+import EmployeeDashboard from '../pages/EmployeeDashboard';
+
 export default function AppRoutes() {
     return (
         <Routes>
@@ -24,8 +28,25 @@ export default function AppRoutes() {
             <Route
                 path="/customer-dashboard"
                 element={
-                    <ProtectedRoute>
+                    <ProtectedRoute allowedRoles={['customer']}>
                         <CustomerDashboard />
+                    </ProtectedRoute>
+                }
+            />
+            {/* Staff Routes */}
+            <Route
+                path="/rider-dashboard"
+                element={
+                    <ProtectedRoute allowedRoles={['rider']}>
+                        <RiderDashboard />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/employee-dashboard"
+                element={
+                    <ProtectedRoute allowedRoles={['employee']}>
+                        <EmployeeDashboard />
                     </ProtectedRoute>
                 }
             />
@@ -48,6 +69,7 @@ export default function AppRoutes() {
                 <Route path="orders/:id" element={<OrderDetail />} />
                 <Route path="tracking" element={<Tracking />} />
                 <Route path="riders" element={<Riders />} />
+                <Route path="employees" element={<Employees />} />
                 <Route path="customers" element={<Customers />} />
                 <Route path="analytics" element={<div className="p-4">Analytics Comp</div>} />
                 <Route path="settings" element={<div className="p-4">Settings Comp</div>} />

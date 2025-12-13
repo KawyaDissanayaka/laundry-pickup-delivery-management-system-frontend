@@ -23,7 +23,29 @@ export const AuthProvider = ({ children }) => {
       setUser(adminUser);
       setIsAuthenticated(true);
       localStorage.setItem('laundry_user', JSON.stringify(adminUser));
-      return adminUser; // Return user info for redirection
+      return adminUser;
+    } else if (email === 'employee@laundrygo.com' && password === 'employee123') {
+      const employeeUser = {
+        name: 'John Staff',
+        email: email,
+        role: 'employee',
+        id: 'emp_001'
+      };
+      setUser(employeeUser);
+      setIsAuthenticated(true);
+      localStorage.setItem('laundry_user', JSON.stringify(employeeUser));
+      return employeeUser;
+    } else if (email === 'rider@laundrygo.com' && password === 'rider123') {
+      const riderUser = {
+        name: 'Mike Rider',
+        email: email,
+        role: 'rider',
+        id: 'rider_001'
+      };
+      setUser(riderUser);
+      setIsAuthenticated(true);
+      localStorage.setItem('laundry_user', JSON.stringify(riderUser));
+      return riderUser;
     } else {
       // Default to Customer for any other credentials
       const customerUser = {

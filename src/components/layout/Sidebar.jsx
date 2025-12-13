@@ -9,6 +9,7 @@ const navItems = [
     { icon: ShoppingBag, label: 'Orders', path: '/admin/orders' },
     { icon: Map, label: 'Live Tracking', path: '/admin/tracking' },
     { icon: Truck, label: 'Riders', path: '/admin/riders' },
+    { icon: Users, label: 'Employees', path: '/admin/employees' },
     { icon: Users, label: 'Customers', path: '/admin/customers' },
     { icon: BarChart3, label: 'Analytics', path: '/admin/analytics' },
     { icon: Settings, label: 'Settings', path: '/admin/settings' },

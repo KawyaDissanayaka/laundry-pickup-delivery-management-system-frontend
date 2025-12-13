@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Lock, Mail } from 'lucide-react';
 
@@ -8,15 +8,45 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const { login } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Determine context from navigation state
+    const role = location.state?.role || 'customer';
+
+    const getTitle = () => {
+        switch (role) {
+            case 'rider': return 'Rider Portal';
+            case 'employee': return 'Staff Portal';
+            default: return 'Welcome Back';
+        }
+    };
+
+    const getSubtitle = () => {
+        switch (role) {
+            case 'rider': return 'Login to access delivery tasks';
+            case 'employee': return 'Login to access work queue';
+            default: return 'Sign in to manage your laundry orders';
+        }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (email && password) {
             const user = login(email, password);
-            if (user && user.role === 'admin') {
-                navigate('/admin');
-            } else {
-                navigate('/customer-dashboard');
+            if (user) {
+                switch (user.role) {
+                    case 'admin':
+                        navigate('/admin');
+                        break;
+                    case 'employee':
+                        navigate('/employee-dashboard');
+                        break;
+                    case 'rider':
+                        navigate('/rider-dashboard');
+                        break;
+                    default:
+                        navigate('/customer-dashboard');
+                }
             }
         }
     };
@@ -25,8 +55,8 @@ export default function Login() {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-xl shadow-lg max-w-md w-full p-8">
                 <div className="text-center mb-8">
-                    <h1 className="text-2xl font-bold text-gray-900">Welcome Back</h1>
-                    <p className="text-gray-600 mt-2">Sign in to manage your laundry orders</p>
+                    <h1 className="text-2xl font-bold text-gray-900">{getTitle()}</h1>
+                    <p className="text-gray-600 mt-2">{getSubtitle()}</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">

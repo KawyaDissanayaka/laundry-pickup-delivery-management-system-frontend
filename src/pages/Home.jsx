@@ -17,8 +17,26 @@ export default function Home() {
                             </button>
                             <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden transform opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 origin-top-right z-50">
                                 <div className="py-2">
-                                    <Link to="/login" className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-sm font-medium border-b border-gray-50 last:border-0">
+                                    <Link
+                                        to="/login"
+                                        state={{ role: 'customer' }}
+                                        className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-sm font-medium border-b border-gray-50"
+                                    >
                                         Customer Login
+                                    </Link>
+                                    <Link
+                                        to="/login"
+                                        state={{ role: 'rider' }}
+                                        className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-sm font-medium border-b border-gray-50"
+                                    >
+                                        Rider Login
+                                    </Link>
+                                    <Link
+                                        to="/login"
+                                        state={{ role: 'employee' }}
+                                        className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-sm font-medium border-b border-gray-50"
+                                    >
+                                        Employee Login
                                     </Link>
                                     <Link to="/admin/login" className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-sm font-medium">
                                         Admin Login
