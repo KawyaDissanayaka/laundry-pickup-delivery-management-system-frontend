@@ -1,60 +1,32 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Truck, Clock, ShieldCheck } from 'lucide-react';
+import PublicNavbar from '../components/layout/PublicNavbar';
 
 export default function Home() {
     return (
         <div className="min-h-screen bg-white">
+            <PublicNavbar />
+
             {/* Hero Section */}
-            <header className="bg-blue-600 text-white">
-                <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
-                    <div className="text-2xl font-bold">LaundryExpress</div>
-                    <div className="flex items-center gap-4">
-                        {/* Login Dropdown */}
-                        <div className="relative group">
-                            <button className="px-4 py-2 hover:bg-blue-700 rounded transition flex items-center gap-2">
-                                Login
-                            </button>
-                            <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden transform opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 origin-top-right z-50">
-                                <div className="py-2">
-                                    <Link
-                                        to="/login"
-                                        state={{ role: 'customer' }}
-                                        className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-sm font-medium border-b border-gray-50"
-                                    >
-                                        Customer Login
-                                    </Link>
-                                    <Link
-                                        to="/login"
-                                        state={{ role: 'rider' }}
-                                        className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-sm font-medium border-b border-gray-50"
-                                    >
-                                        Rider Login
-                                    </Link>
-                                    <Link
-                                        to="/login"
-                                        state={{ role: 'employee' }}
-                                        className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-sm font-medium border-b border-gray-50"
-                                    >
-                                        Employee Login
-                                    </Link>
-                                    <Link to="/admin/login" className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-sm font-medium">
-                                        Admin Login
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
-
-                        <Link to="/login" className="px-4 py-2 bg-white text-blue-600 rounded font-semibold hover:bg-gray-100 transition">Register</Link>
+            <header className="bg-blue-600 text-white pt-20 pb-24 md:pt-32 md:pb-40 relative overflow-hidden">
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1545173168-9f1947eebb8f?q=80&w=2071&auto=format&fit=crop')] bg-cover bg-center opacity-10"></div>
+                <div className="container mx-auto px-6 text-center relative z-10">
+                    <h1 className="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight leading-tight">
+                        Premium Laundry Service <br className="hidden md:block" />
+                        <span className="text-blue-100">Delivered to Your Door</span>
+                    </h1>
+                    <p className="text-xl md:text-2xl mb-10 opacity-90 max-w-2xl mx-auto font-light">
+                        We take care of your laundry so you can take care of what matters most. Fast, reliable, and fresh.
+                    </p>
+                    <div className="flex flex-col md:flex-row gap-4 justify-center">
+                        <Link to="/login" className="px-8 py-4 bg-white text-blue-600 text-lg font-bold rounded-full hover:bg-blue-50 transition shadow-lg hover:shadow-xl transform hover:-translate-y-1 inline-block">
+                            Schedule a Pickup
+                        </Link>
+                        <Link to="/services" className="px-8 py-4 bg-transparent border-2 border-white text-white text-lg font-bold rounded-full hover:bg-white/10 transition inline-block">
+                            View Services
+                        </Link>
                     </div>
-                </nav>
-
-                <div className="container mx-auto px-6 py-20 text-center">
-                    <h1 className="text-4xl md:text-6xl font-bold mb-6">Premium Laundry Service <br /> Delivered to Your Door</h1>
-                    <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">We take care of your laundry so you can take care of what matters most. Fast, reliable, and fresh.</p>
-                    <Link to="/login" className="px-8 py-3 bg-white text-blue-600 text-lg font-bold rounded-full hover:bg-gray-100 transition shadow-lg inline-block">
-                        Schedule a Pickup
-                    </Link>
                 </div>
             </header>
 

@@ -19,12 +19,25 @@ import Employees from '../pages/Employees';
 import RiderDashboard from '../pages/RiderDashboard';
 import EmployeeDashboard from '../pages/EmployeeDashboard';
 
+// ... imports
+import About from '../pages/About';
+import Services from '../pages/Services';
+import Pricing from '../pages/Pricing';
+import Contact from '../pages/Contact';
+import SmartFAQ from '../pages/SmartFAQ';
+
 export default function AppRoutes() {
     return (
         <Routes>
-            {/* Customer Routes */}
+            {/* Public Routes */}
             <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/faq" element={<SmartFAQ />} />
             <Route path="/login" element={<Login />} />
+            {/* ... rest of routes */}
             <Route
                 path="/customer-dashboard"
                 element={
