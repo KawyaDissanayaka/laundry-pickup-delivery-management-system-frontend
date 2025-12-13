@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import {
     LayoutDashboard,
@@ -12,9 +12,14 @@ import {
     Clock,
     CheckCircle,
     DollarSign,
-    X
+    X,
+    FileText,
+    Printer,
+    Download
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 const StatusBadge = ({ status }) => {
     const colors = {
@@ -197,8 +202,151 @@ const ProfileTab = ({ user }) => (
     </div>
 );
 
-const NewOrderModal = ({ isOpen, onClose }) => {
+const QuotationModal = ({ isOpen, onClose, data }) => {
+    const quotationRef = useRef();
+
+    if (!isOpen || !data) return null;
+
+    const handlePrint = () => {
+        const printContent = quotationRef.current.innerHTML;
+
+        // Simple print hack for SPA
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <title>Print Quotation</title>
+                    <script src="https://cdn.tailwindcss.com"></script>
+                </head>
+                <body class="p-8">
+                    ${printContent}
+                    <script>
+                        setTimeout(() => {
+                            window.print();
+                            window.close();
+                        }, 500);
+                    </script>
+                </body>
+            </html>
+        `);
+        printWindow.document.close();
+    };
+
+    const handleDownloadPDF = async () => {
+        if (quotationRef.current) {
+            const canvas = await html2canvas(quotationRef.current);
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            pdf.save(`Quotation-${data.id}.pdf`);
+        }
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl w-full max-w-lg shadow-xl animate-in fade-in zoom-in duration-200">
+                <div className="flex justify-between items-center p-6 border-b border-gray-100">
+                    <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                        <FileText className="w-5 h-5 text-blue-600" />
+                        Order Quotation
+                    </h3>
+                    <button onClick={onClose} className="text-gray-400 hover:text-gray-500">
+                        <X className="w-6 h-6" />
+                    </button>
+                </div>
+
+                <div className="p-6 bg-gray-50 overflow-y-auto max-h-[80vh]">
+                    {/* Printable Area */}
+                    <div ref={quotationRef} className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 mb-6 text-sm">
+                        <div className="flex justify-between items-start mb-8">
+                            <div>
+                                <h1 className="text-2xl font-bold text-blue-600">LaundryHub</h1>
+                                <p className="text-gray-500 mt-1">Premium Laundry Service</p>
+                            </div>
+                            <div className="text-right">
+                                <h2 className="text-lg font-bold text-gray-900">QUOTATION</h2>
+                                <p className="text-gray-600">#{data.id}</p>
+                                <p className="text-gray-500">{new Date().toLocaleDateString()}</p>
+                            </div>
+                        </div>
+
+                        <div className="mb-8 p-4 bg-gray-50 rounded-lg">
+                            <h3 className="font-bold text-gray-900 mb-2">Customer Details</h3>
+                            <p className="text-gray-700">{data.userName || 'Guest User'}</p>
+                            <p className="text-gray-600">{data.userEmail}</p>
+                        </div>
+
+                        <table className="w-full mb-8">
+                            <thead className="border-b-2 border-gray-100">
+                                <tr>
+                                    <th className="text-left py-2 text-gray-600">Service</th>
+                                    <th className="text-center py-2 text-gray-600">Qty</th>
+                                    <th className="text-right py-2 text-gray-600">Unit Price</th>
+                                    <th className="text-right py-2 text-gray-600">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr className="border-b border-gray-50">
+                                    <td className="py-4 font-medium">{data.service}</td>
+                                    <td className="text-center py-4">{data.items} items</td>
+                                    <td className="text-right py-4">${data.unitPrice.toFixed(2)}</td>
+                                    <td className="text-right py-4">${data.total.toFixed(2)}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colSpan="3" className="pt-4 text-right font-bold text-gray-900">Grand Total</td>
+                                    <td className="pt-4 text-right font-bold text-blue-600 text-lg">${data.total.toFixed(2)}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <div className="text-xs text-center text-gray-400 mt-8 pt-4 border-t border-gray-100">
+                            This is a computer generated quotation. Valid for 24 hours.
+                        </div>
+                    </div>
+
+                    <div className="flex gap-3">
+                        <button
+                            onClick={handlePrint}
+                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-white transition-colors"
+                        >
+                            <Printer className="w-4 h-4" />
+                            Print
+                        </button>
+                        <button
+                            onClick={handleDownloadPDF}
+                            className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        >
+                            <Download className="w-4 h-4" />
+                            Download PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const NewOrderModal = ({ isOpen, onClose, onSubmit }) => {
+    const [formData, setFormData] = useState({
+        service: 'Wash & Fold',
+        date: '',
+        time: 'Morning (8-12)',
+        items: '',
+        instructions: ''
+    });
+
     if (!isOpen) return null;
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onSubmit(formData);
+    };
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-2xl w-full max-w-lg shadow-xl animate-in fade-in zoom-in duration-200">
@@ -209,14 +357,14 @@ const NewOrderModal = ({ isOpen, onClose }) => {
                     </button>
                 </div>
 
-                <form className="p-6 space-y-4" onSubmit={(e) => {
-                    e.preventDefault();
-                    onClose();
-                    alert("Order Scheduled Successfully! (This is a mock)");
-                }}>
+                <form className="p-6 space-y-4" onSubmit={handleSubmit}>
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Service Type</label>
-                        <select className="w-full rounded-lg border-gray-300 border p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                        <select
+                            value={formData.service}
+                            onChange={(e) => setFormData({ ...formData, service: e.target.value })}
+                            className="w-full rounded-lg border-gray-300 border p-2.5 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                        >
                             <option>Wash & Fold</option>
                             <option>Dry Cleaning</option>
                             <option>Ironing Only</option>
@@ -227,11 +375,21 @@ const NewOrderModal = ({ isOpen, onClose }) => {
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Pickup Date</label>
-                            <input type="date" className="w-full rounded-lg border-gray-300 border p-2.5 focus:ring-2 focus:ring-blue-500 outline-none" required />
+                            <input
+                                type="date"
+                                required
+                                value={formData.date}
+                                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                                className="w-full rounded-lg border-gray-300 border p-2.5 focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Pickup Time</label>
-                            <select className="w-full rounded-lg border-gray-300 border p-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
+                            <select
+                                value={formData.time}
+                                onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                                className="w-full rounded-lg border-gray-300 border p-2.5 focus:ring-2 focus:ring-blue-500 outline-none"
+                            >
                                 <option>Morning (8-12)</option>
                                 <option>Afternoon (12-4)</option>
                                 <option>Evening (4-8)</option>
@@ -241,12 +399,26 @@ const NewOrderModal = ({ isOpen, onClose }) => {
 
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Estimated Items</label>
-                        <input type="number" placeholder="e.g., 2 bags" className="w-full rounded-lg border-gray-300 border p-2.5 focus:ring-2 focus:ring-blue-500 outline-none" min="1" />
+                        <input
+                            type="number"
+                            placeholder="e.g., 10"
+                            required
+                            min="1"
+                            value={formData.items}
+                            onChange={(e) => setFormData({ ...formData, items: e.target.value })}
+                            className="w-full rounded-lg border-gray-300 border p-2.5 focus:ring-2 focus:ring-blue-500 outline-none"
+                        />
                     </div>
 
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Special Instructions</label>
-                        <textarea rows="3" placeholder="Gate code, specific detergent, etc." className="w-full rounded-lg border-gray-300 border p-2.5 focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                        <textarea
+                            rows="3"
+                            placeholder="Gate code, specific detergent, etc."
+                            value={formData.instructions}
+                            onChange={(e) => setFormData({ ...formData, instructions: e.target.value })}
+                            className="w-full rounded-lg border-gray-300 border p-2.5 focus:ring-2 focus:ring-blue-500 outline-none"
+                        ></textarea>
                     </div>
 
                     <div className="flex gap-3 mt-6">
@@ -261,7 +433,7 @@ const NewOrderModal = ({ isOpen, onClose }) => {
                             type="submit"
                             className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium shadow-sm"
                         >
-                            Schedule Pickup
+                            Schedule & Get Quote
                         </button>
                     </div>
                 </form>
@@ -275,6 +447,10 @@ const LaundryDashboard = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('overview');
     const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
+
+    // Quotation State
+    const [isQuotationOpen, setIsQuotationOpen] = useState(false);
+    const [quotationData, setQuotationData] = useState(null);
 
     // Mock Data
     const stats = {
@@ -293,6 +469,34 @@ const LaundryDashboard = () => {
     const handleLogout = () => {
         logout();
         navigate('/');
+    };
+
+    const handleOrderSubmit = (formData) => {
+        // Mock calculation logic
+        const basePrice = {
+            'Wash & Fold': 1.5,
+            'Dry Cleaning': 5.0,
+            'Ironing Only': 2.0,
+            'Household Items': 8.0
+        }[formData.service] || 1.5;
+
+        const itemCount = Number(formData.items);
+        const total = basePrice * itemCount;
+
+        const newQuotation = {
+            id: `QT-${Math.floor(Math.random() * 10000)}`,
+            service: formData.service,
+            items: itemCount,
+            unitPrice: basePrice,
+            total: total,
+            userName: user?.name,
+            userEmail: user?.email,
+            date: new Date().toISOString()
+        };
+
+        setQuotationData(newQuotation);
+        setIsOrderModalOpen(false);
+        setIsQuotationOpen(true);
     };
 
     return (
@@ -389,6 +593,13 @@ const LaundryDashboard = () => {
             <NewOrderModal
                 isOpen={isOrderModalOpen}
                 onClose={() => setIsOrderModalOpen(false)}
+                onSubmit={handleOrderSubmit}
+            />
+
+            <QuotationModal
+                isOpen={isQuotationOpen}
+                onClose={() => setIsQuotationOpen(false)}
+                data={quotationData}
             />
         </div>
     );
