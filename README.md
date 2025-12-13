@@ -1,16 +1,94 @@
-# React + Vite
+# 🧺 Laundry Pickup Delivery Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+![Last Commit](https://img.shields.io/github/last-commit/KawyaDissanayaka/laundry-pickup-delivery-management-system?style=flat-square)
+![Repo Size](https://img.shields.io/github/repo-size/KawyaDissanayaka/laundry-pickup-delivery-management-system?style=flat-square)
+![Issues](https://img.shields.io/github/issues/KawyaDissanayaka/laundry-pickup-delivery-management-system?style=flat-square)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## React Compiler
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Description
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+A **full-stack application** to manage laundry pickup, delivery, and order tracking, with a **Spring Boot backend** and **React frontend**.
+
+---
+
+## 🌟 Features
+
+* Manage customers and their laundry orders
+* Assign pickup and delivery drivers
+* Track order status (Pending → Processing → Completed → Delivered)
+* Maintain service types and pricing
+* Responsive frontend built with React
+* Backend REST API built with Spring Boot
+
+---
+
+## ⚡ Tech Stack
+
+* **Backend:** Java 17, Spring Boot, Maven
+* **Frontend:** React, Node.js, npm
+* **Database:** MySQL / PostgreSQL / H2
+
+---
+
+## 🚀 Getting Started
+
+### Backend
+
+```bash
+cd laundry-management-system
+./mvnw spring-boot:run
+```
+
+> Backend runs at `http://localhost:8080`
+> *Note:* Requires database configuration for full functionality.
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm start
+```
+
+> Frontend runs at `http://localhost:3000`
+
+---
+
+## 📁 Project Structure
+
+```
+mge-laundry-management-system/
+├─ src/                     # Backend source code (Spring Boot)
+├─ frontend/               # Frontend source code (React)
+├─ pom.xml                  # Maven project file
+├─ mvnw, mvnw.cmd           # Maven wrapper
+└─ README.md
+```
+
+---
+
+## 🔗 Repository
+
+Clone the project:
+
+```bash
+git clone https://github.com/DarshanaChinthaka/Laundry-Pickup-Delivery-Management-System-.git
+```
+
+---
+
+## 📝 License
+
+This project is licensed under the **MIT License**.
+Feel free to use, modify, and contribute!
+
+---
+
+## 💡 Notes
+
+* Backend requires a database connection for managing orders and customers.
+* Frontend can run independently to test UI and components.
+* Future updates may include driver app integration, notifications, and analytics dashboards.
