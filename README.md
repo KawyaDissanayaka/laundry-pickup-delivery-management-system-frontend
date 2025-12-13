@@ -4,6 +4,10 @@
 ![Last Commit](https://img.shields.io/github/last-commit/KawyaDissanayaka/laundry-pickup-delivery-management-system?style=flat-square)
 ![Repo Size](https://img.shields.io/github/repo-size/KawyaDissanayaka/laundry-pickup-delivery-management-system?style=flat-square)
 ![Issues](https://img.shields.io/github/issues/KawyaDissanayaka/laundry-pickup-delivery-management-system?style=flat-square)
+![Forks](https://img.shields.io/github/forks/KawyaDissanayaka/laundry-pickup-delivery-management-system?style=flat-square)
+![Stars](https://img.shields.io/github/stars/KawyaDissanayaka/laundry-pickup-delivery-management-system?style=flat-square)
+![License](https://img.shields.io/github/license/KawyaDissanayaka/laundry-pickup-delivery-management-system?style=flat-square)
+
 
 
 
