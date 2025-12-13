@@ -9,8 +9,24 @@ export default function Home() {
             <header className="bg-blue-600 text-white">
                 <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
                     <div className="text-2xl font-bold">LaundryExpress</div>
-                    <div className="space-x-4">
-                        <Link to="/login" className="px-4 py-2 hover:bg-blue-700 rounded transition">Login</Link>
+                    <div className="flex items-center gap-4">
+                        {/* Login Dropdown */}
+                        <div className="relative group">
+                            <button className="px-4 py-2 hover:bg-blue-700 rounded transition flex items-center gap-2">
+                                Login
+                            </button>
+                            <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden transform opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 origin-top-right z-50">
+                                <div className="py-2">
+                                    <Link to="/login" className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-sm font-medium border-b border-gray-50 last:border-0">
+                                        Customer Login
+                                    </Link>
+                                    <Link to="/admin/login" className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-sm font-medium">
+                                        Admin Login
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+
                         <Link to="/login" className="px-4 py-2 bg-white text-blue-600 rounded font-semibold hover:bg-gray-100 transition">Register</Link>
                     </div>
                 </nav>
