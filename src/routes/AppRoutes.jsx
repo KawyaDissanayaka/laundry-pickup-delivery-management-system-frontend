@@ -8,11 +8,28 @@ import CreateOrder from '../pages/CreateOrder';
 import Tracking from '../pages/Tracking';
 import Riders from '../pages/Riders';
 import Customers from '../pages/Customers';
+import Home from '../pages/Home';
+import Login from '../pages/Login';
+import CustomerDashboard from '../pages/CustomerDashboard';
+import ProtectedRoute from '../components/ProtectedRoute';
 
 export default function AppRoutes() {
     return (
         <Routes>
-            <Route path="/" element={<MainLayout />}>
+            {/* Customer Routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route
+                path="/customer-dashboard"
+                element={
+                    <ProtectedRoute>
+                        <CustomerDashboard />
+                    </ProtectedRoute>
+                }
+            />
+
+            {/* Admin Routes */}
+            <Route path="/admin" element={<MainLayout />}>
                 <Route index element={<Dashboard />} />
                 <Route path="orders" element={<Orders />} />
                 <Route path="orders/new" element={<CreateOrder />} />
@@ -22,8 +39,11 @@ export default function AppRoutes() {
                 <Route path="customers" element={<Customers />} />
                 <Route path="analytics" element={<div className="p-4">Analytics Comp</div>} />
                 <Route path="settings" element={<div className="p-4">Settings Comp</div>} />
-                <Route path="*" element={<Navigate to="/" replace />} />
+                <Route path="*" element={<Navigate to="/admin" replace />} />
             </Route>
+
+            {/* Redirect unknown routes to Home */}
+            <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
     );
 }

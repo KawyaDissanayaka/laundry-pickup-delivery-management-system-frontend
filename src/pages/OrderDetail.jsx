@@ -11,7 +11,7 @@ export default function OrderDetail() {
     return (
         <div className="space-y-6">
             <div className="flex items-center gap-4">
-                <Link to="/orders" className="p-2 hover:bg-gray-100 rounded-lg text-gray-600">
+                <Link to="/admin/orders" className="p-2 hover:bg-gray-100 rounded-lg text-gray-600">
                     <ArrowLeft className="h-5 w-5" />
                 </Link>
                 <h1 className="text-2xl font-bold text-gray-900">Order Details {order.id}</h1>

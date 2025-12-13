@@ -20,7 +20,7 @@ export default function Orders() {
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <h1 className="text-2xl font-bold text-gray-900">Orders</h1>
-                <Link to="/orders/new" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                <Link to="/admin/orders/new" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                     + Create New Order
                 </Link>
             </div>
@@ -88,7 +88,7 @@ export default function Orders() {
                                         {new Date(order.deliveryDate).toLocaleDateString()}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <Link to={`/orders/${order.id}`} className="text-gray-400 hover:text-blue-600 mx-1 inline-block">
+                                        <Link to={`/admin/orders/${order.id}`} className="text-gray-400 hover:text-blue-600 mx-1 inline-block">
                                             <Eye className="h-5 w-5" />
                                         </Link>
                                         <button className="text-gray-400 hover:text-gray-600 mx-1">

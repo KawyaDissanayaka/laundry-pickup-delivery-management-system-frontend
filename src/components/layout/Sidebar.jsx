@@ -4,13 +4,13 @@ import { LayoutDashboard, ShoppingBag, Truck, Users, BarChart3, Settings, Map } 
 import { clsx } from 'clsx';
 
 const navItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
-    { icon: ShoppingBag, label: 'Orders', path: '/orders' },
-    { icon: Map, label: 'Live Tracking', path: '/tracking' },
-    { icon: Truck, label: 'Riders', path: '/riders' },
-    { icon: Users, label: 'Customers', path: '/customers' },
-    { icon: BarChart3, label: 'Analytics', path: '/analytics' },
-    { icon: Settings, label: 'Settings', path: '/settings' },
+    { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
+    { icon: ShoppingBag, label: 'Orders', path: '/admin/orders' },
+    { icon: Map, label: 'Live Tracking', path: '/admin/tracking' },
+    { icon: Truck, label: 'Riders', path: '/admin/riders' },
+    { icon: Users, label: 'Customers', path: '/admin/customers' },
+    { icon: BarChart3, label: 'Analytics', path: '/admin/analytics' },
+    { icon: Settings, label: 'Settings', path: '/admin/settings' },
 ];
 
 export default function Sidebar() {
