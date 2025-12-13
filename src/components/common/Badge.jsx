@@ -1,8 +1,8 @@
 import React from 'react';
-import { clsx } from 'clsx';
+import clsx from 'clsx';
 import { ORDER_STATUSES } from '../../data/mockOrders';
 
-export default function Badge({ status, type = 'order' }) {
+export default function Badge({ status }) {
     const styles = {
         [ORDER_STATUSES.PLACED]: 'bg-yellow-100 text-yellow-800',
         [ORDER_STATUSES.PICKED_UP]: 'bg-blue-100 text-blue-800',

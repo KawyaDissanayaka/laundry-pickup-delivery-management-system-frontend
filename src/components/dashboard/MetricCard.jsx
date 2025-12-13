@@ -1,7 +1,7 @@
 import React from 'react';
-import { clsx } from 'clsx';
+import clsx from 'clsx';
 
-export default function MetricCard({ title, value, icon: Icon, trend, color, subValue }) {
+export default function MetricCard({ title, value, icon, trend, color, subValue }) {
     const colorStyles = {
         blue: 'bg-blue-50 text-blue-600',
         green: 'bg-green-50 text-green-600',
@@ -18,7 +18,7 @@ export default function MetricCard({ title, value, icon: Icon, trend, color, sub
                     {subValue && <p className="text-xs text-gray-400 mt-1">{subValue}</p>}
                 </div>
                 <div className={clsx("p-3 rounded-lg", colorStyles[color] || colorStyles.blue)}>
-                    <Icon className="h-6 w-6" />
+                    {icon ? React.createElement(icon, { className: 'h-6 w-6' }) : null}
                 </div>
             </div>
             {trend && (

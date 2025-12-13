@@ -1,10 +1,15 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import React, { createContext, useState, useContext } from 'react';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Initialize from localStorage to avoid setting state inside useEffect
+  const storedUser = typeof window !== 'undefined' ? localStorage.getItem('laundry_user') : null;
+  const initialUser = storedUser ? JSON.parse(storedUser) : null;
+
+  const [user, setUser] = useState(initialUser);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!initialUser);
 
   const login = (email, password) => {
     // Mock login logic - Auto-detect role based on credentials
@@ -39,15 +44,6 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
     localStorage.removeItem('laundry_user');
   };
-
-  useEffect(() => {
-    // Check local storage for persistent login
-    const storedUser = localStorage.getItem('laundry_user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-      setIsAuthenticated(true);
-    }
-  }, []);
 
   return (
     <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
