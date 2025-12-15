@@ -10,6 +10,7 @@ export default function CreateOrder() {
         if (location.state?.serviceName) {
             setItems([{ name: '', service: location.state.serviceName, quantity: 1, price: 0 }]);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);
 
     const addItem = () => {
