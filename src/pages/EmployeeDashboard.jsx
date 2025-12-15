@@ -2,6 +2,8 @@ import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { LayoutList, Package, CheckSquare, Clock, LogOut, DollarSign, AlertCircle, BarChart3, Calendar } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { mockOrders } from '../data/mockOrders';
+import { mockDrivers } from '../data/mockDrivers';
 
 export default function EmployeeDashboard() {
     const { user, logout } = useAuth();
@@ -12,19 +14,29 @@ export default function EmployeeDashboard() {
         navigate('/');
     };
 
-    // Mock Active Tasks (with enhanced data)
-    const activeTasks = [
-        { id: 'ORD-001', service: 'Wash & Fold', items: 15, status: 'Sorting', priority: 'High', dueIn: '2 hrs' },
-        { id: 'ORD-003', service: 'Dry Clean', items: 4, status: 'Washing', priority: 'Normal', dueIn: '4 hrs' },
-        { id: 'ORD-009', service: 'Ironing', items: 10, status: 'Ready', priority: 'Normal', dueIn: '5 hrs' },
-    ];
+    // Dynamic Data
+    const activeTasks = mockOrders.filter(order => order.staffId === user?.id)
+        .map(order => {
+            const assignedDriver = mockDrivers.find(d => d.id === order.driverId);
+            return {
+                id: order.id,
+                service: order.items[0]?.service || 'Multiple',
+                items: order.items.reduce((acc, item) => acc + item.quantity, 0),
+                status: order.status === 'Cleaning' ? 'Washing' : (order.status === 'Placed' ? 'Sorting' : order.status),
+                priority: 'Normal',
+                dueIn: '4 hrs',
+                driver: assignedDriver // Pass full driver object
+            };
+        });
 
     const stats = {
-        pending: 12,
+        pending: activeTasks.length,
         processed: 25,
         hours: 42,
         salary: 96000
     };
+
+    const [isProfileOpen, setIsProfileOpen] = React.useState(false);
 
     return (
         <div className="min-h-screen bg-slate-50 font-sans text-slate-800">
@@ -41,7 +53,10 @@ export default function EmployeeDashboard() {
                 </div>
 
                 <div className="flex items-center gap-6">
-                    <div className="hidden md:block text-right">
+                    <div
+                        className="hidden md:block text-right cursor-pointer hover:opacity-80 transition-opacity"
+                        onClick={() => setIsProfileOpen(true)}
+                    >
                         <p className="text-sm font-bold text-slate-800">{user?.name || 'Staff Member'}</p>
                         <p className="text-xs text-emerald-600 font-medium flex items-center justify-end gap-1">
                             <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> On Shift
@@ -164,7 +179,14 @@ export default function EmployeeDashboard() {
 
                                     {/* Footer Info */}
                                     <div className="bg-slate-50 -mx-5 -mb-5 mt-5 px-5 py-3 border-t border-slate-100 flex justify-between items-center text-xs">
-                                        <span className="text-slate-400 font-medium">Assigned: Today, 9:00 AM</span>
+                                        <div className="flex flex-col">
+                                            <span className="text-slate-400 font-medium">Assigned: Today, 9:00 AM</span>
+                                            {task.driver && (
+                                                <span className="text-blue-600 font-semibold mt-0.5">
+                                                    Rider: {task.driver.name} ({task.driver.vehicle})
+                                                </span>
+                                            )}
+                                        </div>
                                         <span className="text-slate-600 font-semibold flex items-center gap-1">
                                             <Clock className="w-3.5 h-3.5" /> Due in {task.dueIn}
                                         </span>
@@ -212,6 +234,69 @@ export default function EmployeeDashboard() {
                     </div>
                 </div>
             </div>
+
+            {/* Profile Modal */}
+            {isProfileOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsProfileOpen(false)}></div>
+                    <div className="relative bg-white rounded-3xl shadow-xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
+                        <div className="h-24 bg-gradient-to-r from-violet-600 to-indigo-600"></div>
+                        <div className="px-8 pb-8">
+                            <div className="relative flex justify-center -mt-12 mb-6">
+                                <div className="p-1 bg-white rounded-2xl shadow-lg">
+                                    <div className="w-24 h-24 bg-slate-100 rounded-xl flex items-center justify-center text-3xl font-bold text-slate-400">
+                                        {user?.name?.charAt(0)}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="text-center mb-8">
+                                <h2 className="text-2xl font-bold text-slate-900">{user?.name}</h2>
+                                <p className="text-violet-600 font-medium bg-violet-50 inline-block px-3 py-1 rounded-full text-sm mt-2">{user?.role} - {user?.id}</p>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-4">
+                                    <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-slate-400 shadow-sm shrink-0">
+                                        <Package className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-slate-500 font-bold uppercase">Email Address</p>
+                                        <p className="text-slate-900 font-medium">{user?.email}</p>
+                                    </div>
+                                </div>
+
+                                <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-4">
+                                    <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-slate-400 shadow-sm shrink-0">
+                                        <DollarSign className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-slate-500 font-bold uppercase">Phone Number</p>
+                                        <p className="text-slate-900 font-medium">{user?.phone}</p>
+                                    </div>
+                                </div>
+
+                                <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-4">
+                                    <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-slate-400 shadow-sm shrink-0">
+                                        <BarChart3 className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-slate-500 font-bold uppercase">Current Metrics</p>
+                                        <p className="text-slate-900 font-medium">98% Efficiency • 0 Absences</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={() => setIsProfileOpen(false)}
+                                className="w-full mt-8 py-3 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 transition-colors"
+                            >
+                                Close Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

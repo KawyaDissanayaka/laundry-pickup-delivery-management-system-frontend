@@ -11,7 +11,8 @@ export const mockOrders = [
         status: 'Cleaning', // Placed, Picked Up, Cleaning, Ready, Out for Delivery, Delivered
         pickupDate: '2025-12-14T09:00:00',
         deliveryDate: '2025-12-16T18:00:00',
-        driverId: 'DRV-001',
+        driverId: 'DRV-001', // John Doe
+        staffId: 'EMP-001', // Sarah Wilson (Washer)
         address: '123 Maple Ave, Apt 4B',
     },
     {
@@ -26,6 +27,7 @@ export const mockOrders = [
         pickupDate: '2025-12-13T14:00:00',
         deliveryDate: '2025-12-15T10:00:00',
         driverId: null,
+        staffId: null, // Not yet assigned to staff
         address: '456 Oak Dr',
     },
     {
@@ -39,7 +41,8 @@ export const mockOrders = [
         status: 'Delivered',
         pickupDate: '2025-12-10T09:00:00',
         deliveryDate: '2025-12-12T17:00:00',
-        driverId: 'DRV-002',
+        driverId: 'DRV-002', // Jane Roe
+        staffId: 'EMP-002', // Mike Johnson (Quality Control - verified final step)
         address: '123 Maple Ave, Apt 4B',
     }
 ];
