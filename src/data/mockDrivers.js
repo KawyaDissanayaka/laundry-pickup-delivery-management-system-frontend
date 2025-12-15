@@ -1,7 +1,7 @@
 export const mockDrivers = [
     {
         id: 'DRV-001',
-        name: 'John Doe',
+        name: 'Kasun Rajapaksa',
         status: 'Available', // Available, Busy, Offline
         currentLocation: { lat: 40.7128, lng: -74.0060 },
         vehicle: 'Van (Ford Transit)',
@@ -11,7 +11,7 @@ export const mockDrivers = [
     },
     {
         id: 'DRV-002',
-        name: 'Jane Roe',
+        name: 'Dilini Wickramasinghe',
         status: 'Busy',
         currentLocation: { lat: 40.7300, lng: -73.9950 },
         vehicle: 'Scooter',
@@ -21,7 +21,7 @@ export const mockDrivers = [
     },
     {
         id: 'DRV-003',
-        name: 'Mike Ross',
+        name: 'Tharindu Jayawardena',
         status: 'Offline',
         currentLocation: { lat: 40.7500, lng: -73.9800 },
         vehicle: 'Bike',
