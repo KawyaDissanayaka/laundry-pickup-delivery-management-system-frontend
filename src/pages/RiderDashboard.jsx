@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Truck, MapPin, Clock, DollarSign, LogOut, CheckCircle, Navigation, Phone, Menu, X, Wallet } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { mockOrders } from '../data/mockOrders';
 
 const RiderDashboard = () => {
     const { user, logout } = useAuth();
@@ -9,15 +10,21 @@ const RiderDashboard = () => {
     const [isAvailable, setIsAvailable] = useState(true);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    // Mock Data
-    const assignedOrders = [
-        { id: 'ORD-002', type: 'Pickup', address: '123 Main St, Apt 4B', time: '10:00 AM', status: 'Pending', customer: 'Alice Johnson', phone: '077 123 4567' },
-        { id: 'ORD-005', type: 'Delivery', address: '456 Oak Ave', time: '02:00 PM', status: 'In Progress', customer: 'Bob Smith', phone: '071 987 6543' },
-    ];
+    // Dynamic Data
+    const assignedOrders = mockOrders.filter(order => order.driverId === user?.id)
+        .map(order => ({
+            id: order.id,
+            type: order.id === 'ORD-002' ? 'Pickup' : 'Delivery', // Simple logic for demo, ideally order object has type
+            address: order.address,
+            time: new Date(order.deliveryDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            status: order.status,
+            customer: order.customerName,
+            phone: '077 123 4567' // Fallback or needs to be in order data
+        }));
 
     const stats = {
-        deliveries: 145,
-        today: 8,
+        deliveries: 145, // Historical Total
+        today: assignedOrders.length,
         earnings: 45000,
         base: 75000,
         projected: 93750
