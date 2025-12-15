@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, ShoppingBag, Truck, Users, BarChart3, Settings, Map, LogOut } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Truck, WashingMachine, Users, BarChart3, Settings, Map, LogOut } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useAuth } from '../../context/AuthContext';
 
@@ -28,7 +28,7 @@ export default function Sidebar() {
         <aside className="w-64 bg-white border-r border-gray-200 min-h-screen hidden md:flex flex-col">
             <div className="p-6">
                 <h1 className="text-2xl font-bold text-blue-600 flex items-center gap-2">
-                    <Truck className="h-8 w-8" />
+                    <WashingMachine className="h-8 w-8" />
                     <span>LaundryGo</span>
                 </h1>
             </div>
