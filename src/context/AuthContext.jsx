@@ -1,5 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useState, useContext } from 'react';
+import { mockCustomers } from '../data/mockCustomers';
 
 const AuthContext = createContext(null);
 
@@ -47,13 +48,20 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('laundry_user', JSON.stringify(riderUser));
       return riderUser;
     } else {
-      // Default to Customer for any other credentials
-      const customerUser = {
+      // Check if it matches a mock customer
+      const existingCustomer = mockCustomers.find(c => c.email === email);
+
+      const customerUser = existingCustomer ? {
+        ...existingCustomer,
+        role: 'customer'
+      } : {
+        // Fallback for new/unknown emails
         name: 'John Doe',
         email: email,
         role: 'customer',
-        id: 'cust_001'
+        id: 'cust_new' // distinct ID so it doesn't accidentally match if we had generic hardcoded ones
       };
+
       setUser(customerUser);
       setIsAuthenticated(true);
       localStorage.setItem('laundry_user', JSON.stringify(customerUser));

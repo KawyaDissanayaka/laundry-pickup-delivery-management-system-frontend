@@ -23,6 +23,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { mockOrders } from '../data/mockOrders';
 
 // --- Utility Components ---
 
@@ -527,19 +528,26 @@ const LaundryDashboard = () => {
     const [isQuotationOpen, setIsQuotationOpen] = useState(false);
     const [quotationData, setQuotationData] = useState(null);
 
-    // Mock Data (Refined with LKR)
+    // Dynamic Data Filtering
+    const userOrders = mockOrders.filter(order => order.customerId === user?.id)
+        .sort((a, b) => new Date(b.pickupDate) - new Date(a.pickupDate));
+
     const stats = {
-        totalOrders: 12,
-        activeOrders: 2,
-        completedOrders: 10,
-        totalSpent: 135000.00
+        totalOrders: userOrders.length,
+        activeOrders: userOrders.filter(o => ['Placed', 'Picked Up', 'Cleaning', 'Ready', 'Out for Delivery'].includes(o.status)).length,
+        completedOrders: userOrders.filter(o => o.status === 'Delivered').length,
+        totalSpent: user?.totalSpent || userOrders.reduce((sum, order) => sum + order.totalAmount, 0)
     };
 
-    const recentOrders = [
-        { id: 'ORD-001', service: 'Wash & Fold', items: 15, total: 7500.00, status: 'In Progress', date: '2024-03-10', pickup: '2024-03-10 10:00 AM' },
-        { id: 'ORD-002', service: 'Dry Clean', items: 3, total: 13500.00, status: 'Scheduled', date: '2024-03-12', pickup: '2024-03-12 02:00 PM' },
-        { id: 'ORD-003', service: 'Wash & Iron', items: 8, total: 9750.00, status: 'Delivered', date: '2024-03-05', pickup: '2024-03-05 09:00 AM' },
-    ];
+    const recentOrders = userOrders.map(order => ({
+        id: order.id,
+        service: order.items[0]?.service || 'Multiple Services',
+        items: order.items.reduce((sum, item) => sum + item.quantity, 0),
+        total: order.totalAmount,
+        status: order.status,
+        date: new Date(order.pickupDate).toLocaleDateString(),
+        pickup: new Date(order.pickupDate).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' })
+    })).slice(0, 5);
 
     const handleOrderSubmit = (formData) => {
         // Price Calculation Logic
