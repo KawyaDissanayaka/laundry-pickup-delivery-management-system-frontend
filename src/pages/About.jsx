@@ -21,7 +21,7 @@ export default function About() {
                 <div className="grid md:grid-cols-2 gap-12 items-center">
                     <div>
                         <img
-                            src="https://images.unsplash.com/photo-1582735689369-4fe89db236ea?q=80&w=2070&auto=format&fit=crop"
+                            src="/about-image.jpg"
                             alt="Laundry Team"
                             className="rounded-2xl shadow-xl hover:shadow-2xl transition duration-500 transform hover:-translate-y-2"
                         />
