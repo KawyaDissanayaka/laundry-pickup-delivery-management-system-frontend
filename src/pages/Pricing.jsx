@@ -43,10 +43,22 @@ export default function Pricing() {
             <PublicNavbar />
 
             {/* Header */}
-            <div className="bg-teal-500 py-20 text-center text-white">
-                <div className="container mx-auto px-6">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-4">Pricing List</h1>
-                    <p className="text-xl opacity-90 max-w-xl mx-auto">Affordable, transparent pricing for every item.</p>
+            <div className="bg-teal-500 text-white overflow-hidden">
+                <div className="container mx-auto px-6 py-12 md:py-20 flex flex-col md:flex-row items-center gap-12">
+                    <div className="w-full md:w-1/2 text-center md:text-left z-10">
+                        <h1 className="text-4xl md:text-5xl font-bold mb-6">Transparent Pricing</h1>
+                        <p className="text-xl text-teal-50 mb-8 leading-relaxed">
+                            No hidden fees. Just clean clothes and clear prices. Check out our competitive rates for all your laundry needs.
+                        </p>
+                    </div>
+                    <div className="w-full md:w-1/2 relative">
+                        <div className="absolute inset-0 bg-teal-500/20 rounded-2xl transform rotate-3"></div>
+                        <img
+                            src="/pricing-image.png"
+                            alt="Laundry Pricing"
+                            className="relative rounded-2xl shadow-2xl border-4 border-white/20 transform -rotate-2 hover:rotate-0 transition-transform duration-500 w-full object-cover"
+                        />
+                    </div>
                 </div>
             </div>
 
@@ -73,8 +85,8 @@ export default function Pricing() {
                                 key={cat}
                                 onClick={() => setActiveTab(cat)}
                                 className={`px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-colors ${activeTab === cat
-                                        ? 'bg-teal-500 text-white'
-                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                    ? 'bg-teal-500 text-white'
+                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                     }`}
                             >
                                 {cat}
@@ -106,8 +118,8 @@ export default function Pricing() {
                                     Unit: {item.unit}
                                 </span>
                                 <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${item.speed.includes('Fast') || item.speed.includes('One Day')
-                                        ? 'bg-purple-50 text-purple-700'
-                                        : 'bg-green-50 text-green-700'
+                                    ? 'bg-purple-50 text-purple-700'
+                                    : 'bg-green-50 text-green-700'
                                     }`}>
                                     {item.speed}
                                 </span>
