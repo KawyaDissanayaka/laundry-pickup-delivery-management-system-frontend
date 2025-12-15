@@ -1,12 +1,37 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { ArrowLeft, Save } from 'lucide-react';
 
 export default function CreateOrder() {
+    const location = useLocation();
     const [items, setItems] = useState([{ name: '', service: 'Wash & Fold', quantity: 1, price: 0 }]);
+
+    useEffect(() => {
+        if (location.state?.serviceName) {
+            setItems([{ name: '', service: location.state.serviceName, quantity: 1, price: 0 }]);
+        }
+    }, [location]);
 
     const addItem = () => {
         setItems([...items, { name: '', service: 'Wash & Fold', quantity: 1, price: 0 }]);
+    };
+
+    const handleCreateOrder = () => {
+        // Simple validation
+        if (!items.some(i => i.name)) {
+            alert("Please add at least one item name.");
+            return;
+        }
+
+        const customerName = "Alice Johnson"; // Mock customer
+        const serviceName = items[0].service;
+
+        // Simulate API call
+        setTimeout(() => {
+            alert(`Order successfully placed for ${customerName}!\nService: ${serviceName}\nYour order has been linked.`);
+            // In a real app, navigate to order list or dashboard
+            // navigate('/admin/orders'); 
+        }, 500);
     };
 
     return (
@@ -44,13 +69,31 @@ export default function CreateOrder() {
                         <div key={idx} className="flex gap-4 items-end bg-gray-50 p-4 rounded-lg">
                             <div className="flex-1">
                                 <label className="block text-xs font-medium text-gray-500 mb-1">Item Name</label>
-                                <input type="text" placeholder="e.g. Shirt" className="w-full border border-gray-200 rounded px-2 py-1" />
+                                <input type="text"
+                                    placeholder="e.g. Shirt"
+                                    className="w-full border border-gray-200 rounded px-2 py-1"
+                                    value={item.name}
+                                    onChange={(e) => {
+                                        const newItems = [...items];
+                                        newItems[idx].name = e.target.value;
+                                        setItems(newItems);
+                                    }}
+                                />
                             </div>
                             <div className="w-40">
                                 <label className="block text-xs font-medium text-gray-500 mb-1">Service</label>
-                                <select className="w-full border border-gray-200 rounded px-2 py-1">
+                                <select
+                                    className="w-full border border-gray-200 rounded px-2 py-1"
+                                    value={item.service}
+                                    onChange={(e) => {
+                                        const newItems = [...items];
+                                        newItems[idx].service = e.target.value;
+                                        setItems(newItems);
+                                    }}
+                                >
                                     <option>Wash & Fold</option>
-                                    <option>Dry Clean</option>
+                                    <option>Dry Cleaning</option>
+                                    <option>Wash Dry And Iron</option>
                                     <option>Iron Only</option>
                                 </select>
                             </div>
@@ -66,7 +109,10 @@ export default function CreateOrder() {
                 </div>
 
                 <div className="flex justify-end pt-4 border-t border-gray-100">
-                    <button className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-medium transition-colors shadow-sm">
+                    <button
+                        onClick={handleCreateOrder}
+                        className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-medium transition-colors shadow-sm"
+                    >
                         <Save className="h-4 w-4" />
                         Place Order
                     </button>

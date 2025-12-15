@@ -1,108 +1,136 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PublicNavbar from '../components/layout/PublicNavbar';
-import { Check } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Search, Shirt, Scissors, Tag } from 'lucide-react';
 
 export default function Pricing() {
-    const plans = [
-        {
-            name: "Pay As You Go",
-            price: "$1.50",
-            unit: "/ lb",
-            features: [
-                "No subscription needed",
-                "Next-day delivery",
-                "Standard detergents",
-                "Stain treatment included"
-            ],
-            button: "Start Order",
-            popular: false
-        },
-        {
-            name: "Monthly Pro",
-            price: "$59",
-            unit: "/ month",
-            features: [
-                "40 lbs included",
-                "Free pickup & delivery",
-                "Premium detergents",
-                "Same-day rush available",
-                "Rollover unused lbs"
-            ],
-            button: "Subscribe Now",
-            popular: true
-        },
-        {
-            name: "Family Plan",
-            price: "$99",
-            unit: "/ month",
-            features: [
-                "80 lbs included",
-                "Priority scheduling",
-                "Eco-friendly options",
-                "Separate bagging per person",
-                "Dedicated support"
-            ],
-            button: "Subscribe Now",
-            popular: false
-        }
+    const [searchTerm, setSearchTerm] = useState('');
+    const [activeTab, setActiveTab] = useState('All');
+
+    // Mock Pricing Data based on user reference
+    const pricingItems = [
+        { id: 1, name: "Baby Full Suit (3pcs)", price: 1100, unit: "pcs", type: "Dry Clean", speed: "Normal Service", category: "Kids" },
+        { id: 2, name: "Bed Sheet (Double size)", price: 520, unit: "pcs", type: "Dry Clean", speed: "Normal Service", category: "Household" },
+        { id: 3, name: "Bed Sheet (King size)", price: 600, unit: "pcs", type: "Dry Clean", speed: "Normal Service", category: "Household" },
+        { id: 4, name: "Blaser", price: 750, unit: "pcs", type: "Dry Clean", speed: "Normal Service", category: "Men" },
+        { id: 5, name: "Blaser", price: 900, unit: "pcs", type: "Dry Clean", speed: "One Day Service", category: "Men" },
+        { id: 6, name: "Blaser", price: 1500, unit: "pcs", type: "Dry Clean", speed: "Fast Service", category: "Men" },
+        { id: 7, name: "Blaser & Trouser (2PCS)", price: 1400, unit: "pcs", type: "Dry Clean", speed: "Normal Service", category: "Men" },
+        { id: 8, name: "Blouse", price: 450, unit: "pcs", type: "Dry Clean", speed: "Normal Service", category: "Women" },
+        { id: 9, name: "Bridal Frock", price: 3800, unit: "pcs", type: "Dry Clean", speed: "Normal Service", category: "Women" },
+        { id: 10, name: "Bridal Saree", price: 2590, unit: "pcs", type: "Dry Clean", speed: "Normal Service", category: "Women" },
+        { id: 11, name: "Cap", price: 390, unit: "pcs", type: "Dry Clean", speed: "Normal Service", category: "Accessories" },
+        { id: 12, name: "Cloak", price: 900, unit: "pcs", type: "Dry Clean", speed: "Normal Service", category: "Accessories" },
+        { id: 13, name: "Coffee Table Carpets", price: 2490, unit: "pcs", type: "Dry Clean", speed: "Normal Service", category: "Household" },
+        { id: 14, name: "Curtains", price: 650, unit: "kilo", type: "Dry Clean", speed: "Normal Service", category: "Household" },
+        { id: 15, name: "Dancing Item", price: 850, unit: "pcs", type: "Dry Clean", speed: "Normal Service", category: "Other" },
+        { id: 16, name: "Full Suit (3PCS)", price: 1650, unit: "pcs", type: "Dry Clean", speed: "Normal Service", category: "Men" },
+        { id: 17, name: "Jersey", price: 750, unit: "kilo", type: "Dry Clean", speed: "Normal Service", category: "Men" },
+        { id: 18, name: "Kurtha", price: 1950, unit: "pcs", type: "Dry Clean", speed: "Normal Service", category: "Women" },
+        { id: 19, name: "Lehenga", price: 2800, unit: "pcs", type: "Dry Clean", speed: "Normal Service", category: "Women" },
+        { id: 20, name: "National Suit (2PCS)", price: 1500, unit: "pcs", type: "Dry Clean", speed: "Normal Service", category: "Men" },
     ];
 
+    const categories = ['All', 'Men', 'Women', 'Kids', 'Household', 'Accessories'];
+
+    const filteredItems = pricingItems.filter(item => {
+        const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesTab = activeTab === 'All' || item.category === activeTab;
+        return matchesSearch && matchesTab;
+    });
+
     return (
-        <div className="min-h-screen bg-gray-50 font-sans">
+        <div className="min-h-screen bg-gray-50 font-sans text-slate-800">
             <PublicNavbar />
 
             {/* Header */}
-            <div className="bg-blue-600 py-24 text-center text-white">
+            <div className="bg-teal-500 py-20 text-center text-white">
                 <div className="container mx-auto px-6">
-                    <h1 className="text-4xl md:text-5xl font-bold mb-4">Simple, Transparent Pricing</h1>
-                    <p className="text-xl opacity-90 max-w-xl mx-auto">No hidden fees. Choose a plan that fits your lifestyle.</p>
+                    <h1 className="text-4xl md:text-5xl font-bold mb-4">Pricing List</h1>
+                    <p className="text-xl opacity-90 max-w-xl mx-auto">Affordable, transparent pricing for every item.</p>
                 </div>
             </div>
 
-            {/* Pricing Cards */}
-            <div className="container mx-auto px-6 -mt-16 pb-24">
-                <div className="grid md:grid-cols-3 gap-8">
-                    {plans.map((plan, index) => (
-                        <div key={index} className={`bg-white rounded-2xl shadow-xl overflow-hidden transform hover:-translate-y-2 transition-all duration-300 ${plan.popular ? 'ring-4 ring-blue-400 relative' : ''}`}>
-                            {plan.popular && (
-                                <div className="bg-blue-500 text-white text-xs font-bold px-3 py-1 absolute top-4 right-4 rounded-full uppercase tracking-wider">
-                                    Most Popular
+            {/* Search and Filters */}
+            <div className="container mx-auto px-6 -mt-8 mb-12 relative z-10">
+                <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 flex flex-col md:flex-row gap-4 items-center justify-between">
+
+                    {/* Search */}
+                    <div className="relative w-full md:w-96">
+                        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                        <input
+                            type="text"
+                            placeholder="Search for an item..."
+                            className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500 transition-shadow"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+
+                    {/* Tabs */}
+                    <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto">
+                        {categories.map(cat => (
+                            <button
+                                key={cat}
+                                onClick={() => setActiveTab(cat)}
+                                className={`px-4 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-colors ${activeTab === cat
+                                        ? 'bg-teal-500 text-white'
+                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                    }`}
+                            >
+                                {cat}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* Pricing Grid */}
+            <div className="container mx-auto px-6 pb-24">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {filteredItems.map((item) => (
+                        <div key={item.id} className="bg-white rounded-xl border border-gray-200 p-5 hover:shadow-lg transition-shadow duration-300 flex flex-col h-full group">
+                            <div className="flex items-start justify-between mb-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-teal-50 flex items-center justify-center text-teal-600 group-hover:scale-110 transition-transform">
+                                        <Shirt className="h-5 w-5" />
+                                    </div>
+                                    <h3 className="font-bold text-gray-900 group-hover:text-teal-600 transition-colors">{item.name}</h3>
                                 </div>
-                            )}
-                            <div className="p-8">
-                                <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-                                <div className="flex items-baseline mb-6">
-                                    <span className="text-4xl font-extrabold text-blue-600">{plan.price}</span>
-                                    <span className="text-gray-500 ml-2">{plan.unit}</span>
+                            </div>
+
+                            <div className="flex flex-wrap gap-2 mb-6 mt-auto">
+                                <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-50 text-blue-700">
+                                    {item.type}
+                                </span>
+                                <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-600">
+                                    Unit: {item.unit}
+                                </span>
+                                <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${item.speed.includes('Fast') || item.speed.includes('One Day')
+                                        ? 'bg-purple-50 text-purple-700'
+                                        : 'bg-green-50 text-green-700'
+                                    }`}>
+                                    {item.speed}
+                                </span>
+                            </div>
+
+                            <div className="flex items-end justify-between pt-4 border-t border-gray-100">
+                                <span className="text-gray-400 text-sm font-medium">Price:</span>
+                                <div className="flex items-center items-baseline text-teal-600 font-bold">
+                                    <Tag className="w-4 h-4 mr-1" />
+                                    <span className="text-xl">Rs. {item.price}</span>
+                                    <span className="text-xs ml-1 text-gray-400">.00</span>
                                 </div>
-                                <ul className="space-y-4 mb-8">
-                                    {plan.features.map((feature, idx) => (
-                                        <li key={idx} className="flex items-start text-gray-600">
-                                            <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 shrink-0" />
-                                            <span>{feature}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                                <Link
-                                    to="/login"
-                                    className={`block w-full text-center py-4 rounded-xl font-bold transition-all ${plan.popular
-                                            ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-xl'
-                                            : 'bg-gray-50 text-gray-900 hover:bg-gray-100'
-                                        }`}
-                                >
-                                    {plan.button}
-                                </Link>
                             </div>
                         </div>
                     ))}
                 </div>
 
-                {/* Additional Info */}
-                <div className="mt-16 text-center text-gray-600">
-                    <p className="mb-2 font-semibold">Need commercial pricing?</p>
-                    <Link to="/contact" className="text-blue-600 hover:underline">Contact our sales team</Link>
-                </div>
+                {filteredItems.length === 0 && (
+                    <div className="text-center py-20 text-gray-500">
+                        <Scissors className="h-12 w-12 mx-auto mb-4 opacity-20" />
+                        <p>No items found matching your search.</p>
+                    </div>
+                )}
             </div>
         </div>
     );
