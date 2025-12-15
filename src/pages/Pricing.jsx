@@ -129,7 +129,7 @@ export default function Pricing() {
                                 <span className="text-gray-400 text-sm font-medium">Price:</span>
                                 <div className="flex items-center items-baseline text-teal-600 font-bold">
                                     <Tag className="w-4 h-4 mr-1" />
-                                    <span className="text-xl">Rs. {item.price}</span>
+                                    <span className="text-xl">LKR {item.price}</span>
                                     <span className="text-xs ml-1 text-gray-400">.00</span>
                                 </div>
                             </div>

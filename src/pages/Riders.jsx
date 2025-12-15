@@ -5,7 +5,7 @@ import Badge from '../components/common/Badge';
 
 export default function Riders() {
     // Enrich mock data with salary if not present
-    const initialDrivers = mockDrivers.map(d => ({ ...d, salary: d.salary || 2800 }));
+    const initialDrivers = mockDrivers.map(d => ({ ...d, salary: d.salary || 85000 }));
 
     const [drivers, setDrivers] = useState(initialDrivers);
     const [isModalOpen, setIsModalOpen] = useState(false);
