@@ -55,7 +55,7 @@ export default function Dashboard() {
         switch (range) {
             case 'Day':
                 return {
-                    revenue: 1250.00,
+                    revenue: 375000.00,
                     activeOrders: 12,
                     activeDrivers: 8,
                     newCustomers: 2,
@@ -64,7 +64,7 @@ export default function Dashboard() {
                 };
             case 'Week':
                 return {
-                    revenue: 8450.00,
+                    revenue: 2535000.00,
                     activeOrders: 45,
                     activeDrivers: 12,
                     newCustomers: 15,
