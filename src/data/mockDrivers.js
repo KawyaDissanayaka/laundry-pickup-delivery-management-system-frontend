@@ -5,7 +5,7 @@ export const mockDrivers = [
         status: 'Available', // Available, Busy, Offline
         currentLocation: { lat: 40.7128, lng: -74.0060 },
         vehicle: 'Van (Ford Transit)',
-        phone: '555-0123',
+        phone: '076 111 2222',
         totalDeliveries: 154,
         rating: 4.8
     },
@@ -15,7 +15,7 @@ export const mockDrivers = [
         status: 'Busy',
         currentLocation: { lat: 40.7300, lng: -73.9950 },
         vehicle: 'Scooter',
-        phone: '555-0456',
+        phone: '072 333 4444',
         totalDeliveries: 89,
         rating: 4.9
     },
@@ -25,7 +25,7 @@ export const mockDrivers = [
         status: 'Offline',
         currentLocation: { lat: 40.7500, lng: -73.9800 },
         vehicle: 'Bike',
-        phone: '555-0789',
+        phone: '078 555 6666',
         totalDeliveries: 42,
         rating: 4.5
     }
