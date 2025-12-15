@@ -106,6 +106,93 @@ export default function Services() {
                 </div>
             </div>
 
+            {/* Team Section */}
+            <section className="bg-slate-50 py-24">
+                <div className="container mx-auto px-6">
+                    <div className="text-center mb-16">
+                        <span className="text-teal-600 font-bold uppercase tracking-wider text-sm">The People Behind The Service</span>
+                        <h2 className="text-4xl font-bold text-slate-900 mt-2 mb-4">Meet Our Experts</h2>
+                        <p className="text-slate-500 max-w-2xl mx-auto text-lg">
+                            Dedicated professionals committed to delivering the best laundry care experience.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {/* Team Member 1 */}
+                        <div className="group bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                            <div className="aspect-square rounded-xl overflow-hidden mb-6 relative">
+                                <img
+                                    src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop"
+                                    alt="Team Member"
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                                    <span className="text-white font-medium text-sm">"Quality is my priority"</span>
+                                </div>
+                            </div>
+                            <div className="text-center">
+                                <h3 className="text-xl font-bold text-slate-900">David Chen</h3>
+                                <p className="text-teal-600 font-medium text-sm">Operations Manager</p>
+                            </div>
+                        </div>
+
+                        {/* Team Member 2 */}
+                        <div className="group bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                            <div className="aspect-square rounded-xl overflow-hidden mb-6 relative">
+                                <img
+                                    src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop"
+                                    alt="Team Member"
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                                    <span className="text-white font-medium text-sm">"Care in every fold"</span>
+                                </div>
+                            </div>
+                            <div className="text-center">
+                                <h3 className="text-xl font-bold text-slate-900">Sarah Johnson</h3>
+                                <p className="text-teal-600 font-medium text-sm">Lead Specialist</p>
+                            </div>
+                        </div>
+
+                        {/* Team Member 3 */}
+                        <div className="group bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                            <div className="aspect-square rounded-xl overflow-hidden mb-6 relative">
+                                <img
+                                    src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800&auto=format&fit=crop"
+                                    alt="Team Member"
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                                    <span className="text-white font-medium text-sm">"Efficiency matters"</span>
+                                </div>
+                            </div>
+                            <div className="text-center">
+                                <h3 className="text-xl font-bold text-slate-900">Michael Ross</h3>
+                                <p className="text-teal-600 font-medium text-sm">Logistics Head</p>
+                            </div>
+                        </div>
+
+                        {/* Team Member 4 */}
+                        <div className="group bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                            <div className="aspect-square rounded-xl overflow-hidden mb-6 relative">
+                                <img
+                                    src="https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=800&auto=format&fit=crop"
+                                    alt="Team Member"
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                                    <span className="text-white font-medium text-sm">"Customer happiness first"</span>
+                                </div>
+                            </div>
+                            <div className="text-center">
+                                <h3 className="text-xl font-bold text-slate-900">Emily Davis</h3>
+                                <p className="text-teal-600 font-medium text-sm">Customer Relations</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* Modal */}
             {selectedService && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
