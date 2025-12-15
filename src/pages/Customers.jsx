@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, Phone, MapPin, MoreVertical } from 'lucide-react';
+import { Mail, Phone, MapPin, Edit, Trash2 } from 'lucide-react';
 import { mockCustomers } from '../data/mockCustomers';
 
 export default function Customers() {
@@ -62,9 +62,14 @@ export default function Customers() {
                                         ${customer.totalSpent.toFixed(2)}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button className="text-gray-400 hover:text-gray-600">
-                                            <MoreVertical className="h-5 w-5" />
-                                        </button>
+                                        <div className="flex justify-end gap-2">
+                                            <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit Customer">
+                                                <Edit className="h-4 w-4" />
+                                            </button>
+                                            <button className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete Customer">
+                                                <Trash2 className="h-4 w-4" />
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
