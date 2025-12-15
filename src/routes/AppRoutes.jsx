@@ -14,18 +14,16 @@ import AdminLogin from '../pages/AdminLogin';
 import CustomerDashboard from '../pages/CustomerDashboard';
 import ProtectedRoute from '../components/ProtectedRoute';
 import ProtectedAdminRoute from '../components/ProtectedAdminRoute';
-
 import Employees from '../pages/Employees';
 import RiderDashboard from '../pages/RiderDashboard';
 import EmployeeDashboard from '../pages/EmployeeDashboard';
-
-// ... imports
 import About from '../pages/About';
 import Services from '../pages/Services';
 import Pricing from '../pages/Pricing';
 import Contact from '../pages/Contact';
 import SmartFAQ from '../pages/SmartFAQ';
 import Settings from '../pages/Settings';
+import AdminMessages from '../pages/AdminMessages';
 
 export default function AppRoutes() {
     return (
@@ -38,7 +36,9 @@ export default function AppRoutes() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/faq" element={<SmartFAQ />} />
             <Route path="/login" element={<Login />} />
-            {/* ... rest of routes */}
+            <Route path="/admin/login" element={<AdminLogin />} />
+
+            {/* Customer Routes */}
             <Route
                 path="/customer-dashboard"
                 element={
@@ -47,6 +47,7 @@ export default function AppRoutes() {
                     </ProtectedRoute>
                 }
             />
+
             {/* Staff Routes */}
             <Route
                 path="/rider-dashboard"
@@ -65,9 +66,6 @@ export default function AppRoutes() {
                 }
             />
 
-            {/* Admin Authentication */}
-            <Route path="/admin/login" element={<AdminLogin />} />
-
             {/* Admin Routes (Protected) */}
             <Route
                 path="/admin"
@@ -81,6 +79,7 @@ export default function AppRoutes() {
                 <Route path="orders" element={<Orders />} />
                 <Route path="orders/new" element={<CreateOrder />} />
                 <Route path="orders/:id" element={<OrderDetail />} />
+                <Route path="messages" element={<AdminMessages />} />
                 <Route path="tracking" element={<Tracking />} />
                 <Route path="riders" element={<Riders />} />
                 <Route path="employees" element={<Employees />} />
