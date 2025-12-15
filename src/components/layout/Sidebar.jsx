@@ -1,12 +1,13 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, ShoppingBag, Truck, WashingMachine, Users, BarChart3, Settings, Map, LogOut } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, Truck, WashingMachine, Users, BarChart3, Settings, Map, LogOut, Mail } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useAuth } from '../../context/AuthContext';
 
 const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
     { icon: ShoppingBag, label: 'Orders', path: '/admin/orders' },
+    { icon: Mail, label: 'Messages', path: '/admin/messages' },
     { icon: Map, label: 'Live Tracking', path: '/admin/tracking' },
     { icon: Truck, label: 'Riders', path: '/admin/riders' },
     { icon: Users, label: 'Employees', path: '/admin/employees' },
