@@ -177,7 +177,7 @@ export default function Services() {
                         <div className="group bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                             <div className="aspect-square rounded-xl overflow-hidden mb-6 relative">
                                 <img
-                                    src="https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=800&auto=format&fit=crop"
+                                    src="/nipuni-navoddya.jpg"
                                     alt="Team Member"
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                 />
@@ -186,7 +186,7 @@ export default function Services() {
                                 </div>
                             </div>
                             <div className="text-center">
-                                <h3 className="text-xl font-bold text-slate-900">Emily Davis</h3>
+                                <h3 className="text-xl font-bold text-slate-900">Nipuni Navoddya</h3>
                                 <p className="text-teal-600 font-medium text-sm">Customer Relations</p>
                             </div>
                         </div>
@@ -236,7 +236,7 @@ export default function Services() {
 
                         <div className="h-[400px] rounded-2xl overflow-hidden shadow-2xl border border-slate-100">
                             <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.184126937666!2d-73.98773172346617!3d40.757978634830175!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25855c6480299%3A0x55194ec5a1ae072e!2sTimes%20Square!5e0!3m2!1sen!2sus!4v1709668465529!5m2!1sen!2sus"
+                                src="https://maps.google.com/maps?q=No%2028%2C%20Homagama%2C%20Colombo&t=&z=15&ie=UTF8&iwloc=&output=embed"
                                 width="100%"
                                 height="100%"
                                 style={{ border: 0 }}
