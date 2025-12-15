@@ -105,6 +105,57 @@ export default function Home() {
                 </div>
             </section>
 
+            {/* Experience Section - New Images */}
+            <section className="py-24 bg-white overflow-hidden">
+                <div className="container mx-auto px-6 space-y-24">
+                    {/* Feature Row 1 */}
+                    <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20">
+                        <div className="w-full md:w-1/2 animate-in slide-in-from-left-8 duration-1000 delay-200 fill-mode-both">
+                            <div className="relative rounded-3xl overflow-hidden shadow-2xl skew-y-1 transform hover:skew-y-0 transition-transform duration-500">
+                                <div className="absolute inset-0 bg-teal-500 mix-blend-color opacity-20"></div>
+                                <img
+                                    src="/feature-smell.png"
+                                    alt="Fresh Scent"
+                                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                                />
+                            </div>
+                        </div>
+                        <div className="w-full md:w-1/2 animate-in slide-in-from-right-8 duration-1000 delay-400 fill-mode-both">
+                            <h2 className="text-4xl font-bold text-slate-900 mb-6">Experience the Difference</h2>
+                            <p className="text-lg text-slate-500 leading-relaxed mb-8">
+                                There is nothing quite like the scent of freshly cleaned laundry. We use premium, eco-friendly detergents that are tough on stains but gentle on your fabrics and senses. Your clothes will look great and smell even better.
+                            </p>
+                            <Link to="/services" className="text-teal-600 font-bold hover:text-teal-700 flex items-center group">
+                                Learn about our detergents <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                        </div>
+                    </div>
+
+                    {/* Feature Row 2 */}
+                    <div className="flex flex-col md:flex-row-reverse items-center gap-12 lg:gap-20">
+                        <div className="w-full md:w-1/2 animate-in slide-in-from-right-8 duration-1000 delay-200 fill-mode-both">
+                            <div className="relative rounded-3xl overflow-hidden shadow-2xl -skew-y-1 transform hover:skew-y-0 transition-transform duration-500">
+                                <div className="absolute inset-0 bg-blue-500 mix-blend-color opacity-20"></div>
+                                <img
+                                    src="/feature-thumbs.png"
+                                    alt="Expert Care"
+                                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                                />
+                            </div>
+                        </div>
+                        <div className="w-full md:w-1/2 animate-in slide-in-from-left-8 duration-1000 delay-400 fill-mode-both">
+                            <h2 className="text-4xl font-bold text-slate-900 mb-6">Expert Care, Guaranteed</h2>
+                            <p className="text-lg text-slate-500 leading-relaxed mb-8">
+                                Our team is trained to handle all types of fabrics with the utmost care. From delicate silks to heavy comforters, we ensure every item is returned to you in perfect condition. We treat your laundry like it's our own.
+                            </p>
+                            <Link to="/about" className="text-teal-600 font-bold hover:text-teal-700 flex items-center group">
+                                Meet our team <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* Welcome Popup */}
             {showPopup && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
