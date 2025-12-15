@@ -54,7 +54,7 @@ export default function EmployeeDashboard() {
                     </div>
                     <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                         <div className="text-gray-500 text-sm mb-1">Current Salary</div>
-                        <div className="text-2xl font-bold text-green-600">$3.2k</div>
+                        <div className="text-2xl font-bold text-green-600">LKR 3.2k</div>
                     </div>
                 </div>
 
@@ -110,11 +110,11 @@ export default function EmployeeDashboard() {
                             <h3 className="font-bold text-gray-900 mb-4">Salary Details</h3>
                             <div className="flex items-center justify-between mb-4">
                                 <div className="text-sm text-gray-500">Base Salary</div>
-                                <div className="font-semibold text-gray-900">$3,200.00</div>
+                                <div className="font-semibold text-gray-900">LKR 3,200.00</div>
                             </div>
                             <div className="flex items-center justify-between mb-4">
                                 <div className="text-sm text-gray-500">Overtime Rate</div>
-                                <div className="font-semibold text-gray-900">$25.00/hr</div>
+                                <div className="font-semibold text-gray-900">LKR 25.00/hr</div>
                             </div>
                             <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-100 mt-4">
                                 <div className="flex gap-2">

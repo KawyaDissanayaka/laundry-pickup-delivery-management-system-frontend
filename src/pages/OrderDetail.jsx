@@ -35,13 +35,13 @@ export default function OrderDetail() {
                                     </div>
                                     <div className="text-right">
                                         <p className="font-medium text-gray-900">x{item.quantity}</p>
-                                        <p className="text-sm text-gray-500">${item.price.toFixed(2)}</p>
+                                        <p className="text-sm text-gray-500">LKR {item.price.toFixed(2)}</p>
                                     </div>
                                 </div>
                             ))}
                             <div className="flex justify-between items-center pt-4 font-bold text-lg">
                                 <span>Total Amount</span>
-                                <span>${order.totalAmount.toFixed(2)}</span>
+                                <span>LKR {order.totalAmount.toFixed(2)}</span>
                             </div>
                         </div>
                     </div>

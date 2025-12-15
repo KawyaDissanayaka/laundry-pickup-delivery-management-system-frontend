@@ -82,7 +82,7 @@ export default function Orders() {
                                         <Badge status={order.status} />
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        ${order.totalAmount.toFixed(2)}
+                                        LKR {order.totalAmount.toFixed(2)}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                                         {new Date(order.deliveryDate).toLocaleDateString()}

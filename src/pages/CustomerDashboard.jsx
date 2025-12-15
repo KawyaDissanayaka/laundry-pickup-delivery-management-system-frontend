@@ -76,7 +76,7 @@ const OverviewTab = ({ stats, recentOrders, setActiveTab }) => (
                 <div className="flex items-center justify-between">
                     <div>
                         <p className="text-gray-500 text-sm">Total Spent</p>
-                        <h3 className="text-2xl font-bold mt-1">${stats.totalSpent.toFixed(2)}</h3>
+                        <h3 className="text-2xl font-bold mt-1">LKR {stats.totalSpent.toFixed(2)}</h3>
                     </div>
                     <div className="bg-purple-50 p-3 rounded-lg">
                         <DollarSign className="w-6 h-6 text-purple-600" />
@@ -114,7 +114,7 @@ const OverviewTab = ({ stats, recentOrders, setActiveTab }) => (
                                 <td className="px-6 py-4 text-sm text-gray-600">{order.service} ({order.items} items)</td>
                                 <td className="px-6 py-4"><StatusBadge status={order.status} /></td>
                                 <td className="px-6 py-4 text-sm text-gray-600">{order.pickup}</td>
-                                <td className="px-6 py-4 text-sm font-medium text-gray-900 text-right">${order.total.toFixed(2)}</td>
+                                <td className="px-6 py-4 text-sm font-medium text-gray-900 text-right">LKR {order.total.toFixed(2)}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -147,7 +147,7 @@ const OrdersTab = ({ recentOrders }) => (
                             <td className="px-6 py-4 text-sm text-gray-600">{order.date}</td>
                             <td className="px-6 py-4 text-sm text-gray-600">{order.service}</td>
                             <td className="px-6 py-4"><StatusBadge status={order.status} /></td>
-                            <td className="px-6 py-4 text-sm font-medium text-gray-900 text-right">${order.total.toFixed(2)}</td>
+                            <td className="px-6 py-4 text-sm font-medium text-gray-900 text-right">LKR {order.total.toFixed(2)}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -292,14 +292,14 @@ const QuotationModal = ({ isOpen, onClose, data }) => {
                                 <tr className="border-b border-gray-50">
                                     <td className="py-4 font-medium">{data.service}</td>
                                     <td className="text-center py-4">{data.items} items</td>
-                                    <td className="text-right py-4">${data.unitPrice.toFixed(2)}</td>
-                                    <td className="text-right py-4">${data.total.toFixed(2)}</td>
+                                    <td className="text-right py-4">LKR {data.unitPrice.toFixed(2)}</td>
+                                    <td className="text-right py-4">LKR {data.total.toFixed(2)}</td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colSpan="3" className="pt-4 text-right font-bold text-gray-900">Grand Total</td>
-                                    <td className="pt-4 text-right font-bold text-blue-600 text-lg">${data.total.toFixed(2)}</td>
+                                    <td className="pt-4 text-right font-bold text-blue-600 text-lg">LKR {data.total.toFixed(2)}</td>
                                 </tr>
                             </tfoot>
                         </table>

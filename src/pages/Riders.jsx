@@ -96,7 +96,7 @@ export default function Riders() {
                                 </div>
                                 <div className="flex items-center gap-2 text-sm text-gray-600">
                                     <DollarSign className="h-4 w-4 text-gray-400" />
-                                    Salary: ${Number(driver.salary).toLocaleString()}
+                                    Salary: LKR {Number(driver.salary).toLocaleString()}
                                 </div>
                                 <div className="flex items-center gap-2 text-sm text-gray-600">
                                     <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />

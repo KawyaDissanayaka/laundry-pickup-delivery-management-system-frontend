@@ -120,7 +120,7 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <DashboardCard
                     title={`Total Revenue (${timeRange})`}
-                    value={`$${data.revenue.toLocaleString()}`}
+                    value={`LKR ${data.revenue.toLocaleString()}`}
                     icon={DollarSign}
                     trend={timeRange === 'Month' ? 12.5 : timeRange === 'Week' ? 5.2 : 1.8}
                     color="green"
@@ -264,7 +264,7 @@ export default function Dashboard() {
                                         </span>
                                     </td>
                                     <td className="py-4 px-6 text-right font-bold text-gray-900">
-                                        ${order.totalAmount.toFixed(2)}
+                                        LKR {order.totalAmount.toFixed(2)}
                                     </td>
                                 </tr>
                             ))}

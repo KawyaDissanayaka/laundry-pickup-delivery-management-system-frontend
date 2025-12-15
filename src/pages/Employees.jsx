@@ -113,7 +113,7 @@ export default function Employees() {
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 font-medium text-gray-900">
-                                    ${Number(employee.salary).toLocaleString()}
+                                    LKR {Number(employee.salary).toLocaleString()}
                                 </td>
                                 <td className="px-6 py-4">
                                     <span className={`px-2 py-1 rounded-full text-xs font-semibold ${employee.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'

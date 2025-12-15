@@ -59,11 +59,7 @@ export default function RiderDashboard() {
                     </div>
                     <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                         <div className="text-gray-500 text-sm mb-1">Total Earnings</div>
-                        <div className="text-2xl font-bold text-green-600">$1,250</div>
-                    </div>
-                    <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                        <div className="text-gray-500 text-sm mb-1">Rating</div>
-                        <div className="text-2xl font-bold text-yellow-500">4.9 ★</div>
+                        <div className="text-2xl font-bold text-green-600">LKR 1,250</div>
                     </div>
                 </div>
 
@@ -111,7 +107,7 @@ export default function RiderDashboard() {
                         <div className="space-y-4">
                             <div className="flex justify-between items-center pb-4 border-b border-gray-100">
                                 <span className="text-gray-600">Monthly Base</span>
-                                <span className="font-bold text-gray-900">$2,500.00</span>
+                                <span className="font-bold text-gray-900">LKR 2,500.00</span>
                             </div>
                             <div className="flex justify-between items-center pb-4 border-b border-gray-100">
                                 <span className="text-gray-600">Commission Rate</span>
@@ -119,7 +115,7 @@ export default function RiderDashboard() {
                             </div>
                             <div className="flex justify-between items-center pt-2">
                                 <span className="text-gray-900 font-bold">Projected Total</span>
-                                <span className="font-bold text-green-600 text-lg">$3,125.00</span>
+                                <span className="font-bold text-green-600 text-lg">LKR 3,125.00</span>
                             </div>
                         </div>
                         <button className="w-full mt-6 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 text-sm font-medium">
