@@ -24,6 +24,7 @@ import Contact from '../pages/Contact';
 import SmartFAQ from '../pages/SmartFAQ';
 import Settings from '../pages/Settings';
 import AdminMessages from '../pages/AdminMessages';
+import Register from '../pages/Register';
 
 export default function AppRoutes() {
     return (
@@ -36,6 +37,7 @@ export default function AppRoutes() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/faq" element={<SmartFAQ />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/admin/login" element={<AdminLogin />} />
 
             {/* Customer Routes */}
