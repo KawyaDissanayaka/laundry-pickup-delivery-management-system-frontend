@@ -1,76 +1,142 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Truck, Clock, ShieldCheck } from 'lucide-react';
+import { Truck, Clock, ShieldCheck, X, ArrowRight } from 'lucide-react';
 import PublicNavbar from '../components/layout/PublicNavbar';
 
 export default function Home() {
+    const [showPopup, setShowPopup] = useState(false);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowPopup(true);
+        }, 2000); // Show popup after 2 seconds
+
+        return () => clearTimeout(timer);
+    }, []);
+
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-white font-sans text-slate-800">
             <PublicNavbar />
 
             {/* Hero Section */}
-            <header className="bg-blue-600 text-white pt-20 pb-24 md:pt-32 md:pb-40 relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1545173168-9f1947eebb8f?q=80&w=2071&auto=format&fit=crop')] bg-cover bg-center opacity-10"></div>
-                <div className="container mx-auto px-6 text-center relative z-10">
-                    <h1 className="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight leading-tight">
-                        Premium Laundry Service <br className="hidden md:block" />
-                        <span className="text-blue-100">Delivered to Your Door</span>
-                    </h1>
-                    <p className="text-xl md:text-2xl mb-10 opacity-90 max-w-2xl mx-auto font-light">
-                        We take care of your laundry so you can take care of what matters most. Fast, reliable, and fresh.
-                    </p>
-                    <div className="flex flex-col md:flex-row gap-4 justify-center">
-                        <Link to="/login" className="px-8 py-4 bg-white text-blue-600 text-lg font-bold rounded-full hover:bg-blue-50 transition shadow-lg hover:shadow-xl transform hover:-translate-y-1 inline-block">
-                            Schedule a Pickup
-                        </Link>
-                        <Link to="/services" className="px-8 py-4 bg-transparent border-2 border-white text-white text-lg font-bold rounded-full hover:bg-white/10 transition inline-block">
-                            View Services
-                        </Link>
+            <header className="relative pt-32 pb-40 lg:pt-48 lg:pb-64 overflow-hidden">
+                <div className="absolute inset-0 z-0">
+                    <img
+                        src="/hero-image.png"
+                        alt="Laundry Service"
+                        className="w-full h-full object-cover opacity-90 brightness-75"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-r from-teal-900/80 to-transparent"></div>
+                </div>
+
+                <div className="container mx-auto px-6 relative z-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+                    <div className="max-w-3xl">
+                        <span className="inline-block py-1 px-3 rounded-full bg-teal-500/20 text-teal-100 border border-teal-400/30 text-sm font-bold mb-6 backdrop-blur-sm">
+                            #1 Laundry Service in Town
+                        </span>
+                        <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-8 leading-tight tracking-tight">
+                            Fresh Clothes, <br />
+                            <span className="text-teal-400">Zero Stress.</span>
+                        </h1>
+                        <p className="text-xl md:text-2xl text-gray-200 mb-12 font-light leading-relaxed max-w-2xl">
+                            We pick up, clean, and deliver your laundry in 24 hours. Experience the ultimate convenience today.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <Link
+                                to="/services"
+                                className="px-10 py-5 bg-teal-500 text-white text-lg font-bold rounded-xl hover:bg-teal-400 transition-all shadow-lg hover:shadow-teal-500/30 hover:-translate-y-1 flex items-center justify-center group"
+                            >
+                                Schedule Pickup
+                                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                            <Link
+                                to="/pricing"
+                                className="px-10 py-5 bg-white/10 backdrop-blur-md border border-white/20 text-white text-lg font-bold rounded-xl hover:bg-white/20 transition-all flex items-center justify-center"
+                            >
+                                View Pricing
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </header>
 
-            {/* Features */}
-            <section className="py-20 bg-gray-50">
+            {/* Features Section */}
+            <section className="py-24 bg-gray-50">
                 <div className="container mx-auto px-6">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose Us?</h2>
+                    <div className="text-center mb-20 animate-in fade-in zoom-in-95 duration-700 delay-300 fill-mode-both">
+                        <h2 className="text-4xl font-bold text-slate-900 mb-4">Why Choose Us?</h2>
+                        <p className="text-lg text-slate-500 max-w-2xl mx-auto">We don't just clean clothes; we care for them. Here is why thousands trust us.</p>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-10">
-                        <div className="bg-white p-8 rounded-xl shadow-sm text-center">
-                            <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <Truck size={32} />
+                        {/* Feature 1 */}
+                        <div className="bg-white p-10 rounded-3xl shadow-sm border border-gray-100 text-center hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group animate-in slide-in-from-bottom-4 fade-in duration-700 delay-150 fill-mode-both">
+                            <div className="w-20 h-20 bg-teal-50 rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-300">
+                                <Truck className="w-10 h-10 text-teal-600" />
                             </div>
-                            <h3 className="text-xl font-bold mb-3">Free Pickup & Delivery</h3>
-                            <p className="text-gray-600">We pick up your dirty clothes and return them fresh and clean at your convenience.</p>
+                            <h3 className="text-2xl font-bold text-slate-900 mb-4">Free Pickup & Delivery</h3>
+                            <p className="text-slate-500 leading-relaxed">
+                                Don't leave your house. We collect your dirty laundry and return it fresh and folded, absolutely free.
+                            </p>
                         </div>
 
-                        <div className="bg-white p-8 rounded-xl shadow-sm text-center">
-                            <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <Clock size={32} />
+                        {/* Feature 2 */}
+                        <div className="bg-white p-10 rounded-3xl shadow-sm border border-gray-100 text-center hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group animate-in slide-in-from-bottom-4 fade-in duration-700 delay-300 fill-mode-both">
+                            <div className="w-20 h-20 bg-purple-50 rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-300">
+                                <Clock className="w-10 h-10 text-purple-600" />
                             </div>
-                            <h3 className="text-xl font-bold mb-3">24h Turnaround</h3>
-                            <p className="text-gray-600">Get your laundry back in as little as 24 hours. Express service available.</p>
+                            <h3 className="text-2xl font-bold text-slate-900 mb-4">24h Turnaround</h3>
+                            <p className="text-slate-500 leading-relaxed">
+                                Use our Express Service to get your clothes back in as little as 24 hours. Because time is money.
+                            </p>
                         </div>
 
-                        <div className="bg-white p-8 rounded-xl shadow-sm text-center">
-                            <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <ShieldCheck size={32} />
+                        {/* Feature 3 */}
+                        <div className="bg-white p-10 rounded-3xl shadow-sm border border-gray-100 text-center hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group animate-in slide-in-from-bottom-4 fade-in duration-700 delay-500 fill-mode-both">
+                            <div className="w-20 h-20 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-300">
+                                <ShieldCheck className="w-10 h-10 text-blue-600" />
                             </div>
-                            <h3 className="text-xl font-bold mb-3">Quality Guarantee</h3>
-                            <p className="text-gray-600">We treat your clothes with the utmost care. Satisfaction guaranteed.</p>
+                            <h3 className="text-2xl font-bold text-slate-900 mb-4">Quality Guarantee</h3>
+                            <p className="text-slate-500 leading-relaxed">
+                                If you're not 100% satisfied with our cleaning, we will re-wash your clothes for free. No questions asked.
+                            </p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Footer */}
-            <footer className="bg-gray-900 text-white py-10">
-                <div className="container mx-auto px-6 text-center">
-                    <p>&copy; 2024 LaundryExpress. All rights reserved.</p>
+            {/* Welcome Popup */}
+            {showPopup && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-500" onClick={() => setShowPopup(false)}></div>
+                    <div className="relative bg-white rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-10 duration-500">
+                        <button
+                            onClick={() => setShowPopup(false)}
+                            className="absolute top-4 right-4 p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors z-10"
+                        >
+                            <X className="w-5 h-5 text-gray-500" />
+                        </button>
+
+                        <div className="bg-teal-500 h-32 flex items-center justify-center relative overflow-hidden">
+                            <div className="absolute inset-0 bg-[url('/hero-image.png')] bg-cover bg-center opacity-20 mix-blend-overlay"></div>
+                            <h3 className="text-3xl font-bold text-white relative z-10 drop-shadow-md">Special Offer! 🎉</h3>
+                        </div>
+
+                        <div className="p-8 text-center">
+                            <p className="text-xl text-slate-600 mb-2">Get <span className="font-bold text-teal-600">20% OFF</span> your first order!</p>
+                            <p className="text-slate-500 mb-8 text-sm">Use code <span className="font-mono bg-gray-100 px-2 py-1 rounded text-slate-800 font-bold">FRESH20</span> at checkout.</p>
+
+                            <Link
+                                to="/services"
+                                className="block w-full py-4 bg-teal-600 text-white font-bold rounded-xl hover:bg-teal-700 transition-colors shadow-lg hover:shadow-teal-500/30"
+                                onClick={() => setShowPopup(false)}
+                            >
+                                Claim Offer Now
+                            </Link>
+                        </div>
+                    </div>
                 </div>
-            </footer>
+            )}
         </div>
     );
 }
