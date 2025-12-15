@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PublicNavbar from '../components/layout/PublicNavbar';
 import { Shirt, Sparkles, Briefcase, RefreshCw, X, ArrowRight } from 'lucide-react';
 import shanilkaImg from '../assets/team/shanilka_lakshan.jpg';
+import imeshaImg from '../assets/team/imesha.jpg';
 
 export default function Services() {
     const navigate = useNavigate();
@@ -159,8 +160,8 @@ export default function Services() {
                         <div className="group bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                             <div className="aspect-square rounded-xl overflow-hidden mb-6 relative">
                                 <img
-                                    src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800&auto=format&fit=crop"
-                                    alt="Team Member"
+                                    src={imeshaImg}
+                                    alt="Imesha Samaranayake"
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
@@ -168,7 +169,7 @@ export default function Services() {
                                 </div>
                             </div>
                             <div className="text-center">
-                                <h3 className="text-xl font-bold text-slate-900">Michael Ross</h3>
+                                <h3 className="text-xl font-bold text-slate-900">Imesha Samaranayake</h3>
                                 <p className="text-teal-600 font-medium text-sm">Logistics Head</p>
                             </div>
                         </div>
