@@ -1,57 +1,66 @@
-import { mockOrders } from '../data/mockOrders';
+import api from './api';
 
-const ORDER_STORAGE_KEY = 'laundry_orders_v1';
-
-// Initialize storage with mock data if empty
-const initializeStorage = () => {
-    if (!localStorage.getItem(ORDER_STORAGE_KEY)) {
-        localStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(mockOrders));
-    }
-};
+const ENDPOINT = '/orders';
 
 export const orderService = {
-    getAllOrders: () => {
-        initializeStorage();
-        return JSON.parse(localStorage.getItem(ORDER_STORAGE_KEY));
+    // Get all orders (Admin/Staff)
+    getAllOrders: async () => {
+        try {
+            const response = await api.get(ENDPOINT);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching orders', error);
+            return [];
+        }
     },
 
-    getOrdersByCustomer: (customerId) => {
-        const orders = orderService.getAllOrders();
-        return orders.filter(o => o.customerId === customerId);
+    // Get orders by Customer ID
+    getOrdersByCustomer: async (customerId) => {
+        try {
+            const response = await api.get(`${ENDPOINT}?customerId=${customerId}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching customer orders', error);
+            return [];
+        }
     },
 
-    getOrdersByStaff: (staffId) => {
-        const orders = orderService.getAllOrders();
-        return orders.filter(o => o.staffId === staffId);
+    // Get orders by Staff ID (for Drivers/Processors)
+    getOrdersByStaff: async (staffId) => {
+        try {
+            const response = await api.get(`${ENDPOINT}?staffId=${staffId}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching staff orders', error);
+            return [];
+        }
     },
 
-    updateOrder: (orderId, updates) => {
-        const orders = orderService.getAllOrders();
-        const updatedOrders = orders.map(order =>
-            order.id === orderId
-                ? { ...order, ...updates, lastUpdated: new Date().toISOString() }
-                : order
-        );
-        localStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(updatedOrders));
-        return updatedOrders.find(o => o.id === orderId);
+    // Update generic order details
+    updateOrder: async (orderId, updates) => {
+        try {
+            const response = await api.put(`${ENDPOINT}/${orderId}`, updates);
+            return response.data;
+        } catch (error) {
+            console.error('Error updating order', error);
+            throw error;
+        }
     },
 
-    updateOrderProgress: (orderId, progressDetails) => {
+    // Update order progress/status
+    updateOrderProgress: async (orderId, progressDetails) => {
         // progressDetails: { step: string, note: string, completion: number }
         return orderService.updateOrder(orderId, { progress: progressDetails });
     },
 
-    createOrder: (newOrder) => {
-        const orders = orderService.getAllOrders();
-        const orderWithMeta = {
-            ...newOrder,
-            id: `ORD-${Date.now().toString().slice(-6)}`,
-            status: 'Placed',
-            placedAt: new Date().toISOString(),
-            progress: { step: 'Placed', note: 'Order received', completion: 0 }
-        };
-        const updatedOrders = [orderWithMeta, ...orders];
-        localStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(updatedOrders));
-        return orderWithMeta;
+    // Create a new order
+    createOrder: async (newOrder) => {
+        try {
+            const response = await api.post(ENDPOINT, newOrder);
+            return response.data;
+        } catch (error) {
+            console.error('Error creating order', error);
+            throw error;
+        }
     }
 };
