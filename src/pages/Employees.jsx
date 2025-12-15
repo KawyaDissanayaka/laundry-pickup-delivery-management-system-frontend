@@ -71,72 +71,164 @@ export default function Employees() {
                 </button>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-                <table className="w-full text-left">
-                    <thead className="bg-gray-50 border-b border-gray-100">
-                        <tr>
-                            <th className="px-6 py-4 font-semibold text-gray-600">Employee</th>
-                            <th className="px-6 py-4 font-semibold text-gray-600">Role</th>
-                            <th className="px-6 py-4 font-semibold text-gray-600">Contact</th>
-                            <th className="px-6 py-4 font-semibold text-gray-600">Salary</th>
-                            <th className="px-6 py-4 font-semibold text-gray-600">Status</th>
-                            <th className="px-6 py-4 font-semibold text-gray-600 text-right">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100">
-                        {employees.map((employee) => (
-                            <tr key={employee.id} className="hover:bg-gray-50">
-                                <td className="px-6 py-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
-                                            {employee.name.charAt(0)}
-                                        </div>
-                                        <div>
-                                            <div className="font-semibold text-gray-900">{employee.name}</div>
-                                            <div className="text-xs text-gray-500">{employee.id}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="px-6 py-4 text-gray-600">{employee.role}</td>
-                                <td className="px-6 py-4">
-                                    <div className="space-y-1">
-                                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                                            <Mail className="h-3 w-3" /> {employee.email}
-                                        </div>
-                                        <div className="flex items-center gap-2 text-sm text-gray-600">
-                                            <Phone className="h-3 w-3" /> {employee.phone}
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="px-6 py-4 font-medium text-gray-900">
-                                    LKR {Number(employee.salary).toLocaleString()}
-                                </td>
-                                <td className="px-6 py-4">
-                                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${employee.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
-                                        }`}>
-                                        {employee.status}
-                                    </span>
-                                </td>
-                                <td className="px-6 py-4 text-right">
-                                    <div className="flex items-center justify-end gap-2">
-                                        <button
-                                            onClick={() => handleOpenModal(employee)}
-                                            className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg"
-                                        >
-                                            <Edit2 className="h-4 w-4" />
-                                        </button>
-                                        <button
-                                            onClick={() => handleDelete(employee.id)}
-                                            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg"
-                                        >
-                                            <Trash2 className="h-4 w-4" />
-                                        </button>
-                                    </div>
-                                </td>
+            {/* Employee Table - Modern & Responsive */}
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden">
+                {/* Desktop Table */}
+                <div className="hidden lg:block overflow-x-auto">
+                    <table className="w-full">
+                        <thead className="bg-gradient-to-r from-slate-50 to-slate-100 border-b-2 border-slate-200">
+                            <tr>
+                                <th className="px-6 py-4 text-left font-bold text-slate-700 uppercase text-xs tracking-wider">Employee</th>
+                                <th className="px-6 py-4 text-left font-bold text-slate-700 uppercase text-xs tracking-wider">Position</th>
+                                <th className="px-6 py-4 text-left font-bold text-slate-700 uppercase text-xs tracking-wider">Contact</th>
+                                <th className="px-6 py-4 text-left font-bold text-slate-700 uppercase text-xs tracking-wider">Salary</th>
+                                <th className="px-6 py-4 text-left font-bold text-slate-700 uppercase text-xs tracking-wider">Status</th>
+                                <th className="px-6 py-4 text-right font-bold text-slate-700 uppercase text-xs tracking-wider">Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                            {employees.map((employee, index) => (
+                                <tr key={employee.id} className="hover:bg-slate-50 transition-colors duration-150">
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center gap-4">
+                                            <div className={`h-12 w-12 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md ${index % 5 === 0 ? 'bg-gradient-to-br from-blue-500 to-blue-600' :
+                                                index % 5 === 1 ? 'bg-gradient-to-br from-purple-500 to-purple-600' :
+                                                    index % 5 === 2 ? 'bg-gradient-to-br from-pink-500 to-pink-600' :
+                                                        index % 5 === 3 ? 'bg-gradient-to-br from-teal-500 to-teal-600' :
+                                                            'bg-gradient-to-br from-orange-500 to-orange-600'
+                                                }`}>
+                                                {employee.name.charAt(0)}
+                                            </div>
+                                            <div>
+                                                <div className="font-bold text-slate-900 text-base">{employee.name}</div>
+                                                <div className="text-xs text-slate-500 font-medium">{employee.id}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <span className="inline-flex items-center px-3 py-1 rounded-lg bg-blue-50 text-blue-700 font-semibold text-sm">
+                                            {employee.role}
+                                        </span>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <div className="space-y-1.5">
+                                            <div className="flex items-center gap-2 text-sm text-slate-600">
+                                                <Mail className="h-4 w-4 text-slate-400" />
+                                                <span className="font-medium">{employee.email}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2 text-sm text-slate-600">
+                                                <Phone className="h-4 w-4 text-slate-400" />
+                                                <span className="font-medium">{employee.phone}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <div className="font-bold text-slate-900 text-base">
+                                            LKR {Number(employee.salary).toLocaleString()}
+                                        </div>
+                                        <div className="text-xs text-slate-500">per month</div>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold ${employee.status === 'Active'
+                                            ? 'bg-green-100 text-green-700 ring-1 ring-green-200'
+                                            : 'bg-yellow-100 text-yellow-700 ring-1 ring-yellow-200'
+                                            }`}>
+                                            <span className={`w-1.5 h-1.5 rounded-full mr-2 ${employee.status === 'Active' ? 'bg-green-500' : 'bg-yellow-500'
+                                                }`} />
+                                            {employee.status}
+                                        </span>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center justify-end gap-2">
+                                            <button
+                                                onClick={() => handleOpenModal(employee)}
+                                                className="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200 hover:scale-110"
+                                                title="Edit Employee"
+                                            >
+                                                <Edit2 className="h-4 w-4" />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(employee.id)}
+                                                className="p-2.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200 hover:scale-110"
+                                                title="Delete Employee"
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                {/* Mobile Card View */}
+                <div className="lg:hidden divide-y divide-slate-100">
+                    {employees.map((employee, index) => (
+                        <div key={employee.id} className="p-5 hover:bg-slate-50 transition-colors">
+                            <div className="flex items-start justify-between mb-4">
+                                <div className="flex items-center gap-3">
+                                    <div className={`h-12 w-12 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md ${index % 5 === 0 ? 'bg-gradient-to-br from-blue-500 to-blue-600' :
+                                        index % 5 === 1 ? 'bg-gradient-to-br from-purple-500 to-purple-600' :
+                                            index % 5 === 2 ? 'bg-gradient-to-br from-pink-500 to-pink-600' :
+                                                index % 5 === 3 ? 'bg-gradient-to-br from-teal-500 to-teal-600' :
+                                                    'bg-gradient-to-br from-orange-500 to-orange-600'
+                                        }`}>
+                                        {employee.name.charAt(0)}
+                                    </div>
+                                    <div>
+                                        <div className="font-bold text-slate-900">{employee.name}</div>
+                                        <div className="text-xs text-slate-500 font-medium">{employee.id}</div>
+                                    </div>
+                                </div>
+                                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${employee.status === 'Active'
+                                    ? 'bg-green-100 text-green-700'
+                                    : 'bg-yellow-100 text-yellow-700'
+                                    }`}>
+                                    {employee.status}
+                                </span>
+                            </div>
+
+                            <div className="space-y-3 mb-4">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-xs font-bold text-slate-500 uppercase">Position</span>
+                                    <span className="text-sm font-semibold text-blue-600">{employee.role}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-sm text-slate-600">
+                                    <Mail className="h-4 w-4 text-slate-400" />
+                                    <span>{employee.email}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-sm text-slate-600">
+                                    <Phone className="h-4 w-4 text-slate-400" />
+                                    <span>{employee.phone}</span>
+                                </div>
+                                <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                                    <span className="text-xs font-bold text-slate-500 uppercase">Salary</span>
+                                    <span className="text-base font-bold text-slate-900">
+                                        LKR {Number(employee.salary).toLocaleString()}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={() => handleOpenModal(employee)}
+                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-50 text-blue-600 rounded-lg font-semibold text-sm hover:bg-blue-100 transition-colors"
+                                >
+                                    <Edit2 className="h-4 w-4" />
+                                    Edit
+                                </button>
+                                <button
+                                    onClick={() => handleDelete(employee.id)}
+                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 rounded-lg font-semibold text-sm hover:bg-red-100 transition-colors"
+                                >
+                                    <Trash2 className="h-4 w-4" />
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
 
             {/* Modal */}
@@ -180,6 +272,8 @@ export default function Employees() {
                                         <option>Driver</option>
                                         <option>Manager</option>
                                         <option>Quality Control</option>
+                                        <option>Operations Manager</option>
+                                        <option>Lead Specialist</option>
                                     </select>
                                 </div>
                                 <div>
