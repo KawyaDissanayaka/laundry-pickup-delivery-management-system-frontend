@@ -100,8 +100,43 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('laundry_user', JSON.stringify(newUser));
   };
 
+  const register = (userData) => {
+    // Check if email already exists
+    const existingCustomers = JSON.parse(localStorage.getItem('laundry_customers') || '[]');
+    const emailExists = existingCustomers.some(c => c.email === userData.email);
+
+    if (emailExists) {
+      return false; // Email already registered
+    }
+
+    // Create new customer
+    const newCustomer = {
+      id: `CUST-${Date.now()}`,
+      name: userData.name,
+      email: userData.email,
+      phone: userData.phone,
+      address: userData.address,
+      role: 'customer',
+      joinDate: new Date().toISOString(),
+      totalOrders: 0,
+      totalSpent: 0,
+      status: 'Active'
+    };
+
+    // Save to localStorage
+    existingCustomers.push(newCustomer);
+    localStorage.setItem('laundry_customers', JSON.stringify(existingCustomers));
+
+    // Auto-login
+    setUser(newCustomer);
+    setIsAuthenticated(true);
+    localStorage.setItem('laundry_user', JSON.stringify(newCustomer));
+
+    return true;
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, logout, updateUserProfile }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, login, logout, updateUserProfile, register }}>
       {children}
     </AuthContext.Provider>
   );

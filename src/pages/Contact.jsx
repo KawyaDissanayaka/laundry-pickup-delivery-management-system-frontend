@@ -3,6 +3,41 @@ import PublicNavbar from '../components/layout/PublicNavbar';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 
 export default function Contact() {
+    const [formData, setFormData] = React.useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        subject: 'General Inquiry',
+        message: ''
+    });
+    const [submitted, setSubmitted] = React.useState(false);
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const newMessage = {
+            id: `MSG-${Date.now().toString().slice(-6)}`,
+            name: `${formData.firstName} ${formData.lastName}`,
+            email: formData.email,
+            subject: formData.subject,
+            message: formData.message,
+            date: new Date().toISOString(),
+            status: 'New'
+        };
+
+        const existingMessages = JSON.parse(localStorage.getItem('laundry_messages') || '[]');
+        localStorage.setItem('laundry_messages', JSON.stringify([newMessage, ...existingMessages]));
+
+        setSubmitted(true);
+        setFormData({ firstName: '', lastName: '', email: '', subject: 'General Inquiry', message: '' });
+
+        setTimeout(() => setSubmitted(false), 3000);
+    };
+
     return (
         <div className="min-h-screen bg-white font-sans">
             <PublicNavbar />
@@ -47,26 +82,62 @@ export default function Contact() {
 
                     {/* Contact Form */}
                     <div className="md:col-span-2">
-                        <form className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-10">
+                        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-10 relative overflow-hidden">
+                            {submitted && (
+                                <div className="absolute inset-0 bg-white/90 backdrop-blur-sm z-10 flex flex-col items-center justify-center text-center p-6 animate-in fade-in">
+                                    <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                                        <Send size={32} />
+                                    </div>
+                                    <h3 className="text-2xl font-bold text-gray-900">Message Sent!</h3>
+                                    <p className="text-gray-500 mt-2">Thank you for contacting us. We will get back to you shortly.</p>
+                                </div>
+                            )}
+
                             <div className="grid md:grid-cols-2 gap-6 mb-6">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
-                                    <input type="text" className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-50 outline-none transition" />
+                                    <input
+                                        type="text"
+                                        name="firstName"
+                                        value={formData.firstName}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-50 outline-none transition"
+                                    />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
-                                    <input type="text" className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-50 outline-none transition" />
+                                    <input
+                                        type="text"
+                                        name="lastName"
+                                        value={formData.lastName}
+                                        onChange={handleChange}
+                                        required
+                                        className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-50 outline-none transition"
+                                    />
                                 </div>
                             </div>
 
                             <div className="mb-6">
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                                <input type="email" className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-50 outline-none transition" />
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-50 outline-none transition"
+                                />
                             </div>
 
                             <div className="mb-6">
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
-                                <select className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-50 outline-none transition">
+                                <select
+                                    name="subject"
+                                    value={formData.subject}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-50 outline-none transition"
+                                >
                                     <option>General Inquiry</option>
                                     <option>Order Support</option>
                                     <option>Commercial Service</option>
@@ -76,7 +147,14 @@ export default function Contact() {
 
                             <div className="mb-8">
                                 <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                                <textarea rows="5" className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-50 outline-none transition resize-none"></textarea>
+                                <textarea
+                                    rows="5"
+                                    name="message"
+                                    value={formData.message}
+                                    onChange={handleChange}
+                                    required
+                                    className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-50 outline-none transition resize-none"
+                                ></textarea>
                             </div>
 
                             <button type="submit" className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-700 transition flex items-center justify-center gap-2">

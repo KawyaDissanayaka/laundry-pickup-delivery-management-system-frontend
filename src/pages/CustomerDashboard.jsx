@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import {
     LayoutDashboard,
@@ -18,22 +18,29 @@ import {
     Download,
     ChevronRight,
     Package,
-    Calendar
+    Calendar,
+    Loader2
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
-import { mockOrders } from '../data/mockOrders';
+import { orderService } from '../services/orderService';
 
 // --- Utility Components ---
 
 const StatusBadge = ({ status }) => {
     const styles = {
-        'In Progress': 'bg-blue-100 text-blue-700 border-blue-200',
+        'Cleaning': 'bg-blue-100 text-blue-700 border-blue-200',
+        'Washing': 'bg-blue-100 text-blue-700 border-blue-200',
+        'Sorting': 'bg-indigo-100 text-indigo-700 border-indigo-200',
+        'Drying': 'bg-orange-100 text-orange-700 border-orange-200',
+        'Folding': 'bg-purple-100 text-purple-700 border-purple-200',
         'Scheduled': 'bg-purple-100 text-purple-700 border-purple-200',
         'Delivered': 'bg-emerald-100 text-emerald-700 border-emerald-200',
         'Cancelled': 'bg-red-100 text-red-700 border-red-200',
         'Pending': 'bg-amber-100 text-amber-700 border-amber-200',
+        'Placed': 'bg-amber-100 text-amber-700 border-amber-200',
+        'Ready': 'bg-teal-100 text-teal-700 border-teal-200',
     };
     return (
         <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${styles[status] || 'bg-gray-100 text-gray-700 border-gray-200'}`}>
@@ -61,8 +68,98 @@ const StatCard = ({ title, value, icon: Icon, colorClass, trend }) => (
 
 // --- Sub-Components ---
 
-const OverviewTab = ({ stats, recentOrders, setActiveTab }) => (
+const LiveTracker = ({ activeOrders }) => {
+    if (activeOrders.length === 0) return null;
+
+    // Show the most recent active order
+    const currentOrder = activeOrders[0];
+    const steps = ['Placed', 'Sorting', 'Washing', 'Drying', 'Folding', 'Ready', 'Delivered'];
+
+    // Normalize status to step index, handling variations
+    const currentStepIndex = steps.findIndex(step => {
+        if (currentOrder.status === step) return true;
+        if (currentOrder.status === 'Cleaning' && step === 'Washing') return true;
+        if (currentOrder.status === 'Picked Up' && step === 'Sorting') return true;
+        return false;
+    });
+
+    const activeStepIndex = currentStepIndex === -1 ? 0 : currentStepIndex;
+
+    return (
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-8 relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-violet-500 to-emerald-500"></div>
+
+            <div className="flex justify-between items-center mb-8">
+                <div>
+                    <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <Loader2 className="w-5 h-5 text-blue-600 animate-spin" />
+                        Live Status: Order #{currentOrder.id}
+                    </h2>
+                    <p className="text-sm text-slate-500 mt-1">
+                        Estimated Delivery: <span className="font-semibold text-slate-700">{new Date(currentOrder.deliveryDate).toLocaleDateString()}</span>
+                    </p>
+                </div>
+                {/* Progress Note/Badge */}
+                {currentOrder.progress && (
+                    <div className="bg-blue-50 px-4 py-2 rounded-xl border border-blue-100 max-w-xs text-right hidden md:block">
+                        <p className="text-xs font-bold text-blue-800 uppercase mb-0.5">Latest Update</p>
+                        <p className="text-sm text-blue-700 font-medium truncate">{currentOrder.progress.note || 'Processing your order'}</p>
+                    </div>
+                )}
+            </div>
+
+            {/* Stepper */}
+            <div className="relative flex justify-between items-center w-full px-2 md:px-6">
+                {/* Connecting Line */}
+                <div className="absolute top-1/2 left-0 w-full h-1 bg-slate-100 -z-0 rounded-full"></div>
+                <div
+                    className="absolute top-1/2 left-0 h-1 bg-blue-600 -z-0 rounded-full transition-all duration-1000 ease-out"
+                    style={{ width: `${(activeStepIndex / (steps.length - 1)) * 100}%` }}
+                ></div>
+
+                {steps.map((step, index) => {
+                    const isCompleted = index <= activeStepIndex;
+                    const isCurrent = index === activeStepIndex;
+
+                    return (
+                        <div key={step} className="flex flex-col items-center relative z-10 group cursor-default">
+                            <div
+                                className={`
+                                    w-4 h-4 md:w-8 md:h-8 rounded-full flex items-center justify-center border-4 transition-all duration-500
+                                    ${isCompleted ? 'bg-blue-600 border-blue-600 shadow-lg shadow-blue-200' : 'bg-white border-slate-200'}
+                                    ${isCurrent ? 'scale-125 ring-4 ring-blue-100' : ''}
+                                `}
+                            >
+                                {isCompleted && <CheckCircle className="w-2 h-2 md:w-4 md:h-4 text-white" />}
+                            </div>
+                            <span
+                                className={`
+                                    absolute -bottom-8 text-[10px] md:text-xs font-bold uppercase tracking-wider
+                                    ${isCurrent ? 'text-blue-700 scale-110' : 'text-slate-400'}
+                                    transition-all duration-300
+                                    ${index === 0 || index === steps.length - 1 ? '' : 'hidden md:block'}
+                                `}
+                            >
+                                {step}
+                            </span>
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/* Mobile Current Step Label */}
+            <div className="mt-8 text-center md:hidden">
+                <p className="text-sm font-bold text-blue-600 uppercase tracking-widest">{steps[activeStepIndex]}</p>
+            </div>
+        </div>
+    );
+};
+
+const OverviewTab = ({ stats, recentOrders, setActiveTab, activeOrders }) => (
     <div className="space-y-8">
+        {/* Live Tracker for active orders */}
+        <LiveTracker activeOrders={activeOrders} />
+
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard
@@ -617,14 +714,27 @@ const LaundryDashboard = () => {
     const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
     const [isQuotationOpen, setIsQuotationOpen] = useState(false);
     const [quotationData, setQuotationData] = useState(null);
+    const [userOrders, setUserOrders] = useState([]);
 
-    // Dynamic Data Filtering
-    const userOrders = mockOrders.filter(order => order.customerId === user?.id)
-        .sort((a, b) => new Date(b.pickupDate) - new Date(a.pickupDate));
+    // Load Live Data
+    useEffect(() => {
+        const loadRequests = () => {
+            if (user?.id) {
+                const orders = orderService.getOrdersByCustomer(user.id)
+                    .sort((a, b) => new Date(b.pickupDate) - new Date(a.pickupDate));
+                setUserOrders(orders);
+            }
+        };
+
+        loadRequests();
+        const interval = setInterval(loadRequests, 5000); // Poll for real-time updates
+        return () => clearInterval(interval);
+    }, [user?.id]);
+
 
     const stats = {
         totalOrders: userOrders.length,
-        activeOrders: userOrders.filter(o => ['Placed', 'Picked Up', 'Cleaning', 'Ready', 'Out for Delivery'].includes(o.status)).length,
+        activeOrders: userOrders.filter(o => ['Placed', 'Picked Up', 'Cleaning', 'Sorting', 'Washing', 'Drying', 'Folding', 'Ready', 'Out for Delivery'].includes(o.status)).length,
         completedOrders: userOrders.filter(o => o.status === 'Delivered').length,
         totalSpent: user?.totalSpent || userOrders.reduce((sum, order) => sum + order.totalAmount, 0)
     };
@@ -636,8 +746,12 @@ const LaundryDashboard = () => {
         total: order.totalAmount,
         status: order.status,
         date: new Date(order.pickupDate).toLocaleDateString(),
-        pickup: new Date(order.pickupDate).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' })
-    })).slice(0, 5);
+        pickup: new Date(order.pickupDate).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' }),
+        progress: order.progress,
+        deliveryDate: order.deliveryDate
+    }));
+
+    const activeOrders = recentOrders.filter(o => !['Delivered', 'Cancelled'].includes(o.status)).slice(0, 1);
 
     const handleOrderSubmit = (formData) => {
         // Price Calculation Logic
@@ -665,6 +779,7 @@ const LaundryDashboard = () => {
         setQuotationData(newQuotation);
         setIsOrderModalOpen(false);
         setIsQuotationOpen(true);
+        // In a real app, we would save the order here too if user confirms
     };
 
     return (
@@ -744,7 +859,7 @@ const LaundryDashboard = () => {
                 {/* Main Content Area */}
                 <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
                     {activeTab === 'overview' && (
-                        <OverviewTab stats={stats} recentOrders={recentOrders} setActiveTab={setActiveTab} />
+                        <OverviewTab stats={stats} recentOrders={recentOrders} setActiveTab={setActiveTab} activeOrders={activeOrders} />
                     )}
                     {activeTab === 'orders' && (
                         <OrdersTab recentOrders={recentOrders} />
