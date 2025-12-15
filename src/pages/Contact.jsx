@@ -146,7 +146,7 @@ export default function Contact() {
                                             onChange={handleChange}
                                             required
                                             className="w-full px-5 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 outline-none transition-all placeholder:text-gray-400"
-                                            placeholder="John"
+                                            placeholder="shanilka"
                                         />
                                     </div>
                                     <div className="space-y-2">
@@ -158,7 +158,7 @@ export default function Contact() {
                                             onChange={handleChange}
                                             required
                                             className="w-full px-5 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 outline-none transition-all placeholder:text-gray-400"
-                                            placeholder="Doe"
+                                            placeholder="lakshan"
                                         />
                                     </div>
                                 </div>
@@ -172,7 +172,7 @@ export default function Contact() {
                                         onChange={handleChange}
                                         required
                                         className="w-full px-5 py-3 rounded-xl bg-gray-50 border border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 outline-none transition-all placeholder:text-gray-400"
-                                        placeholder="john@example.com"
+                                        placeholder="kawya@example.com"
                                     />
                                 </div>
 
