@@ -21,7 +21,7 @@ export default function SmartFAQ() {
         },
         {
             question: "Is there a minimum order amount?",
-            answer: "Yes, our minimum order for free pickup and delivery is $30. For orders under $30, a small delivery fee of $5.99 applies."
+            answer: "Yes, our minimum order for free pickup and delivery is LKR 3000. For orders under LKR 3000, a small delivery fee of LKR 600 applies."
         },
         {
             question: "Do I need to separate my laundry?",

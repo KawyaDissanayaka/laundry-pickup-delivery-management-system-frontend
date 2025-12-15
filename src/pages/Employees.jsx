@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import { Phone, Mail, DollarSign, Plus, Trash2, Edit2 } from 'lucide-react';
 
-const mockEmployees = [
-    { id: 'EMP-001', name: 'Sarah Wilson', role: 'Washer', email: 'sarah@laundrygo.com', phone: '+1 234 567 890', salary: 3200, status: 'Active' },
-    { id: 'EMP-002', name: 'Mike Johnson', role: 'Quality Control', email: 'mike@laundrygo.com', phone: '+1 234 567 891', salary: 3500, status: 'Active' },
-    { id: 'EMP-003', name: 'Emma Davis', role: 'Washer', email: 'emma@laundrygo.com', phone: '+1 234 567 892', salary: 3200, status: 'On Leave' },
-];
+import { mockEmployees as initialEmployees } from '../data/mockEmployees';
 
 export default function Employees() {
-    const [employees, setEmployees] = useState(mockEmployees);
+    const [employees, setEmployees] = useState(initialEmployees);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingEmployee, setEditingEmployee] = useState(null);
 
@@ -113,7 +109,7 @@ export default function Employees() {
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 font-medium text-gray-900">
-                                    ${Number(employee.salary).toLocaleString()}
+                                    LKR {Number(employee.salary).toLocaleString()}
                                 </td>
                                 <td className="px-6 py-4">
                                     <span className={`px-2 py-1 rounded-full text-xs font-semibold ${employee.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'

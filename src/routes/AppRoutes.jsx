@@ -25,6 +25,7 @@ import Services from '../pages/Services';
 import Pricing from '../pages/Pricing';
 import Contact from '../pages/Contact';
 import SmartFAQ from '../pages/SmartFAQ';
+import Settings from '../pages/Settings';
 
 export default function AppRoutes() {
     return (
@@ -85,7 +86,7 @@ export default function AppRoutes() {
                 <Route path="employees" element={<Employees />} />
                 <Route path="customers" element={<Customers />} />
                 <Route path="analytics" element={<div className="p-4">Analytics Comp</div>} />
-                <Route path="settings" element={<div className="p-4">Settings Comp</div>} />
+                <Route path="settings" element={<Settings />} />
                 <Route path="*" element={<Navigate to="/admin" replace />} />
             </Route>
 
