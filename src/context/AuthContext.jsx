@@ -76,7 +76,7 @@ export const AuthProvider = ({ children }) => {
       role: 'customer'
     } : {
       // Fallback for new/unknown emails -> Guest Customer
-      name: 'John Doe',
+      name: 'Guest Customer',
       email: email,
       role: 'customer',
       id: 'cust_new'

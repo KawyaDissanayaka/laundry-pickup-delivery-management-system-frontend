@@ -60,7 +60,7 @@ export default function OrderDetail() {
                                 <h3 className="text-sm font-bold text-gray-900">Picked Up</h3>
                                 <p className="text-xs text-gray-500 mt-1">Oct 24, 2025 - 12:45 PM</p>
                                 <div className="mt-2 text-sm bg-gray-50 p-2 rounded text-gray-600">
-                                    Picked up by <strong>John Doe</strong>
+                                    Picked up by <strong>Kasun Rajapaksa</strong>
                                 </div>
                             </div>
                             <div className="relative pl-8">
