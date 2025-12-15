@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ShoppingBag, DollarSign, Truck, Users, TrendingUp, TrendingDown, Calendar, ArrowRight, Activity } from 'lucide-react';
 import { mockOrders } from '../data/mockOrders';
 import { mockDrivers } from '../data/mockDrivers';
@@ -48,9 +48,46 @@ const DashboardCard = ({ title, value, icon: Icon, color, trend, subValue }) => 
 };
 
 export default function Dashboard() {
-    const totalRevenue = mockOrders.reduce((sum, order) => sum + order.totalAmount, 0);
-    const activeOrders = mockOrders.filter(o => o.status !== 'Delivered' && o.status !== 'Cancelled').length;
-    const activeDrivers = mockDrivers.filter(d => d.status === 'Available' || d.status === 'Busy').length;
+    const [timeRange, setTimeRange] = useState('Month'); // Default to Monthly
+
+    // Mock Data Generator based on time range
+    const getDashboardData = (range) => {
+        switch (range) {
+            case 'Day':
+                return {
+                    revenue: 1250.00,
+                    activeOrders: 12,
+                    activeDrivers: 8,
+                    newCustomers: 2,
+                    chartData: [20, 35, 45, 30, 50, 65, 40, 55, 70, 60, 80, 75], // Hourly-ish
+                    chartLabels: ['8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm']
+                };
+            case 'Week':
+                return {
+                    revenue: 8450.00,
+                    activeOrders: 45,
+                    activeDrivers: 12,
+                    newCustomers: 15,
+                    chartData: [50, 70, 45, 90, 65, 85, 95],
+                    chartLabels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                };
+            case 'Month':
+            default:
+                const totalRevenue = mockOrders.reduce((sum, order) => sum + order.totalAmount, 0);
+                const activeOrdersCount = mockOrders.filter(o => o.status !== 'Delivered' && o.status !== 'Cancelled').length;
+                const driverCount = mockDrivers.filter(d => d.status === 'Available' || d.status === 'Busy').length;
+                return {
+                    revenue: totalRevenue,
+                    activeOrders: activeOrdersCount,
+                    activeDrivers: driverCount,
+                    newCustomers: 128,
+                    chartData: [65, 40, 75, 55, 80, 95, 85, 45, 60, 70, 90, 80],
+                    chartLabels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+                };
+        }
+    };
+
+    const data = getDashboardData(timeRange);
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
@@ -64,45 +101,54 @@ export default function Dashboard() {
                     </p>
                 </div>
                 <div className="flex bg-white rounded-lg p-1 shadow-sm border border-gray-100">
-                    <button className="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-md">Daily</button>
-                    <button className="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-900">Weekly</button>
-                    <button className="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-900">Monthly</button>
+                    {['Day', 'Week', 'Month'].map((range) => (
+                        <button
+                            key={range}
+                            onClick={() => setTimeRange(range)}
+                            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${timeRange === range
+                                ? 'text-blue-600 bg-blue-50 shadow-sm'
+                                : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
+                                }`}
+                        >
+                            {range === 'Day' ? 'Daily' : range === 'Week' ? 'Weekly' : 'Monthly'}
+                        </button>
+                    ))}
                 </div>
             </div>
 
             {/* Metrics Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <DashboardCard
-                    title="Total Revenue"
-                    value={`$${totalRevenue.toLocaleString()}`}
+                    title={`Total Revenue (${timeRange})`}
+                    value={`$${data.revenue.toLocaleString()}`}
                     icon={DollarSign}
-                    trend={12.5}
+                    trend={timeRange === 'Month' ? 12.5 : timeRange === 'Week' ? 5.2 : 1.8}
                     color="green"
                     subValue="Gross earnings"
                 />
                 <DashboardCard
                     title="Active Orders"
-                    value={activeOrders}
+                    value={data.activeOrders}
                     icon={ShoppingBag}
-                    trend={8.2}
+                    trend={timeRange === 'Month' ? 8.2 : 3.4}
                     color="blue"
                     subValue="Currently processing"
                 />
                 <DashboardCard
                     title="Active Riders"
-                    value={activeDrivers}
+                    value={data.activeDrivers}
                     icon={Truck}
                     color="purple"
                     subValue={`${mockDrivers.length} Registered`}
-                    trend={2.4}
+                    trend={0}
                 />
                 <DashboardCard
                     title="New Customers"
-                    value="128"
+                    value={data.newCustomers}
                     icon={Users}
-                    trend={-2.1}
+                    trend={timeRange === 'Month' ? -2.1 : 4.5}
                     color="orange"
-                    subValue="This month"
+                    subValue="This period"
                 />
             </div>
 
@@ -111,23 +157,29 @@ export default function Dashboard() {
                 {/* Visual Chart Placeholder - Simplified for UI */}
                 <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                     <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-lg font-bold text-gray-900">Revenue Analytics</h2>
+                        <h2 className="text-lg font-bold text-gray-900">Revenue Analytics ({timeRange})</h2>
                         <button className="text-sm text-blue-600 hover:underline">View Report</button>
                     </div>
                     {/* CSS Bar Chart Simulation */}
                     <div className="h-64 flex items-end justify-between gap-2">
-                        {[65, 40, 75, 55, 80, 95, 85, 45, 60, 70, 90, 80].map((h, i) => (
+                        {data.chartData.map((h, i) => (
                             <div key={i} className="w-full bg-blue-50 hover:bg-blue-100 rounded-t-lg relative group transition-all duration-300">
                                 <div
                                     style={{ height: `${h}%` }}
                                     className="absolute bottom-0 w-full bg-blue-500 rounded-t-sm opacity-80 group-hover:opacity-100 transition-all"
-                                ></div>
+                                >
+                                    {/* Tooltip */}
+                                    <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                                        {h}% Capacity
+                                    </div>
+                                </div>
                             </div>
                         ))}
                     </div>
                     <div className="flex justify-between mt-4 text-xs text-gray-400 uppercase font-bold tracking-wider">
-                        <span>Jan</span><span>Fab</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
-                        <span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
+                        {data.chartLabels.map((label, i) => (
+                            <span key={i} className="flex-1 text-center">{label}</span>
+                        ))}
                     </div>
                 </div>
 
