@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import LoginSelectionModal from '../auth/LoginSelectionModal';
 
 export default function PublicNavbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
     const location = useLocation();
 
     const isActive = (path) => location.pathname === path;
@@ -43,39 +45,12 @@ export default function PublicNavbar() {
 
                     {/* Auth Buttons */}
                     <div className="hidden md:flex items-center gap-4">
-                        <div className="relative group">
-                            <button className="px-5 py-2.5 text-blue-600 font-semibold hover:bg-blue-50 rounded-lg transition-all">
-                                Login
-                            </button>
-                            <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden transform opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-200 origin-top-right z-50">
-                                <div className="py-2">
-                                    <Link
-                                        to="/login"
-                                        state={{ role: 'customer' }}
-                                        className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-sm font-medium border-b border-gray-50"
-                                    >
-                                        Customer Login
-                                    </Link>
-                                    <Link
-                                        to="/login"
-                                        state={{ role: 'rider' }}
-                                        className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-sm font-medium border-b border-gray-50"
-                                    >
-                                        Rider Login
-                                    </Link>
-                                    <Link
-                                        to="/login"
-                                        state={{ role: 'employee' }}
-                                        className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-sm font-medium border-b border-gray-50"
-                                    >
-                                        Employee Login
-                                    </Link>
-                                    <Link to="/admin/login" className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors text-sm font-medium">
-                                        Admin Login
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
+                        <button
+                            onClick={() => setShowLoginModal(true)}
+                            className="px-5 py-2.5 text-blue-600 font-semibold hover:bg-blue-50 rounded-lg transition-all"
+                        >
+                            Login
+                        </button>
                         <Link to="/login" className="px-6 py-2.5 bg-blue-600 text-white font-bold rounded-full hover:bg-blue-700 hover:shadow-lg transition-all transform hover:-translate-y-0.5">
                             Register
                         </Link>
@@ -102,11 +77,23 @@ export default function PublicNavbar() {
                         <Link to="/contact" className="text-gray-600 font-medium p-2 hover:bg-gray-50 rounded-lg">Contact</Link>
                         <Link to="/faq" className="text-gray-600 font-medium p-2 hover:bg-gray-50 rounded-lg">FAQ</Link>
                         <hr />
-                        <Link to="/login" className="text-center w-full py-3 bg-blue-50 text-blue-600 font-bold rounded-lg">Login</Link>
+                        <button
+                            onClick={() => {
+                                setIsMenuOpen(false);
+                                setShowLoginModal(true);
+                            }}
+                            className="text-center w-full py-3 bg-blue-50 text-blue-600 font-bold rounded-lg"
+                        >
+                            Login
+                        </button>
                         <Link to="/login" className="text-center w-full py-3 bg-blue-600 text-white font-bold rounded-lg">Register</Link>
                     </div>
                 </div>
             )}
+            <LoginSelectionModal
+                isOpen={showLoginModal}
+                onClose={() => setShowLoginModal(false)}
+            />
         </nav>
     );
 }
