@@ -21,7 +21,7 @@ export default function Contact() {
                                 <div className="bg-blue-100 p-3 rounded-lg text-blue-600"><Phone size={24} /></div>
                                 <div>
                                     <h3 className="font-bold text-gray-900 text-lg">Phone</h3>
-                                    <p className="text-gray-600 mt-1">+1 (555) 123-4567</p>
+                                    <p className="text-gray-600 mt-1">+94 79 001 1223</p>
                                     <p className="text-sm text-gray-400 mt-1">Mon-Fri 8am-8pm</p>
                                 </div>
                             </div>
@@ -39,7 +39,7 @@ export default function Contact() {
                                 <div className="bg-blue-100 p-3 rounded-lg text-blue-600"><MapPin size={24} /></div>
                                 <div>
                                     <h3 className="font-bold text-gray-900 text-lg">Office</h3>
-                                    <p className="text-gray-600 mt-1">100 Laundry Lane, Suite 500<br />New York, NY 10001</p>
+                                    <p className="text-gray-600 mt-1">No 28, Homagama,<br />Colombo</p>
                                 </div>
                             </div>
                         </div>

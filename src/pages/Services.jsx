@@ -122,8 +122,8 @@ export default function Services() {
                         <div className="group bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                             <div className="aspect-square rounded-xl overflow-hidden mb-6 relative">
                                 <img
-                                    src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop"
-                                    alt="Team Member"
+                                    src="/kawya-dissanayaka.jpg"
+                                    alt="Kawya Dissanayaka"
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
@@ -131,7 +131,7 @@ export default function Services() {
                                 </div>
                             </div>
                             <div className="text-center">
-                                <h3 className="text-xl font-bold text-slate-900">David Chen</h3>
+                                <h3 className="text-xl font-bold text-slate-900">Kawya Dissanayaka</h3>
                                 <p className="text-teal-600 font-medium text-sm">Operations Manager</p>
                             </div>
                         </div>
@@ -140,7 +140,7 @@ export default function Services() {
                         <div className="group bg-white rounded-2xl p-4 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
                             <div className="aspect-square rounded-xl overflow-hidden mb-6 relative">
                                 <img
-                                    src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop"
+                                    src="/shanilka-lakshan.jpg"
                                     alt="Team Member"
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                 />
@@ -149,7 +149,7 @@ export default function Services() {
                                 </div>
                             </div>
                             <div className="text-center">
-                                <h3 className="text-xl font-bold text-slate-900">Sarah Johnson</h3>
+                                <h3 className="text-xl font-bold text-slate-900">Shanilka lakshan</h3>
                                 <p className="text-teal-600 font-medium text-sm">Lead Specialist</p>
                             </div>
                         </div>
@@ -214,7 +214,7 @@ export default function Services() {
                                     </div>
                                     <div>
                                         <h4 className="font-bold text-slate-900 text-lg">Address</h4>
-                                        <p className="text-slate-500">123 Laundry Lane, Clean City, ST 12345</p>
+                                        <p className="text-slate-500">No. 28, Homagama, Colombo</p>
                                     </div>
                                 </div>
 
