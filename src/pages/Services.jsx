@@ -193,6 +193,61 @@ export default function Services() {
                 </div>
             </section>
 
+            {/* Location Map Section */}
+            <section className="bg-white py-24">
+                <div className="container mx-auto px-6">
+                    <div className="grid md:grid-cols-2 gap-12 items-center">
+                        <div>
+                            <span className="text-teal-600 font-bold uppercase tracking-wider text-sm">Find Us</span>
+                            <h2 className="text-4xl font-bold text-slate-900 mt-2 mb-6">Visit Our Main Center</h2>
+                            <p className="text-slate-500 text-lg mb-8 leading-relaxed">
+                                While we are primarily a pickup and delivery service, you are always welcome to drop by our main processing center. We are located in the heart of the city for quick logistics.
+                            </p>
+
+                            <div className="space-y-4">
+                                <div className="flex items-start gap-4">
+                                    <div className="w-12 h-12 bg-teal-50 rounded-lg flex items-center justify-center text-teal-600 flex-shrink-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-slate-900 text-lg">Address</h4>
+                                        <p className="text-slate-500">123 Laundry Lane, Clean City, ST 12345</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start gap-4">
+                                    <div className="w-12 h-12 bg-teal-50 rounded-lg flex items-center justify-center text-teal-600 flex-shrink-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 className="font-bold text-slate-900 text-lg">Operating Hours</h4>
+                                        <p className="text-slate-500">Mon - Sat: 8:00 AM - 8:00 PM</p>
+                                        <p className="text-slate-500">Sun: 9:00 AM - 5:00 PM</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="h-[400px] rounded-2xl overflow-hidden shadow-2xl border border-slate-100">
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.184126937666!2d-73.98773172346617!3d40.757978634830175!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25855c6480299%3A0x55194ec5a1ae072e!2sTimes%20Square!5e0!3m2!1sen!2sus!4v1709668465529!5m2!1sen!2sus"
+                                width="100%"
+                                height="100%"
+                                style={{ border: 0 }}
+                                allowFullScreen=""
+                                loading="lazy"
+                                referrerPolicy="no-referrer-when-downgrade"
+                            ></iframe>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* Modal */}
             {selectedService && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
