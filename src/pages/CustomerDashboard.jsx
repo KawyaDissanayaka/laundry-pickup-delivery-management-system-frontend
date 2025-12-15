@@ -185,70 +185,160 @@ const OrdersTab = ({ recentOrders }) => (
     </div>
 );
 
-const ProfileTab = ({ user }) => (
-    <div className="max-w-3xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden relative">
-            {/* Cover Banner Mock */}
-            <div className="h-32 bg-gradient-to-r from-blue-600 to-violet-600"></div>
+const ProfileTab = ({ user }) => {
+    const { updateUserProfile } = useAuth();
+    const [isEditing, setIsEditing] = useState(false);
+    const [formData, setFormData] = useState({
+        name: user?.name || '',
+        email: user?.email || '',
+        phone: user?.phone || '',
+        address: user?.address || '',
+    });
 
-            <div className="px-8 pb-8">
-                <div className="relative flex justify-between items-end -mt-12 mb-8">
-                    <div className="flex items-end gap-6">
-                        <div className="w-24 h-24 bg-white rounded-2xl p-1 shadow-md">
-                            <div className="w-full h-full bg-slate-100 rounded-xl flex items-center justify-center text-3xl font-bold text-slate-400">
-                                {user?.name?.charAt(0) || 'U'}
-                            </div>
-                        </div>
-                        <div className="mb-1">
-                            <h2 className="text-2xl font-bold text-slate-900">{user?.name}</h2>
-                            <p className="text-slate-500 font-medium">Premium Member</p>
-                        </div>
-                    </div>
-                    <button className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors bg-white shadow-sm">
-                        Edit Profile
-                    </button>
-                </div>
+    const handleSave = () => {
+        updateUserProfile(formData);
+        setIsEditing(false);
+    };
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-6">
-                        <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Contact Info</h3>
-                            <div className="space-y-4">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-slate-400 shadow-sm">
-                                        <Mail className="w-4 h-4" />
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-slate-500 font-medium">Email</p>
-                                        <p className="text-sm text-slate-900">{user?.email}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-slate-400 shadow-sm">
-                                        <Phone className="w-4 h-4" />
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-slate-500 font-medium">Phone</p>
-                                        <p className="text-sm text-slate-900">077 123 4567</p>
-                                    </div>
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    return (
+        <div className="max-w-3xl mx-auto">
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden relative">
+                {/* Cover Banner Mock */}
+                <div className="h-32 bg-gradient-to-r from-blue-600 to-violet-600"></div>
+
+                <div className="px-8 pb-8">
+                    <div className="relative flex flex-col md:flex-row justify-between items-end -mt-12 mb-8 gap-4">
+                        <div className="flex items-end gap-6">
+                            <div className="w-24 h-24 bg-white rounded-2xl p-1 shadow-md shrink-0">
+                                <div className="w-full h-full bg-slate-100 rounded-xl flex items-center justify-center text-3xl font-bold text-slate-400">
+                                    {user?.name?.charAt(0) || 'U'}
                                 </div>
                             </div>
+                            <div className="mb-1">
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        className="text-2xl font-bold text-slate-900 border-b-2 border-slate-200 focus:border-blue-500 outline-none bg-transparent w-full"
+                                        placeholder="Your Name"
+                                    />
+                                ) : (
+                                    <h2 className="text-2xl font-bold text-slate-900">{user?.name}</h2>
+                                )}
+                                <p className="text-slate-500 font-medium">Premium Member</p>
+                            </div>
+                        </div>
+                        <div className="flex gap-2 w-full md:w-auto">
+                            {isEditing ? (
+                                <>
+                                    <button
+                                        onClick={() => setIsEditing(false)}
+                                        className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors bg-white shadow-sm flex-1 md:flex-none"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={handleSave}
+                                        className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm flex-1 md:flex-none"
+                                    >
+                                        Save Changes
+                                    </button>
+                                </>
+                            ) : (
+                                <button
+                                    onClick={() => {
+                                        setFormData({
+                                            name: user?.name || '',
+                                            email: user?.email || '',
+                                            phone: user?.phone || '',
+                                            address: user?.address || '',
+                                        });
+                                        setIsEditing(true);
+                                    }}
+                                    className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors bg-white shadow-sm w-full md:w-auto"
+                                >
+                                    Edit Profile
+                                </button>
+                            )}
                         </div>
                     </div>
 
-                    <div className="space-y-6">
-                        <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 h-full">
-                            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Default Address</h3>
-                            <div className="flex items-start gap-3">
-                                <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-slate-400 shadow-sm shrink-0">
-                                    <MapPin className="w-4 h-4" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-6">
+                            <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 h-full">
+                                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Contact Info</h3>
+                                <div className="space-y-4">
+                                    <div className="flex items-start gap-3">
+                                        <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-slate-400 shadow-sm shrink-0">
+                                            <Mail className="w-4 h-4" />
+                                        </div>
+                                        <div className="w-full">
+                                            <p className="text-xs text-slate-500 font-medium">Email</p>
+                                            {isEditing ? (
+                                                <input
+                                                    type="email"
+                                                    name="email"
+                                                    value={formData.email}
+                                                    onChange={handleChange}
+                                                    className="w-full text-sm text-slate-900 bg-white border border-slate-200 rounded px-2 py-1 mt-1 focus:ring-2 focus:ring-blue-100 outline-none"
+                                                />
+                                            ) : (
+                                                <p className="text-sm text-slate-900">{user?.email}</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="flex items-start gap-3">
+                                        <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-slate-400 shadow-sm shrink-0">
+                                            <Phone className="w-4 h-4" />
+                                        </div>
+                                        <div className="w-full">
+                                            <p className="text-xs text-slate-500 font-medium">Phone</p>
+                                            {isEditing ? (
+                                                <input
+                                                    type="text"
+                                                    name="phone"
+                                                    value={formData.phone}
+                                                    onChange={handleChange}
+                                                    className="w-full text-sm text-slate-900 bg-white border border-slate-200 rounded px-2 py-1 mt-1 focus:ring-2 focus:ring-blue-100 outline-none"
+                                                />
+                                            ) : (
+                                                <p className="text-sm text-slate-900">{user?.phone || 'Not set'}</p>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p className="text-sm text-slate-900 font-medium leading-relaxed">
-                                        123 Galle Road,<br />
-                                        Colombo 03,<br />
-                                        Sri Lanka
-                                    </p>
+                            </div>
+                        </div>
+
+                        <div className="space-y-6">
+                            <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 h-full">
+                                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Default Address</h3>
+                                <div className="flex items-start gap-3">
+                                    <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-slate-400 shadow-sm shrink-0">
+                                        <MapPin className="w-4 h-4" />
+                                    </div>
+                                    <div className="w-full">
+                                        {isEditing ? (
+                                            <textarea
+                                                name="address"
+                                                rows="3"
+                                                value={formData.address}
+                                                onChange={handleChange}
+                                                className="w-full text-sm text-slate-900 bg-white border border-slate-200 rounded px-2 py-1 focus:ring-2 focus:ring-blue-100 outline-none resize-none"
+                                                placeholder="Street, City, Province"
+                                            ></textarea>
+                                        ) : (
+                                            <p className="text-sm text-slate-900 font-medium leading-relaxed whitespace-pre-wrap">
+                                                {user?.address || 'No address set'}
+                                            </p>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -256,8 +346,8 @@ const ProfileTab = ({ user }) => (
                 </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 // --- Modals ---
 
