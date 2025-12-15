@@ -274,6 +274,7 @@ export default function Employees() {
                                         <option>Quality Control</option>
                                         <option>Operations Manager</option>
                                         <option>Lead Specialist</option>
+                                        <option>Customer Relations</option>
                                     </select>
                                 </div>
                                 <div>
