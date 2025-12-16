@@ -5,7 +5,7 @@ import { User, Mail, Phone, MapPin, Lock, Eye, EyeOff, CheckCircle, AlertCircle,
 
 export default function Register() {
     const navigate = useNavigate();
-    const { register } = useAuth();
+    const { register, error: authError } = useAuth();
 
     const [formData, setFormData] = useState({
         name: '',
@@ -130,23 +130,20 @@ export default function Register() {
         });
 
         if (Object.keys(newErrors).length === 0) {
-            // Simulate API call
-            setTimeout(() => {
-                const success = register({
-                    name: formData.name,
-                    email: formData.email,
-                    phone: formData.phone,
-                    address: formData.address,
-                    password: formData.password
-                });
+            const success = await register({
+                name: formData.name,
+                email: formData.email,
+                phone: formData.phone,
+                address: formData.address,
+                password: formData.password
+            });
 
-                if (success) {
-                    navigate('/customer-dashboard');
-                } else {
-                    setErrors({ email: 'This email is already registered' });
-                    setIsSubmitting(false);
-                }
-            }, 1000);
+            if (success) {
+                navigate('/customer-dashboard');
+            } else {
+                // Error is already set in AuthContext, just stop submitting
+                setIsSubmitting(false);
+            }
         } else {
             setIsSubmitting(false);
         }
@@ -179,6 +176,14 @@ export default function Register() {
 
                     {/* Form Section */}
                     <form onSubmit={handleSubmit} className="p-8 space-y-6">
+                        {/* API Error Display */}
+                        {authError && (
+                            <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700">
+                                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                                <span className="text-sm font-medium">{authError}</span>
+                            </div>
+                        )}
+
                         <div className="grid md:grid-cols-2 gap-6">
                             {/* Full Name */}
                             <div>
@@ -194,8 +199,8 @@ export default function Register() {
                                         onChange={handleChange}
                                         onBlur={handleBlur}
                                         className={`w-full pl-11 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition ${errors.name && touched.name
-                                                ? 'border-red-300 bg-red-50'
-                                                : 'border-slate-200 hover:border-slate-300'
+                                            ? 'border-red-300 bg-red-50'
+                                            : 'border-slate-200 hover:border-slate-300'
                                             }`}
                                         placeholder="John Doe"
                                     />
@@ -225,8 +230,8 @@ export default function Register() {
                                         onChange={handleChange}
                                         onBlur={handleBlur}
                                         className={`w-full pl-11 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition ${errors.email && touched.email
-                                                ? 'border-red-300 bg-red-50'
-                                                : 'border-slate-200 hover:border-slate-300'
+                                            ? 'border-red-300 bg-red-50'
+                                            : 'border-slate-200 hover:border-slate-300'
                                             }`}
                                         placeholder="john@example.com"
                                     />
@@ -256,8 +261,8 @@ export default function Register() {
                                         onChange={handleChange}
                                         onBlur={handleBlur}
                                         className={`w-full pl-11 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition ${errors.phone && touched.phone
-                                                ? 'border-red-300 bg-red-50'
-                                                : 'border-slate-200 hover:border-slate-300'
+                                            ? 'border-red-300 bg-red-50'
+                                            : 'border-slate-200 hover:border-slate-300'
                                             }`}
                                         placeholder="0771234567"
                                     />
@@ -287,8 +292,8 @@ export default function Register() {
                                         onChange={handleChange}
                                         onBlur={handleBlur}
                                         className={`w-full pl-11 pr-4 py-3 border-2 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition ${errors.address && touched.address
-                                                ? 'border-red-300 bg-red-50'
-                                                : 'border-slate-200 hover:border-slate-300'
+                                            ? 'border-red-300 bg-red-50'
+                                            : 'border-slate-200 hover:border-slate-300'
                                             }`}
                                         placeholder="No. 28, Homagama, Colombo"
                                     />
@@ -319,8 +324,8 @@ export default function Register() {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     className={`w-full pl-11 pr-12 py-3 border-2 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition ${errors.password && touched.password
-                                            ? 'border-red-300 bg-red-50'
-                                            : 'border-slate-200 hover:border-slate-300'
+                                        ? 'border-red-300 bg-red-50'
+                                        : 'border-slate-200 hover:border-slate-300'
                                         }`}
                                     placeholder="••••••••"
                                 />
@@ -337,8 +342,8 @@ export default function Register() {
                                     <div className="flex items-center justify-between mb-1">
                                         <span className="text-xs font-medium text-slate-600">Password Strength:</span>
                                         <span className={`text-xs font-bold ${passwordStrength.label === 'Weak' ? 'text-red-600' :
-                                                passwordStrength.label === 'Medium' ? 'text-yellow-600' :
-                                                    'text-green-600'
+                                            passwordStrength.label === 'Medium' ? 'text-yellow-600' :
+                                                'text-green-600'
                                             }`}>
                                             {passwordStrength.label}
                                         </span>
@@ -373,8 +378,8 @@ export default function Register() {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                     className={`w-full pl-11 pr-12 py-3 border-2 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition ${errors.confirmPassword && touched.confirmPassword
-                                            ? 'border-red-300 bg-red-50'
-                                            : 'border-slate-200 hover:border-slate-300'
+                                        ? 'border-red-300 bg-red-50'
+                                        : 'border-slate-200 hover:border-slate-300'
                                         }`}
                                     placeholder="••••••••"
                                 />

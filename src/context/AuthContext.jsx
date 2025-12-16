@@ -1,8 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useState, useContext } from 'react';
-import { mockCustomers } from '../data/mockCustomers';
-import { mockEmployees } from '../data/mockEmployees';
-import { mockDrivers } from '../data/mockDrivers';
+import { authService } from '../services/authService';
 
 const AuthContext = createContext(null);
 
@@ -13,84 +11,42 @@ export const AuthProvider = ({ children }) => {
 
   const [user, setUser] = useState(initialUser);
   const [isAuthenticated, setIsAuthenticated] = useState(!!initialUser);
+  const [error, setError] = useState(null);
 
-  const login = (email, password) => {
-    // Mock login logic - Auto-detect role based on credentials
+  const login = async (email, password) => {
+    setError(null);
 
-    // 1. Admin Check
-    if (email === 'admin@laundrygo.com' && password === 'admin123') {
-      const adminUser = {
-        name: 'Admin User',
-        email: email,
-        role: 'admin',
-        id: 'admin_001'
-      };
-      setUser(adminUser);
-      setIsAuthenticated(true);
-      localStorage.setItem('laundry_user', JSON.stringify(adminUser));
-      return adminUser;
-    }
+    try {
+      const result = await authService.login(email, password);
 
-    // 2. Employee Check
-    const existingEmployee = mockEmployees.find(e => e.email === email);
-    if (existingEmployee) {
-      const employeeUser = {
-        ...existingEmployee,
-        role: 'employee'
-      };
-      setUser(employeeUser);
-      setIsAuthenticated(true);
-      localStorage.setItem('laundry_user', JSON.stringify(employeeUser));
-      return employeeUser;
-    }
-
-    // 3. Rider Check (Demo mappings)
-    const driverEmailMap = {
-      'driver1@laundrygo.com': 'DRV-001',
-      'rider@laundrygo.com': 'DRV-001',
-      'driver2@laundrygo.com': 'DRV-002',
-      'driver3@laundrygo.com': 'DRV-003'
-    };
-
-    const targetDriverId = driverEmailMap[email];
-    if (targetDriverId) {
-      const driverData = mockDrivers.find(d => d.id === targetDriverId);
-      if (driverData) {
-        const riderUser = {
-          ...driverData,
-          role: 'rider',
-          email: email
+      if (result.success) {
+        const userData = {
+          id: result.data.id,
+          name: result.data.name,
+          email: result.data.email,
+          phone: result.data.phone,
+          address: result.data.address,
+          role: result.data.role
         };
-        setUser(riderUser);
+
+        setUser(userData);
         setIsAuthenticated(true);
-        localStorage.setItem('laundry_user', JSON.stringify(riderUser));
-        return riderUser;
+        localStorage.setItem('laundry_user', JSON.stringify(userData));
+        return userData;
+      } else {
+        setError(result.error);
+        return null;
       }
+    } catch (err) {
+      setError('Login failed. Please try again.');
+      return null;
     }
-
-    // 4. Customer Check (Default)
-    const existingCustomer = mockCustomers.find(c => c.email === email);
-
-    const customerUser = existingCustomer ? {
-      ...existingCustomer,
-      role: 'customer'
-    } : {
-      // Fallback for new/unknown emails -> Guest Customer
-      name: 'Guest Customer',
-      email: email,
-      role: 'customer',
-      id: 'cust_new'
-    };
-
-    setUser(customerUser);
-    setIsAuthenticated(true);
-    localStorage.setItem('laundry_user', JSON.stringify(customerUser));
-    return customerUser;
   };
 
   const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
+    setError(null);
     localStorage.removeItem('laundry_user');
   };
 
@@ -100,43 +56,39 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('laundry_user', JSON.stringify(newUser));
   };
 
-  const register = (userData) => {
-    // Check if email already exists
-    const existingCustomers = JSON.parse(localStorage.getItem('laundry_customers') || '[]');
-    const emailExists = existingCustomers.some(c => c.email === userData.email);
+  const register = async (userData) => {
+    setError(null);
 
-    if (emailExists) {
-      return false; // Email already registered
+    try {
+      const result = await authService.register(userData);
+
+      if (result.success) {
+        const newUser = {
+          id: result.data.id,
+          name: result.data.name,
+          email: result.data.email,
+          phone: result.data.phone,
+          address: result.data.address,
+          role: result.data.role
+        };
+
+        // Auto-login after registration
+        setUser(newUser);
+        setIsAuthenticated(true);
+        localStorage.setItem('laundry_user', JSON.stringify(newUser));
+        return true;
+      } else {
+        setError(result.error);
+        return false;
+      }
+    } catch (err) {
+      setError('Registration failed. Please try again.');
+      return false;
     }
-
-    // Create new customer
-    const newCustomer = {
-      id: `CUST-${Date.now()}`,
-      name: userData.name,
-      email: userData.email,
-      phone: userData.phone,
-      address: userData.address,
-      role: 'customer',
-      joinDate: new Date().toISOString(),
-      totalOrders: 0,
-      totalSpent: 0,
-      status: 'Active'
-    };
-
-    // Save to localStorage
-    existingCustomers.push(newCustomer);
-    localStorage.setItem('laundry_customers', JSON.stringify(existingCustomers));
-
-    // Auto-login
-    setUser(newCustomer);
-    setIsAuthenticated(true);
-    localStorage.setItem('laundry_user', JSON.stringify(newCustomer));
-
-    return true;
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, logout, updateUserProfile, register }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, login, logout, updateUserProfile, register, error }}>
       {children}
     </AuthContext.Provider>
   );

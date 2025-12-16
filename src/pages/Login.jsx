@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Lock, Mail } from 'lucide-react';
+import { Lock, Mail, AlertCircle } from 'lucide-react';
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { login } = useAuth();
+    const [isLoading, setIsLoading] = useState(false);
+    const { login, error } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -29,10 +30,12 @@ export default function Login() {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
+
         if (email && password) {
-            const user = login(email, password);
+            const user = await login(email, password);
             if (user) {
                 switch (user.role) {
                     case 'admin':
@@ -49,6 +52,8 @@ export default function Login() {
                 }
             }
         }
+
+        setIsLoading(false);
     };
 
     return (
@@ -58,6 +63,13 @@ export default function Login() {
                     <h1 className="text-2xl font-bold text-gray-900">{getTitle()}</h1>
                     <p className="text-gray-600 mt-2">{getSubtitle()}</p>
                 </div>
+
+                {error && (
+                    <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700">
+                        <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                        <span className="text-sm">{error}</span>
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
@@ -71,6 +83,7 @@ export default function Login() {
                                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
                                 placeholder="you@example.com"
                                 required
+                                disabled={isLoading}
                             />
                         </div>
                     </div>
@@ -86,15 +99,17 @@ export default function Login() {
                                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
                                 placeholder="••••••••"
                                 required
+                                disabled={isLoading}
                             />
                         </div>
                     </div>
 
                     <button
                         type="submit"
-                        className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition duration-200"
+                        disabled={isLoading}
+                        className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        Sign In
+                        {isLoading ? 'Signing in...' : 'Sign In'}
                     </button>
                 </form>
 
