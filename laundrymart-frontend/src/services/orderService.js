@@ -1,6 +1,6 @@
 import api from './api';
 
-const ENDPOINT = '/api/orders';
+const ENDPOINT = '/orders';
 
 export const orderService = {
     // Get all orders (Admin/Staff)
@@ -14,10 +14,10 @@ export const orderService = {
         }
     },
 
-    // Get orders by Customer ID (User ID)
-    getOrdersByCustomer: async (userId) => {
+    // Get orders by Customer ID
+    getOrdersByCustomer: async (customerId) => {
         try {
-            const response = await api.get(`${ENDPOINT}/user/${userId}`);
+            const response = await api.get(`${ENDPOINT}?customerId=${customerId}`);
             return response.data;
         } catch (error) {
             console.error('Error fetching customer orders', error);
@@ -33,17 +33,6 @@ export const orderService = {
         } catch (error) {
             console.error('Error fetching staff orders', error);
             return [];
-        }
-    },
-
-    // Update order status
-    updateOrderStatus: async (orderId, status) => {
-        try {
-            const response = await api.put(`${ENDPOINT}/${orderId}/status?status=${status}`);
-            return response.data;
-        } catch (error) {
-            console.error('Error updating order status', error);
-            throw error;
         }
     },
 
@@ -75,4 +64,3 @@ export const orderService = {
         }
     }
 };
-

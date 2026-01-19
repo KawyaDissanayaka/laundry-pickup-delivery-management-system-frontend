@@ -2,21 +2,11 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, ShoppingBag, Truck, WashingMachine, Users, BarChart3, Settings, Map, LogOut, Mail } from 'lucide-react';
 import { clsx } from 'clsx';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 
-const navItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
-    { icon: ShoppingBag, label: 'Orders', path: '/admin/orders' },
-    { icon: Mail, label: 'Messages', path: '/admin/messages' },
-    { icon: Map, label: 'Live Tracking', path: '/admin/tracking' },
-    { icon: Truck, label: 'Riders', path: '/admin/riders' },
-    { icon: Users, label: 'Employees', path: '/admin/employees' },
-    { icon: Users, label: 'Customers', path: '/admin/customers' },
-    { icon: BarChart3, label: 'Analytics', path: '/admin/analytics' },
-    { icon: Settings, label: 'Settings', path: '/admin/settings' },
-];
-
 export default function Sidebar() {
+    const { t } = useTranslation();
     const { logout } = useAuth();
     const navigate = useNavigate();
 
@@ -24,6 +14,18 @@ export default function Sidebar() {
         logout();
         navigate('/admin/login');
     };
+
+    const navItems = [
+        { icon: LayoutDashboard, label: t('dashboard', 'Dashboard'), path: '/admin' },
+        { icon: ShoppingBag, label: t('orders', 'Orders'), path: '/admin/orders' },
+        { icon: Mail, label: t('messages', 'Messages'), path: '/admin/messages' },
+        { icon: Map, label: t('tracking', 'Live Tracking'), path: '/admin/tracking' },
+        { icon: Truck, label: t('riders', 'Riders'), path: '/admin/riders' },
+        { icon: Users, label: t('employees', 'Employees'), path: '/admin/employees' },
+        { icon: Users, label: t('customers', 'Customers'), path: '/admin/customers' },
+        { icon: BarChart3, label: t('analytics', 'Analytics'), path: '/admin/analytics' },
+        { icon: Settings, label: t('settings', 'Settings'), path: '/admin/settings' },
+    ];
 
     return (
         <aside className="w-64 bg-white border-r border-gray-200 min-h-screen hidden md:flex flex-col">
@@ -61,7 +63,7 @@ export default function Sidebar() {
                     className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-sm font-medium text-red-600 hover:bg-red-50"
                 >
                     <LogOut className="h-5 w-5" />
-                    Logout
+                    {t('logout', 'Logout')}
                 </button>
             </div>
 

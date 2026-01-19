@@ -25,6 +25,8 @@ import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { orderService } from '../services/orderService';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../components/common/LanguageSwitcher';
 
 // --- Utility Components ---
 
@@ -155,7 +157,7 @@ const LiveTracker = ({ activeOrders }) => {
     );
 };
 
-const OverviewTab = ({ stats, recentOrders, setActiveTab, activeOrders }) => (
+const OverviewTab = ({ stats, recentOrders, setActiveTab, activeOrders, t }) => (
     <div className="space-y-8">
         {/* Live Tracker for active orders */}
         <LiveTracker activeOrders={activeOrders} />
@@ -163,26 +165,26 @@ const OverviewTab = ({ stats, recentOrders, setActiveTab, activeOrders }) => (
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard
-                title="Total Orders"
+                title={t('total_orders', 'Total Orders')}
                 value={stats.totalOrders}
                 icon={ShoppingBag}
                 colorClass="bg-blue-500"
                 trend="+2 this month"
             />
             <StatCard
-                title="Active Orders"
+                title={t('active_orders', 'Active Orders')}
                 value={stats.activeOrders}
                 icon={Clock}
                 colorClass="bg-amber-500"
             />
             <StatCard
-                title="Completed"
+                title={t('completed_orders', 'Completed')}
                 value={stats.completedOrders}
                 icon={CheckCircle}
                 colorClass="bg-emerald-500"
             />
             <StatCard
-                title="Total Spent"
+                title={t('total_spent', 'Total Spent')}
                 value={`LKR ${stats.totalSpent.toLocaleString()}`}
                 icon={DollarSign}
                 colorClass="bg-violet-500"
@@ -193,25 +195,25 @@ const OverviewTab = ({ stats, recentOrders, setActiveTab, activeOrders }) => (
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
             <div className="p-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
                 <div>
-                    <h2 className="text-lg font-bold text-slate-800">Recent Activity</h2>
+                    <h2 className="text-lg font-bold text-slate-800">{t('recent_activity', 'Recent Activity')}</h2>
                     <p className="text-slate-500 text-sm">Your latest laundry updates</p>
                 </div>
                 <button
                     onClick={() => setActiveTab('orders')}
                     className="text-blue-600 text-sm font-semibold hover:text-blue-700 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors"
                 >
-                    View All
+                    {t('view_all', 'View All')}
                 </button>
             </div>
             <div className="overflow-x-auto">
                 <table className="w-full">
                     <thead className="bg-slate-50">
                         <tr>
-                            <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Order ID</th>
-                            <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Service</th>
-                            <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+                            <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">{t('order_id', 'Order ID')}</th>
+                            <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">{t('services', 'Service')}</th>
+                            <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">{t('status', 'Status')}</th>
                             <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Pickup</th>
-                            <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Amount</th>
+                            <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">{t('amount', 'Amount')}</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
@@ -709,6 +711,7 @@ const QuotationModal = ({ isOpen, onClose, data }) => {
 
 const LaundryDashboard = () => {
     const { user, logout } = useAuth();
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('overview');
     const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
@@ -815,21 +818,29 @@ const LaundryDashboard = () => {
             </nav>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+
                 {/* Header Action Row */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
                     <div>
-                        <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Dashboard</h1>
-                        <p className="text-slate-500 mt-2 font-medium">Welcome back! manage your orders and profile.</p>
-                    </div>
-                    <button
-                        onClick={() => setIsOrderModalOpen(true)}
-                        className="group flex items-center justify-center gap-2.5 bg-slate-900 text-white px-7 py-3.5 rounded-2xl hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 hover:shadow-2xl hover:translate-y-[-2px] active:translate-y-[1px]"
-                    >
-                        <div className="bg-white/20 p-1 rounded-lg group-hover:bg-white/30 transition-colors">
-                            <Plus className="w-5 h-5" />
+                        <div className="flex justify-between items-start">
+                            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">{t('dashboard', 'Dashboard')}</h1>
+                            <div className="md:hidden"><LanguageSwitcher /></div>
                         </div>
-                        <span className="font-bold">New Order</span>
-                    </button>
+                        <p className="text-slate-500 mt-2 font-medium">{t('hero_subtitle', 'Welcome back!')}</p>
+                    </div>
+                    <div className="flex gap-4 items-center">
+                        <div className="hidden md:block"><LanguageSwitcher /></div>
+                        <button
+                            onClick={() => setIsOrderModalOpen(true)}
+                            className="group flex items-center justify-center gap-2.5 bg-slate-900 text-white px-7 py-3.5 rounded-2xl hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 hover:shadow-2xl hover:translate-y-[-2px] active:translate-y-[1px]"
+                        >
+                            <div className="bg-white/20 p-1 rounded-lg group-hover:bg-white/30 transition-colors">
+                                <Plus className="w-5 h-5" />
+                            </div>
+                            <span className="font-bold">{t('schedule_pickup', 'New Order')}</span>
+                        </button>
+                    </div>
                 </div>
 
                 {/* Tabs Navigation */}
@@ -859,7 +870,7 @@ const LaundryDashboard = () => {
                 {/* Main Content Area */}
                 <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
                     {activeTab === 'overview' && (
-                        <OverviewTab stats={stats} recentOrders={recentOrders} setActiveTab={setActiveTab} activeOrders={activeOrders} />
+                        <OverviewTab stats={stats} recentOrders={recentOrders} setActiveTab={setActiveTab} activeOrders={activeOrders} t={t} />
                     )}
                     {activeTab === 'orders' && (
                         <OrdersTab recentOrders={recentOrders} />

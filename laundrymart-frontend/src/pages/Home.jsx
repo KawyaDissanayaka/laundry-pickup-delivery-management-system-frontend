@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 import { Truck, Clock, ShieldCheck, X, ArrowRight } from 'lucide-react';
 import PublicNavbar from '../components/layout/PublicNavbar';
 
+import { useTranslation } from 'react-i18next';
+
 export default function Home() {
+    const { t } = useTranslation();
     const [showPopup, setShowPopup] = useState(false);
 
     useEffect(() => {
@@ -35,25 +38,24 @@ export default function Home() {
                             #1 Laundry Service in Town
                         </span>
                         <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-8 leading-tight tracking-tight">
-                            Fresh Clothes, <br />
-                            <span className="text-teal-400">Zero Stress.</span>
+                            {t('hero_title', 'Fresh Clothes, Zero Stress.')}
                         </h1>
                         <p className="text-xl md:text-2xl text-gray-200 mb-12 font-light leading-relaxed max-w-2xl">
-                            We pick up, clean, and deliver your laundry in 24 hours. Experience the ultimate convenience today.
+                            {t('hero_subtitle', 'We pick up, clean, and deliver your laundry in 24 hours. Experience the ultimate convenience today.')}
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4">
                             <Link
                                 to="/services"
                                 className="px-10 py-5 bg-teal-500 text-white text-lg font-bold rounded-xl hover:bg-teal-400 transition-all shadow-lg hover:shadow-teal-500/30 hover:-translate-y-1 flex items-center justify-center group"
                             >
-                                Schedule Pickup
+                                {t('schedule_pickup', 'Schedule Pickup')}
                                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                             </Link>
                             <Link
                                 to="/pricing"
                                 className="px-10 py-5 bg-white/10 backdrop-blur-md border border-white/20 text-white text-lg font-bold rounded-xl hover:bg-white/20 transition-all flex items-center justify-center"
                             >
-                                View Pricing
+                                {t('view_pricing', 'View Pricing')}
                             </Link>
                         </div>
                     </div>
@@ -64,7 +66,7 @@ export default function Home() {
             <section className="py-24 bg-gray-50">
                 <div className="container mx-auto px-6">
                     <div className="text-center mb-20 animate-in fade-in zoom-in-95 duration-700 delay-300 fill-mode-both">
-                        <h2 className="text-4xl font-bold text-slate-900 mb-4">Why Choose Us?</h2>
+                        <h2 className="text-4xl font-bold text-slate-900 mb-4">{t('why_choose_us', 'Why Choose Us?')}</h2>
                         <p className="text-lg text-slate-500 max-w-2xl mx-auto">We don't just clean clothes; we care for them. Here is why thousands trust us.</p>
                     </div>
 
@@ -74,7 +76,7 @@ export default function Home() {
                             <div className="w-20 h-20 bg-teal-50 rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-300">
                                 <Truck className="w-10 h-10 text-teal-600" />
                             </div>
-                            <h3 className="text-2xl font-bold text-slate-900 mb-4">Free Pickup & Delivery</h3>
+                            <h3 className="text-2xl font-bold text-slate-900 mb-4">{t('free_pickup', 'Free Pickup & Delivery')}</h3>
                             <p className="text-slate-500 leading-relaxed">
                                 Don't leave your house. We collect your dirty laundry and return it fresh and folded, absolutely free.
                             </p>
@@ -85,7 +87,7 @@ export default function Home() {
                             <div className="w-20 h-20 bg-purple-50 rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-300">
                                 <Clock className="w-10 h-10 text-purple-600" />
                             </div>
-                            <h3 className="text-2xl font-bold text-slate-900 mb-4">24h Turnaround</h3>
+                            <h3 className="text-2xl font-bold text-slate-900 mb-4">{t('turnaround_24h', '24h Turnaround')}</h3>
                             <p className="text-slate-500 leading-relaxed">
                                 Use our Express Service to get your clothes back in as little as 24 hours. Because time is money.
                             </p>
@@ -96,7 +98,7 @@ export default function Home() {
                             <div className="w-20 h-20 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-300">
                                 <ShieldCheck className="w-10 h-10 text-blue-600" />
                             </div>
-                            <h3 className="text-2xl font-bold text-slate-900 mb-4">Quality Guarantee</h3>
+                            <h3 className="text-2xl font-bold text-slate-900 mb-4">{t('quality_guarantee', 'Quality Guarantee')}</h3>
                             <p className="text-slate-500 leading-relaxed">
                                 If you're not 100% satisfied with our cleaning, we will re-wash your clothes for free. No questions asked.
                             </p>
