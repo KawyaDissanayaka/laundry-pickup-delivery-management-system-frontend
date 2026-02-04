@@ -15,7 +15,16 @@ export const AuthProvider = ({ children }) => {
         const savedUser = localStorage.getItem('user');
         if (savedUser) {
             try {
-                setUser(JSON.parse(savedUser));
+                const parsedUser = JSON.parse(savedUser);
+                // Normalize role if it exists (for backward compatibility)
+                if (parsedUser.role) {
+                    parsedUser.role = parsedUser.role.toLowerCase();
+                }
+                // Ensure name field exists for frontend compatibility
+                if (!parsedUser.name && parsedUser.fullName) {
+                    parsedUser.name = parsedUser.fullName;
+                }
+                setUser(parsedUser);
             } catch (error) {
                 console.error('Error parsing saved user:', error);
                 localStorage.removeItem('user');
@@ -38,10 +47,16 @@ export const AuthProvider = ({ children }) => {
 
             if (response.status === 200 && response.data) {
                 const { token, user } = response.data;
-                const userWithToken = { ...user, token };
-                setUser(userWithToken);
-                localStorage.setItem('user', JSON.stringify(userWithToken));
-                return { success: true, user: userWithToken };
+                // Normalize role to lowercase and add name alias for frontend compatibility
+                const normalizedUser = {
+                    ...user,
+                    role: user.role ? user.role.toLowerCase() : 'customer',
+                    name: user.fullName || user.name || '', // Add name alias for frontend
+                    token
+                };
+                setUser(normalizedUser);
+                localStorage.setItem('user', JSON.stringify(normalizedUser));
+                return { success: true, user: normalizedUser };
             }
         } catch (error) {
             console.error('Registration error:', error);
@@ -65,10 +80,16 @@ export const AuthProvider = ({ children }) => {
 
             if (response.status === 200 && response.data) {
                 const { token, user } = response.data;
-                const userWithToken = { ...user, token };
-                setUser(userWithToken);
-                localStorage.setItem('user', JSON.stringify(userWithToken));
-                return { success: true, user: userWithToken };
+                // Normalize role to lowercase and add name alias for frontend compatibility
+                const normalizedUser = {
+                    ...user,
+                    role: user.role ? user.role.toLowerCase() : 'customer',
+                    name: user.fullName || user.name || '', // Add name alias for frontend
+                    token
+                };
+                setUser(normalizedUser);
+                localStorage.setItem('user', JSON.stringify(normalizedUser));
+                return { success: true, user: normalizedUser };
             }
         } catch (error) {
             console.error('Login error:', error);

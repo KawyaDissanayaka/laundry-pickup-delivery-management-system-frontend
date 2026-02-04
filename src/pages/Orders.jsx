@@ -1,17 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Filter, Eye, Printer, MoreVertical } from 'lucide-react';
-import { mockOrders } from '../data/mockOrders';
+import { orderService } from '../services/orderService';
 import Badge from '../components/common/Badge';
 
 export default function Orders() {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('All');
+    const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const filteredOrders = mockOrders.filter(order => {
+    useEffect(() => {
+        const loadOrders = async () => {
+            try {
+                const data = await orderService.getAllOrders();
+                setOrders(data);
+            } catch (error) {
+                console.error('Error loading orders:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadOrders();
+    }, []);
+
+    const filteredOrders = orders.filter(order => {
+        const orderIdStr = order.id?.toString() || '';
         const matchesSearch =
-            order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            order.customerName.toLowerCase().includes(searchTerm.toLowerCase());
+            orderIdStr.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (order.customerName || '').toLowerCase().includes(searchTerm.toLowerCase());
         const matchesStatus = statusFilter === 'All' || order.status === statusFilter;
         return matchesSearch && matchesStatus;
     });
@@ -70,22 +87,22 @@ export default function Orders() {
                         <tbody className="divide-y divide-gray-200">
                             {filteredOrders.map((order) => (
                                 <tr key={order.id} className="hover:bg-gray-50">
-                                    <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{order.id}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">#{order.id}</td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm font-medium text-gray-900">{order.customerName}</div>
-                                        <div className="text-xs text-gray-500">ID: {order.customerId}</div>
+                                        <div className="text-sm font-medium text-gray-900">{order.customerName || 'Unknown'}</div>
+                                        <div className="text-xs text-gray-500">ID: {order.customerId || 'N/A'}</div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {order.items.length} items
+                                        {order.items?.length || 0} items
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <Badge status={order.status} />
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        LKR {order.totalAmount.toFixed(2)}
+                                        LKR {order.totalAmount?.toFixed(2) || '0.00'}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                        {new Date(order.deliveryDate).toLocaleDateString()}
+                                        {order.deliveryDate ? new Date(order.deliveryDate).toLocaleDateString() : 'N/A'}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <Link to={`/admin/orders/${order.id}`} className="text-gray-400 hover:text-blue-600 mx-1 inline-block">
@@ -101,11 +118,15 @@ export default function Orders() {
                     </table>
                 </div>
 
-                {filteredOrders.length === 0 && (
+                {loading ? (
+                    <div className="p-8 text-center text-gray-500">
+                        Loading orders...
+                    </div>
+                ) : filteredOrders.length === 0 ? (
                     <div className="p-8 text-center text-gray-500">
                         No orders found matching your criteria.
                     </div>
-                )}
+                ) : null}
             </div>
         </div>
     );

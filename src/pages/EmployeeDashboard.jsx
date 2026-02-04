@@ -14,35 +14,48 @@ export default function EmployeeDashboard() {
 
     // Load tasks from orderService
     useEffect(() => {
-        const loadTasks = () => {
-            // Get orders for this staff member
-            // If user.id is 'EMP-001', we get orders assigned to them
-            // Fallback: If no user ID, show all orders for demo purposes if not strictly filtered
-            const allOrders = orderService.getAllOrders();
-            const myOrders = allOrders.filter(o => o.staffId === user?.id);
+        const loadTasks = async () => {
+            try {
+                // Get orders for this staff member
+                const myOrders = await orderService.getOrdersByStaff(user?.id);
 
-            const formattedTasks = myOrders.map(order => {
-                const assignedDriver = mockDrivers.find(d => d.id === order.driverId);
-                const assignedCustomer = mockCustomers.find(c => c.id === order.customerId);
-                return {
+                const formattedTasks = myOrders.map(order => ({
                     id: order.id,
-                    service: order.items[0]?.service || 'Multiple',
-                    items: order.items.reduce((acc, item) => acc + item.quantity, 0),
-                    status: order.status,
-                    priority: 'Normal', // Could be derived from order data
-                    dueIn: '4 hrs', // Mock logic
-                    driver: assignedDriver,
-                    customer: assignedCustomer,
+                    service: order.items?.[0]?.service || 'Multiple',
+                    items: order.items?.reduce((acc, item) => acc + (item.quantity || 0), 0) || 0,
+                    // Keep both backend status code and display label
+                    statusCode: order.status,
+                    status: order.statusLabel || order.status,
+                    priority: 'Normal',
+                    dueIn: order.deliveryDate
+                        ? `${Math.ceil((new Date(order.deliveryDate) - new Date()) / (1000 * 60 * 60))} hrs`
+                        : 'N/A',
+                    driver: order.driverId ? { id: order.driverId } : null,
+                    customer: order.customerId
+                        ? {
+                            id: order.customerId,
+                            name: order.customerName,
+                            phone: '',
+                            address: order.address,
+                            totalOrders: 0,
+                            totalSpent: 0
+                        }
+                        : null,
                     progress: order.progress || { note: 'No updates yet' }
-                };
-            });
-            setTasks(formattedTasks);
+                }));
+                setTasks(formattedTasks);
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+                setTasks([]); // Set empty array on error
+            }
         };
 
-        loadTasks();
-        // Optional: Poll for updates every 5 seconds to simulate real-time
-        const interval = setInterval(loadTasks, 5000);
-        return () => clearInterval(interval);
+        if (user?.id) {
+            loadTasks();
+            // Poll for updates every 10 seconds (reduced from 5)
+            const interval = setInterval(loadTasks, 10000);
+            return () => clearInterval(interval);
+        }
     }, [user?.id, lastUpdated]);
 
     const handleLogout = () => {
@@ -50,9 +63,15 @@ export default function EmployeeDashboard() {
         navigate('/');
     };
 
-    const handleStatusUpdate = (taskId, newStatus) => {
-        orderService.updateOrder(taskId, { status: newStatus });
-        setLastUpdated(Date.now()); // Trigger re-render
+    const handleStatusUpdate = async (taskId, newStatusCode) => {
+        try {
+            // Employees update via the employee-specific endpoint using backend status codes
+            await orderService.updateOrderStatus(taskId, newStatusCode, 'employee');
+            setLastUpdated(Date.now()); // Trigger re-render
+        } catch (error) {
+            console.error('Error updating status:', error);
+            alert('Failed to update order status');
+        }
     };
 
     const [isProfileOpen, setIsProfileOpen] = React.useState(false);
@@ -64,8 +83,10 @@ export default function EmployeeDashboard() {
     const [selectedTaskForProgress, setSelectedTaskForProgress] = useState(null);
 
     const stats = {
-        pending: tasks.filter(t => t.status !== 'Delivered').length,
-        processed: tasks.filter(t => t.status === 'Ready' || t.status === 'Delivered').length,
+        // Pending = all tasks that are not completed yet
+        pending: tasks.filter(t => t.statusCode !== 'COMPLETED').length,
+        // Processed = completed tasks
+        processed: tasks.filter(t => t.statusCode === 'COMPLETED').length,
         hours: 42,
         salary: 96000
     };
@@ -204,14 +225,15 @@ export default function EmployeeDashboard() {
                                             {/* Status Dropdown with color coding */}
                                             <div className="flex items-center gap-2 bg-slate-50 p-1 rounded-xl border border-slate-200">
                                                 <select
-                                                    className="bg-transparent text-sm font-bold text-slate-700 focus:outline-none px-3 py-1.5 w-full sm:w-32 cursor-pointer"
-                                                    value={task.status}
+                                                    className="bg-transparent text-sm font-bold text-slate-700 focus:outline-none px-3 py-1.5 w-full sm:w-40 cursor-pointer"
+                                                    value={task.statusCode}
                                                     onChange={(e) => handleStatusUpdate(task.id, e.target.value)}
                                                 >
-                                                    <option>Pending</option>
-                                                    <option>Sorting</option>
-                                                    <option>Cleaning</option>
-                                                    <option value="Ready">Ready</option>
+                                                    {/* Backend status codes with friendly labels */}
+                                                    <option value="AT_LAUNDRY">At Laundry</option>
+                                                    <option value="PROCESSING">Processing</option>
+                                                    <option value="READY">Ready</option>
+                                                    <option value="COMPLETED">Completed</option>
                                                 </select>
                                             </div>
 
@@ -302,10 +324,15 @@ export default function EmployeeDashboard() {
                 <ProgressUpdateModal
                     task={selectedTaskForProgress}
                     onClose={() => setIsProgressModalOpen(false)}
-                    onUpdate={(details) => {
-                        orderService.updateOrderProgress(selectedTaskForProgress.id, details);
-                        setLastUpdated(Date.now());
-                        setIsProgressModalOpen(false);
+                    onUpdate={async (details) => {
+                        try {
+                            await orderService.updateOrderProgress(selectedTaskForProgress.id, details);
+                            setLastUpdated(Date.now());
+                            setIsProgressModalOpen(false);
+                        } catch (error) {
+                            console.error('Error updating progress:', error);
+                            alert('Failed to update progress');
+                        }
                     }}
                 />
             )}
