@@ -25,8 +25,6 @@ import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { orderService } from '../services/orderService';
-import { useTranslation } from 'react-i18next';
-import LanguageSwitcher from '../components/common/LanguageSwitcher';
 
 // --- Utility Components ---
 
@@ -41,7 +39,12 @@ const StatusBadge = ({ status }) => {
         'Delivered': 'bg-emerald-100 text-emerald-700 border-emerald-200',
         'Cancelled': 'bg-red-100 text-red-700 border-red-200',
         'Pending': 'bg-amber-100 text-amber-700 border-amber-200',
+        'PENDING': 'bg-amber-100 text-amber-700 border-amber-200',
         'Placed': 'bg-amber-100 text-amber-700 border-amber-200',
+        'PICKED': 'bg-blue-100 text-blue-700 border-blue-200',
+        'NOT_PICKED': 'bg-amber-100 text-amber-700 border-amber-200',
+        'COMPLETED': 'bg-emerald-100 text-emerald-700 border-emerald-200',
+        'CANCELLED': 'bg-red-100 text-red-700 border-red-200',
         'Ready': 'bg-teal-100 text-teal-700 border-teal-200',
     };
     return (
@@ -157,7 +160,7 @@ const LiveTracker = ({ activeOrders }) => {
     );
 };
 
-const OverviewTab = ({ stats, recentOrders, setActiveTab, activeOrders, t }) => (
+const OverviewTab = ({ stats, recentOrders, setActiveTab, activeOrders }) => (
     <div className="space-y-8">
         {/* Live Tracker for active orders */}
         <LiveTracker activeOrders={activeOrders} />
@@ -165,26 +168,26 @@ const OverviewTab = ({ stats, recentOrders, setActiveTab, activeOrders, t }) => 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard
-                title={t('total_orders', 'Total Orders')}
+                title="Total Orders"
                 value={stats.totalOrders}
                 icon={ShoppingBag}
                 colorClass="bg-blue-500"
                 trend="+2 this month"
             />
             <StatCard
-                title={t('active_orders', 'Active Orders')}
+                title="Active Orders"
                 value={stats.activeOrders}
                 icon={Clock}
                 colorClass="bg-amber-500"
             />
             <StatCard
-                title={t('completed_orders', 'Completed')}
+                title="Completed"
                 value={stats.completedOrders}
                 icon={CheckCircle}
                 colorClass="bg-emerald-500"
             />
             <StatCard
-                title={t('total_spent', 'Total Spent')}
+                title="Total Spent"
                 value={`LKR ${stats.totalSpent.toLocaleString()}`}
                 icon={DollarSign}
                 colorClass="bg-violet-500"
@@ -195,25 +198,24 @@ const OverviewTab = ({ stats, recentOrders, setActiveTab, activeOrders, t }) => 
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
             <div className="p-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
                 <div>
-                    <h2 className="text-lg font-bold text-slate-800">{t('recent_activity', 'Recent Activity')}</h2>
+                    <h2 className="text-lg font-bold text-slate-800">Recent Activity</h2>
                     <p className="text-slate-500 text-sm">Your latest laundry updates</p>
                 </div>
                 <button
                     onClick={() => setActiveTab('orders')}
                     className="text-blue-600 text-sm font-semibold hover:text-blue-700 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors"
                 >
-                    {t('view_all', 'View All')}
+                    View All
                 </button>
             </div>
             <div className="overflow-x-auto">
                 <table className="w-full">
                     <thead className="bg-slate-50">
                         <tr>
-                            <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">{t('order_id', 'Order ID')}</th>
-                            <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">{t('services', 'Service')}</th>
-                            <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">{t('status', 'Status')}</th>
-                            <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Pickup</th>
-                            <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">{t('amount', 'Amount')}</th>
+                            <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Order ID</th>
+                            <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Service Type</th>
+                            <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Pickup Status</th>
+                            <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Amount</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
@@ -228,17 +230,12 @@ const OverviewTab = ({ stats, recentOrders, setActiveTab, activeOrders, t }) => 
                                             <Package className="w-4 h-4" />
                                         </div>
                                         <div>
-                                            <p className="text-sm font-medium text-slate-900">{order.service}</p>
-                                            <p className="text-xs text-slate-500">{order.items} items</p>
+                                            <p className="text-sm font-medium text-slate-900">{order.serviceType || order.service}</p>
                                         </div>
                                     </div>
                                 </td>
-                                <td className="px-6 py-4"><StatusBadge status={order.status} /></td>
-                                <td className="px-6 py-4 text-sm text-slate-600">
-                                    <div className="flex items-center gap-1.5">
-                                        <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                                        {order.pickup}
-                                    </div>
+                                <td className="px-6 py-4">
+                                    <StatusBadge status={order.pickupStatus === 'PICKED' ? 'PICKED' : 'PENDING'} />
                                 </td>
                                 <td className="px-6 py-4 text-sm font-bold text-slate-900 text-right">LKR {order.total.toLocaleString()}</td>
                             </tr>
@@ -257,13 +254,13 @@ const OrdersTab = ({ recentOrders }) => (
         </div>
         <div className="overflow-x-auto">
             <table className="w-full">
-                <thead className="bg-slate-50">
+                    <thead className="bg-slate-50">
                     <tr>
                         <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Order ID</th>
-                        <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Date</th>
-                        <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Service</th>
+                        <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Created At</th>
+                        <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Service Type</th>
                         <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
-                        <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Amount</th>
+                        <th className="px-6 py-4 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Total Amount</th>
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -272,8 +269,10 @@ const OrdersTab = ({ recentOrders }) => (
                             <td className="px-6 py-4">
                                 <span className="font-mono text-sm font-medium text-slate-900 group-hover:text-blue-600 transition-colors">{order.id}</span>
                             </td>
-                            <td className="px-6 py-4 text-sm text-slate-600">{order.date}</td>
-                            <td className="px-6 py-4 text-sm font-medium text-slate-900">{order.service}</td>
+                            <td className="px-6 py-4 text-sm text-slate-600">
+                                {order.createdAt ? new Date(order.createdAt).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' }) : order.date}
+                            </td>
+                            <td className="px-6 py-4 text-sm font-medium text-slate-900">{order.serviceType || order.service}</td>
                             <td className="px-6 py-4"><StatusBadge status={order.status} /></td>
                             <td className="px-6 py-4 text-sm font-bold text-slate-900 text-right">LKR {order.total.toLocaleString()}</td>
                         </tr>
@@ -571,8 +570,9 @@ const NewOrderModal = ({ isOpen, onClose, onSubmit }) => {
     );
 };
 
-const QuotationModal = ({ isOpen, onClose, data }) => {
+const QuotationModal = ({ isOpen, onClose, data, onConfirm }) => {
     const quotationRef = useRef();
+    const [isConfirming, setIsConfirming] = useState(false);
 
     if (!isOpen || !data) return null;
 
@@ -611,7 +611,21 @@ const QuotationModal = ({ isOpen, onClose, data }) => {
             const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
             pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-            pdf.save(`Quotation-${data.id}.pdf`);
+            pdf.save(`Quotation-${data.tempId || 'preview'}.pdf`);
+        }
+    };
+
+    const handleConfirmOrder = async () => {
+        if (!onConfirm || !data.orderData) return;
+        
+        setIsConfirming(true);
+        try {
+            await onConfirm(data.orderData);
+        } catch (error) {
+            console.error('Error confirming order:', error);
+            alert('Failed to confirm order. Please try again.');
+        } finally {
+            setIsConfirming(false);
         }
     };
 
@@ -635,11 +649,17 @@ const QuotationModal = ({ isOpen, onClose, data }) => {
                         <div className="flex justify-between items-start mb-10">
                             <div>
                                 <div className="text-2xl font-black text-blue-600 tracking-tight">LaundryHub</div>
-                                <p className="text-slate-400 text-xs font-medium uppercase tracking-wider mt-1">Order Quotation</p>
+                                <p className="text-slate-400 text-xs font-medium uppercase tracking-wider mt-1">Order Quotation {data.id ? `#${data.id}` : '(Preview)'}</p>
                             </div>
                             <div className="text-right">
-                                <h2 className="text-base font-bold text-slate-900">#{data.id}</h2>
-                                <p className="text-slate-500">{new Date().toLocaleDateString()}</p>
+                                {data.id ? (
+                                    <>
+                                        <h2 className="text-base font-bold text-slate-900">#{data.id}</h2>
+                                        <p className="text-slate-500">{new Date().toLocaleDateString()}</p>
+                                    </>
+                                ) : (
+                                    <p className="text-slate-500 text-sm">Preview Only</p>
+                                )}
                             </div>
                         </div>
 
@@ -696,11 +716,30 @@ const QuotationModal = ({ isOpen, onClose, data }) => {
                     </button>
                     <button
                         onClick={handleDownloadPDF}
-                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-semibold shadow-lg shadow-blue-200 transition-all"
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 font-semibold transition-colors"
                     >
                         <Download className="w-4 h-4" />
                         Download PDF
                     </button>
+                    {onConfirm && data.orderData && (
+                        <button
+                            onClick={handleConfirmOrder}
+                            disabled={isConfirming}
+                            className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 font-semibold shadow-lg shadow-green-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {isConfirming ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    Confirming...
+                                </>
+                            ) : (
+                                <>
+                                    <CheckCircle className="w-4 h-4" />
+                                    Confirm Order
+                                </>
+                            )}
+                        </button>
+                    )}
                 </div>
             </div>
         </div>
@@ -711,78 +750,177 @@ const QuotationModal = ({ isOpen, onClose, data }) => {
 
 const LaundryDashboard = () => {
     const { user, logout } = useAuth();
-    const { t } = useTranslation();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('overview');
+    const [userOrders, setUserOrders] = useState([]);
+    const [stats, setStats] = useState({
+        totalOrders: 0,
+        activeOrders: 0,
+        completedOrders: 0,
+        totalSpent: 0
+    });
+    const [recentOrders, setRecentOrders] = useState([]);
+    const [activeOrders, setActiveOrders] = useState([]);
+    
+    // Modal states
     const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
     const [isQuotationOpen, setIsQuotationOpen] = useState(false);
     const [quotationData, setQuotationData] = useState(null);
-    const [userOrders, setUserOrders] = useState([]);
 
-    // Load Live Data
+    // Load dashboard data from backend
     useEffect(() => {
-        const loadRequests = () => {
-            if (user?.id) {
-                const orders = orderService.getOrdersByCustomer(user.id)
-                    .sort((a, b) => new Date(b.pickupDate) - new Date(a.pickupDate));
+        const loadDashboardData = async () => {
+            if (!user?.id) return;
+            
+            try {
+                // Load dashboard stats from backend
+                const statsResponse = await api.get('/customer/dashboard/stats');
+                const statsData = statsResponse.data;
+
+                // Load orders from backend
+                const orders = await orderService.getOrdersByCustomer(user.id);
+                
+                // Filter active orders (not completed)
+                const activeOrders = orders.filter(order => order.status !== 'COMPLETED');
+                
+                // Get recent orders (last 5)
+                const recentOrders = orders
+                    .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
+                    .slice(0, 5);
+
+                setStats({
+                    totalOrders: statsData.totalOrders || 0,
+                    activeOrders: statsData.activeOrders || 0,
+                    completedOrders: statsData.completedOrders || 0,
+                    totalSpent: statsData.totalSpent || 0
+                });
+                
                 setUserOrders(orders);
+                setRecentOrders(recentOrders);
+                setActiveOrders(activeOrders);
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                // Fallback to zeros
+                setStats({
+                    totalOrders: 0,
+                    activeOrders: 0,
+                    completedOrders: 0,
+                    totalSpent: 0
+                });
+                setUserOrders([]);
+                setRecentOrders([]);
+                setActiveOrders([]);
             }
         };
 
-        loadRequests();
-        const interval = setInterval(loadRequests, 5000); // Poll for real-time updates
+        loadDashboardData();
+        // Refresh every 30 seconds
+        const interval = setInterval(loadDashboardData, 30000);
         return () => clearInterval(interval);
     }, [user?.id]);
 
+    const handleOrderSubmit = async (formData) => {
+        try {
+            // Price Calculation Logic
+            const basePrice = {
+                'Wash & Fold': 450.0,
+                'Dry Cleaning': 1500.0,
+                'Ironing Only': 600.0,
+                'Household Items': 2400.0
+            }[formData.service] || 450.0;
 
-    const stats = {
-        totalOrders: userOrders.length,
-        activeOrders: userOrders.filter(o => ['Placed', 'Picked Up', 'Cleaning', 'Sorting', 'Washing', 'Drying', 'Folding', 'Ready', 'Out for Delivery'].includes(o.status)).length,
-        completedOrders: userOrders.filter(o => o.status === 'Delivered').length,
-        totalSpent: user?.totalSpent || userOrders.reduce((sum, order) => sum + order.totalAmount, 0)
+            const itemCount = Number(formData.items);
+            const total = basePrice * itemCount;
+
+            // Create order object for backend (NOT saved yet - preview only)
+            // Pickup date/time not required per requirements
+            const orderData = {
+                items: [{
+                    name: formData.service,
+                    service: formData.service,
+                    quantity: itemCount,
+                    price: basePrice
+                }],
+                totalAmount: total,
+                serviceType: formData.service,
+                address: user?.address || formData.address || '',
+                progressNote: formData.instructions || ''
+            };
+
+            // Show quotation modal with PREVIEW ONLY (no order saved to DB yet)
+            const newQuotation = {
+                tempId: `PREVIEW-${Date.now()}`,
+                service: formData.service,
+                items: itemCount,
+                unitPrice: basePrice,
+                total: total,
+                userName: user?.fullName || user?.name || 'Customer',
+                userEmail: user?.email || '',
+                date: new Date().toISOString(),
+                orderData: orderData // Store order data for confirmation
+            };
+
+            setQuotationData(newQuotation);
+            setIsOrderModalOpen(false);
+            setIsQuotationOpen(true);
+        } catch (error) {
+            console.error('Error generating quotation:', error);
+            alert('Failed to generate quotation. Please try again.');
+        }
     };
 
-    const recentOrders = userOrders.map(order => ({
-        id: order.id,
-        service: order.items[0]?.service || 'Multiple Services',
-        items: order.items.reduce((sum, item) => sum + item.quantity, 0),
-        total: order.totalAmount,
-        status: order.status,
-        date: new Date(order.pickupDate).toLocaleDateString(),
-        pickup: new Date(order.pickupDate).toLocaleString('en-US', { dateStyle: 'short', timeStyle: 'short' }),
-        progress: order.progress,
-        deliveryDate: order.deliveryDate
-    }));
+    const handleConfirmOrder = async (orderData) => {
+        try {
+            console.log('Confirming order:', orderData);
 
-    const activeOrders = recentOrders.filter(o => !['Delivered', 'Cancelled'].includes(o.status)).slice(0, 1);
-
-    const handleOrderSubmit = (formData) => {
-        // Price Calculation Logic
-        const basePrice = {
-            'Wash & Fold': 450.0,
-            'Dry Cleaning': 1500.0,
-            'Ironing Only': 600.0,
-            'Household Items': 2400.0
-        }[formData.service] || 450.0;
-
-        const itemCount = Number(formData.items);
-        const total = basePrice * itemCount;
-
-        const newQuotation = {
-            id: `QT-${Math.floor(Math.random() * 10000)}`,
-            service: formData.service,
-            items: itemCount,
-            unitPrice: basePrice,
-            total: total,
-            userName: user?.name,
-            userEmail: user?.email,
-            date: new Date().toISOString()
-        };
-
-        setQuotationData(newQuotation);
-        setIsOrderModalOpen(false);
-        setIsQuotationOpen(true);
-        // In a real app, we would save the order here too if user confirms
+            // Now save the order to database
+            const createdOrder = await orderService.createOrder(orderData);
+            
+            console.log('Order confirmed successfully:', createdOrder);
+            
+            // Update quotation data with real order ID
+            setQuotationData(prev => ({
+                ...prev,
+                id: createdOrder.id,
+                tempId: null
+            }));
+            
+            // Reload all data to refresh dashboard
+            const orders = await orderService.getOrdersByCustomer(user.id);
+            const statsResponse = await api.get('/customer/dashboard/stats');
+            const statsData = statsResponse.data;
+            
+            // Update state with fresh data
+            setUserOrders(orders.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)));
+            
+            const activeOrders = orders.filter(order => order.status !== 'COMPLETED');
+            const recentOrders = orders
+                .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
+                .slice(0, 5);
+            
+            setStats({
+                totalOrders: statsData.totalOrders || 0,
+                activeOrders: statsData.activeOrders || 0,
+                completedOrders: statsData.completedOrders || 0,
+                totalSpent: statsData.totalSpent || 0
+            });
+            setActiveOrders(activeOrders);
+            setRecentOrders(recentOrders);
+            
+            // Show success message
+            alert('Order confirmed successfully! Your order has been placed.');
+            
+            // Close quotation modal after a short delay
+            setTimeout(() => {
+                setIsQuotationOpen(false);
+                setQuotationData(null);
+            }, 1000);
+        } catch (error) {
+            console.error('Error confirming order:', error);
+            console.error('Error details:', error.response?.data || error.message);
+            const errorMessage = error.response?.data?.message || error.response?.data || error.message || 'Unknown error';
+            throw new Error(`Failed to confirm order: ${errorMessage}`);
+        }
     };
 
     return (
@@ -818,29 +956,21 @@ const LaundryDashboard = () => {
             </nav>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
-
                 {/* Header Action Row */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
                     <div>
-                        <div className="flex justify-between items-start">
-                            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">{t('dashboard', 'Dashboard')}</h1>
-                            <div className="md:hidden"><LanguageSwitcher /></div>
+                        <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Dashboard</h1>
+                        <p className="text-slate-500 mt-2 font-medium">Welcome back! manage your orders and profile.</p>
+                    </div>
+                    <button
+                        onClick={() => setIsOrderModalOpen(true)}
+                        className="group flex items-center justify-center gap-2.5 bg-slate-900 text-white px-7 py-3.5 rounded-2xl hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 hover:shadow-2xl hover:translate-y-[-2px] active:translate-y-[1px]"
+                    >
+                        <div className="bg-white/20 p-1 rounded-lg group-hover:bg-white/30 transition-colors">
+                            <Plus className="w-5 h-5" />
                         </div>
-                        <p className="text-slate-500 mt-2 font-medium">{t('hero_subtitle', 'Welcome back!')}</p>
-                    </div>
-                    <div className="flex gap-4 items-center">
-                        <div className="hidden md:block"><LanguageSwitcher /></div>
-                        <button
-                            onClick={() => setIsOrderModalOpen(true)}
-                            className="group flex items-center justify-center gap-2.5 bg-slate-900 text-white px-7 py-3.5 rounded-2xl hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 hover:shadow-2xl hover:translate-y-[-2px] active:translate-y-[1px]"
-                        >
-                            <div className="bg-white/20 p-1 rounded-lg group-hover:bg-white/30 transition-colors">
-                                <Plus className="w-5 h-5" />
-                            </div>
-                            <span className="font-bold">{t('schedule_pickup', 'New Order')}</span>
-                        </button>
-                    </div>
+                        <span className="font-bold">New Order</span>
+                    </button>
                 </div>
 
                 {/* Tabs Navigation */}
@@ -870,7 +1000,7 @@ const LaundryDashboard = () => {
                 {/* Main Content Area */}
                 <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out">
                     {activeTab === 'overview' && (
-                        <OverviewTab stats={stats} recentOrders={recentOrders} setActiveTab={setActiveTab} activeOrders={activeOrders} t={t} />
+                        <OverviewTab stats={stats} recentOrders={recentOrders} setActiveTab={setActiveTab} activeOrders={activeOrders} />
                     )}
                     {activeTab === 'orders' && (
                         <OrdersTab recentOrders={recentOrders} />
@@ -889,8 +1019,12 @@ const LaundryDashboard = () => {
             />
             <QuotationModal
                 isOpen={isQuotationOpen}
-                onClose={() => setIsQuotationOpen(false)}
+                onClose={() => {
+                    setIsQuotationOpen(false);
+                    setQuotationData(null);
+                }}
                 data={quotationData}
+                onConfirm={handleConfirmOrder}
             />
         </div>
     );

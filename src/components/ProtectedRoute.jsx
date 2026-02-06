@@ -9,7 +9,7 @@ export default function ProtectedRoute({ children, allowedRoles }) {
         return <Navigate to="/login" replace />;
     }
 
-    // Role-based protection
+    // Role-based protection (role is normalized to lowercase in AuthContext)
     if (user?.role === 'admin') {
         return <Navigate to="/admin" replace />;
     }

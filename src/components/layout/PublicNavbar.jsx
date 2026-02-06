@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import LanguageSwitcher from '../common/LanguageSwitcher';
 import LoginSelectionModal from '../auth/LoginSelectionModal';
 
 export default function PublicNavbar() {
-    const { t } = useTranslation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
     const location = useLocation();
@@ -27,36 +24,35 @@ export default function PublicNavbar() {
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center gap-8">
                         <Link to="/" className={`font-medium transition-colors ${isActive('/') ? 'text-blue-600' : 'text-gray-600 hover:text-blue-600'}`}>
-                            {t('home', 'Home')}
+                            Home
                         </Link>
                         <Link to="/about" className={`font-medium transition-colors ${isActive('/about') ? 'text-blue-600' : 'text-gray-600 hover:text-blue-600'}`}>
-                            {t('about', 'About Us')}
+                            About Us
                         </Link>
                         <Link to="/services" className={`font-medium transition-colors ${isActive('/services') ? 'text-blue-600' : 'text-gray-600 hover:text-blue-600'}`}>
-                            {t('services', 'Services')}
+                            Services
                         </Link>
                         <Link to="/pricing" className={`font-medium transition-colors ${isActive('/pricing') ? 'text-blue-600' : 'text-gray-600 hover:text-blue-600'}`}>
-                            {t('pricing', 'Pricing')}
+                            Pricing
                         </Link>
                         <Link to="/contact" className={`font-medium transition-colors ${isActive('/contact') ? 'text-blue-600' : 'text-gray-600 hover:text-blue-600'}`}>
-                            {t('contact', 'Contact')}
+                            Contact
                         </Link>
                         <Link to="/faq" className={`font-medium transition-colors ${isActive('/faq') ? 'text-blue-600' : 'text-gray-600 hover:text-blue-600'}`}>
-                            {t('faq', 'FAQ')}
+                            FAQ
                         </Link>
                     </div>
 
                     {/* Auth Buttons */}
                     <div className="hidden md:flex items-center gap-4">
-                        <LanguageSwitcher />
                         <button
                             onClick={() => setShowLoginModal(true)}
                             className="px-5 py-2.5 text-blue-600 font-semibold hover:bg-blue-50 rounded-lg transition-all"
                         >
-                            {t('login', 'Login')}
+                            Login
                         </button>
                         <Link to="/login" className="px-6 py-2.5 bg-blue-600 text-white font-bold rounded-full hover:bg-blue-700 hover:shadow-lg transition-all transform hover:-translate-y-0.5">
-                            {t('register', 'Register')}
+                            Register
                         </Link>
                     </div>
 
@@ -74,15 +70,12 @@ export default function PublicNavbar() {
             {isMenuOpen && (
                 <div className="md:hidden bg-white border-t border-gray-100 animate-in slide-in-from-top-5 duration-200">
                     <div className="flex flex-col p-4 space-y-4">
-                        <Link to="/" className="text-gray-600 font-medium p-2 hover:bg-gray-50 rounded-lg">{t('home', 'Home')}</Link>
-                        <Link to="/about" className="text-gray-600 font-medium p-2 hover:bg-gray-50 rounded-lg">{t('about', 'About Us')}</Link>
-                        <Link to="/services" className="text-gray-600 font-medium p-2 hover:bg-gray-50 rounded-lg">{t('services', 'Services')}</Link>
-                        <Link to="/pricing" className="text-gray-600 font-medium p-2 hover:bg-gray-50 rounded-lg">{t('pricing', 'Pricing')}</Link>
-                        <Link to="/contact" className="text-gray-600 font-medium p-2 hover:bg-gray-50 rounded-lg">{t('contact', 'Contact')}</Link>
-                        <Link to="/faq" className="text-gray-600 font-medium p-2 hover:bg-gray-50 rounded-lg">{t('faq', 'FAQ')}</Link>
-                        <div className="px-2 pt-2">
-                            <LanguageSwitcher />
-                        </div>
+                        <Link to="/" className="text-gray-600 font-medium p-2 hover:bg-gray-50 rounded-lg">Home</Link>
+                        <Link to="/about" className="text-gray-600 font-medium p-2 hover:bg-gray-50 rounded-lg">About Us</Link>
+                        <Link to="/services" className="text-gray-600 font-medium p-2 hover:bg-gray-50 rounded-lg">Services</Link>
+                        <Link to="/pricing" className="text-gray-600 font-medium p-2 hover:bg-gray-50 rounded-lg">Pricing</Link>
+                        <Link to="/contact" className="text-gray-600 font-medium p-2 hover:bg-gray-50 rounded-lg">Contact</Link>
+                        <Link to="/faq" className="text-gray-600 font-medium p-2 hover:bg-gray-50 rounded-lg">FAQ</Link>
                         <hr />
                         <button
                             onClick={() => {
@@ -91,9 +84,9 @@ export default function PublicNavbar() {
                             }}
                             className="text-center w-full py-3 bg-blue-50 text-blue-600 font-bold rounded-lg"
                         >
-                            {t('login', 'Login')}
+                            Login
                         </button>
-                        <Link to="/login" className="text-center w-full py-3 bg-blue-600 text-white font-bold rounded-lg">{t('register', 'Register')}</Link>
+                        <Link to="/login" className="text-center w-full py-3 bg-blue-600 text-white font-bold rounded-lg">Register</Link>
                     </div>
                 </div>
             )}

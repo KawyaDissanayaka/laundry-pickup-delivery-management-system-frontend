@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ShoppingBag, DollarSign, Truck, Users, TrendingUp, TrendingDown, Calendar, ArrowRight, Activity } from 'lucide-react';
-import { mockOrders } from '../data/mockOrders';
-import { mockDrivers } from '../data/mockDrivers';
+import { orderService } from '../services/orderService';
+import api from '../services/api';
 
 // Custom Card Component
 const DashboardCard = ({ title, value, icon: Icon, color, trend, subValue }) => {
@@ -48,46 +48,96 @@ const DashboardCard = ({ title, value, icon: Icon, color, trend, subValue }) => 
 };
 
 export default function Dashboard() {
-    const [timeRange, setTimeRange] = useState('Month'); // Default to Monthly
+    const [timeRange, setTimeRange] = useState('Month');
+    const [dashboardData, setDashboardData] = useState({
+        revenue: 0,
+        activeOrders: 0,
+        activeDrivers: 0,
+        newCustomers: 0,
+        chartData: [],
+        chartLabels: [],
+        recentOrders: []
+    });
+    const [loading, setLoading] = useState(true);
 
-    // Mock Data Generator based on time range
-    const getDashboardData = (range) => {
-        switch (range) {
-            case 'Day':
-                return {
-                    revenue: 375000.00,
-                    activeOrders: 12,
-                    activeDrivers: 8,
-                    newCustomers: 2,
-                    chartData: [20, 35, 45, 30, 50, 65, 40, 55, 70, 60, 80, 75], // Hourly-ish
-                    chartLabels: ['8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm']
-                };
-            case 'Week':
-                return {
-                    revenue: 2535000.00,
-                    activeOrders: 45,
-                    activeDrivers: 12,
-                    newCustomers: 15,
-                    chartData: [50, 70, 45, 90, 65, 85, 95],
-                    chartLabels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                };
-            case 'Month':
-            default:
-                const totalRevenue = mockOrders.reduce((sum, order) => sum + order.totalAmount, 0);
-                const activeOrdersCount = mockOrders.filter(o => o.status !== 'Delivered' && o.status !== 'Cancelled').length;
-                const driverCount = mockDrivers.filter(d => d.status === 'Available' || d.status === 'Busy').length;
-                return {
-                    revenue: totalRevenue,
+    useEffect(() => {
+        const loadDashboardData = async () => {
+            try {
+                // Load analytics from backend
+                const analyticsResponse = await api.get('/admin/analytics/stats');
+                const analytics = analyticsResponse.data;
+
+                // Load all orders (already normalized by orderService)
+                const orders = await orderService.getAllOrders();
+
+                // Prefer backend-provided counts for consistency with DB
+                const activeOrdersCount = analytics.activeOrders ?? 0;
+                const activeRidersCount = analytics.activeRiders ?? 0;
+
+                // Fallback: unique riders from current orders if backend field missing
+                const uniqueRiders = new Set(
+                    orders
+                        .filter(o => o.driverId)
+                        .map(o => o.driverId)
+                );
+
+                // Build monthly revenue series from completed orders for the current year
+                const monthlyRevenue = Array(12).fill(0);
+                const currentYear = new Date().getFullYear();
+                orders.forEach(o => {
+                    if (!o.totalAmount) return;
+                    const dateSource = o.completedAt || o.createdAt;
+                    if (!dateSource) return;
+                    const d = new Date(dateSource);
+                    if (Number.isNaN(d.getTime()) || d.getFullYear() !== currentYear) return;
+                    monthlyRevenue[d.getMonth()] += o.totalAmount;
+                });
+
+                const maxMonthly = Math.max(...monthlyRevenue, 1);
+                const chartData = monthlyRevenue.map(v => Math.round((v / maxMonthly) * 100));
+                const chartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+                // Get recent orders (last 5 by created date)
+                const recentOrders = orders
+                    .slice()
+                    .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
+                    .slice(0, 5);
+
+                setDashboardData({
+                    revenue: analytics.totalRevenue || 0,
+                    companyRevenue: analytics.companyRevenue || 0,
                     activeOrders: activeOrdersCount,
-                    activeDrivers: driverCount,
-                    newCustomers: 128,
-                    chartData: [65, 40, 75, 55, 80, 95, 85, 45, 60, 70, 90, 80],
-                    chartLabels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-                };
-        }
-    };
+                    activeDrivers: activeRidersCount || uniqueRiders.size,
+                    newCustomers: analytics.newCustomers || 0,
+                    chartData,
+                    chartLabels,
+                    recentOrders
+                });
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                // Set default values on error
+                setDashboardData({
+                    revenue: 0,
+                    companyRevenue: 0,
+                    activeOrders: 0,
+                    activeDrivers: 0,
+                    newCustomers: 0,
+                    chartData: [],
+                    chartLabels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    recentOrders: []
+                });
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    const data = getDashboardData(timeRange);
+        loadDashboardData();
+        // Refresh every 30 seconds
+        const interval = setInterval(loadDashboardData, 30000);
+        return () => clearInterval(interval);
+    }, []);
+
+    const data = dashboardData;
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
@@ -122,33 +172,29 @@ export default function Dashboard() {
                     title={`Total Revenue (${timeRange})`}
                     value={`LKR ${data.revenue.toLocaleString()}`}
                     icon={DollarSign}
-                    trend={timeRange === 'Month' ? 12.5 : timeRange === 'Week' ? 5.2 : 1.8}
                     color="green"
-                    subValue="Gross earnings"
+                    subValue="Completed orders revenue"
                 />
                 <DashboardCard
                     title="Active Orders"
                     value={data.activeOrders}
                     icon={ShoppingBag}
-                    trend={timeRange === 'Month' ? 8.2 : 3.4}
                     color="blue"
-                    subValue="Currently processing"
+                    subValue="Not yet completed"
                 />
                 <DashboardCard
                     title="Active Riders"
                     value={data.activeDrivers}
                     icon={Truck}
                     color="purple"
-                    subValue={`${mockDrivers.length} Registered`}
-                    trend={0}
+                    subValue="Handling active orders"
                 />
                 <DashboardCard
-                    title="New Customers"
+                    title="Customers"
                     value={data.newCustomers}
                     icon={Users}
-                    trend={timeRange === 'Month' ? -2.1 : 4.5}
                     color="orange"
-                    subValue="This period"
+                    subValue="Registered in system"
                 />
             </div>
 
@@ -192,8 +238,10 @@ export default function Dashboard() {
                                 <Activity className="w-5 h-5" />
                             </div>
                             <div>
-                                <h4 className="font-bold text-gray-900">High Demand</h4>
-                                <p className="text-xs text-gray-500">Processing capacity at 85%</p>
+                                <h4 className="font-bold text-gray-900">Order Load</h4>
+                                <p className="text-xs text-gray-500">
+                                    {data.activeOrders} active orders in progress
+                                </p>
                             </div>
                         </div>
                         <div className="flex items-center p-3 bg-green-50 rounded-xl">
@@ -201,8 +249,8 @@ export default function Dashboard() {
                                 <Truck className="w-5 h-5" />
                             </div>
                             <div>
-                                <h4 className="font-bold text-gray-900">Fleet Healthy</h4>
-                                <p className="text-xs text-gray-500">All vehicles operational</p>
+                                <h4 className="font-bold text-gray-900">Fleet Activity</h4>
+                                <p className="text-xs text-gray-500">{data.activeDrivers} riders handling orders</p>
                             </div>
                         </div>
                         <div className="flex items-center p-3 bg-purple-50 rounded-xl">
@@ -210,8 +258,8 @@ export default function Dashboard() {
                                 <Users className="w-5 h-5" />
                             </div>
                             <div>
-                                <h4 className="font-bold text-gray-900">Staff Active</h4>
-                                <p className="text-xs text-gray-500">12 Employees clocked in</p>
+                                <h4 className="font-bold text-gray-900">Customer Base</h4>
+                                <p className="text-xs text-gray-500">{data.newCustomers} customers in the system</p>
                             </div>
                         </div>
                     </div>
@@ -241,33 +289,60 @@ export default function Dashboard() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
-                            {mockOrders.slice(0, 5).map((order) => (
-                                <tr key={order.id} className="hover:bg-gray-50/80 transition-colors">
-                                    <td className="py-4 px-6 font-bold text-gray-900">
-                                        <span className="font-mono text-blue-600">#{order.id}</span>
-                                    </td>
-                                    <td className="py-4 px-6">
-                                        <div className="flex items-center">
-                                            <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500 mr-3">
-                                                {order.customerName.charAt(0)}
-                                            </div>
-                                            <span className="font-medium text-gray-700">{order.customerName}</span>
-                                        </div>
-                                    </td>
-                                    <td className="py-4 px-6 text-gray-500 text-sm">{order.serviceType || 'Standard Wash'}</td>
-                                    <td className="py-4 px-6">
-                                        <span className={`px-3 py-1 rounded-full text-xs font-bold 
-                                            ${order.status === 'Delivered' ? 'bg-green-100 text-green-700' :
-                                                order.status === 'In Progress' ? 'bg-blue-100 text-blue-700' :
-                                                    order.status === 'Pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-700'}`}>
-                                            {order.status}
-                                        </span>
-                                    </td>
-                                    <td className="py-4 px-6 text-right font-bold text-gray-900">
-                                        LKR {order.totalAmount.toFixed(2)}
+                            {loading ? (
+                                <tr>
+                                    <td colSpan={5} className="py-8 px-6 text-center text-gray-500">
+                                        Loading orders...
                                     </td>
                                 </tr>
-                            ))}
+                            ) : data.recentOrders.length === 0 ? (
+                                <tr>
+                                    <td colSpan={5} className="py-8 px-6 text-center text-gray-500">
+                                        No orders found
+                                    </td>
+                                </tr>
+                            ) : (
+                                data.recentOrders.map((order) => (
+                                    <tr key={order.id} className="hover:bg-gray-50/80 transition-colors">
+                                        <td className="py-4 px-6 font-bold text-gray-900">
+                                            <span className="font-mono text-blue-600">#{order.id}</span>
+                                        </td>
+                                        <td className="py-4 px-6">
+                                            <div className="flex items-center">
+                                                <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500 mr-3">
+                                                    {(order.customerName || 'U').charAt(0).toUpperCase()}
+                                                </div>
+                                                <span className="font-medium text-gray-700">{order.customerName || 'Unknown'}</span>
+                                            </div>
+                                        </td>
+                                        <td className="py-4 px-6 text-gray-500 text-sm">
+                                            {order.items?.[0]?.service || order.serviceType || 'Standard Wash'}
+                                        </td>
+                                        <td className="py-4 px-6">
+                                            {(() => {
+                                                const code = order.status;
+                                                const label = order.statusLabel || order.status;
+                                                let classes = 'bg-gray-100 text-gray-700';
+                                                if (code === 'DELIVERED' || code === 'COMPLETED') {
+                                                    classes = 'bg-green-100 text-green-700';
+                                                } else if (code === 'PROCESSING' || code === 'AT_LAUNDRY' || code === 'READY') {
+                                                    classes = 'bg-blue-100 text-blue-700';
+                                                } else if (code === 'PLACED' || code === 'ASSIGNED') {
+                                                    classes = 'bg-yellow-100 text-yellow-700';
+                                                }
+                                                return (
+                                                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${classes}`}>
+                                                        {label}
+                                                    </span>
+                                                );
+                                            })()}
+                                        </td>
+                                        <td className="py-4 px-6 text-right font-bold text-gray-900">
+                                            LKR {order.totalAmount?.toFixed(2) || '0.00'}
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </div>

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
 
 const api = axios.create({
     baseURL: API_BASE_URL,
@@ -12,11 +12,18 @@ const api = axios.create({
 // Add a request interceptor
 api.interceptors.request.use(
     (config) => {
-        // You can add auth tokens here in the future
-        // const token = localStorage.getItem('token');
-        // if (token) {
-        //     config.headers.Authorization = `Bearer ${token}`;
-        // }
+        // Add auth tokens from localStorage
+        const user = localStorage.getItem('user');
+        if (user) {
+            try {
+                const userData = JSON.parse(user);
+                if (userData.token) {
+                    config.headers.Authorization = `Bearer ${userData.token}`;
+                }
+            } catch (e) {
+                console.error('Error parsing user data:', e);
+            }
+        }
         return config;
     },
     (error) => {

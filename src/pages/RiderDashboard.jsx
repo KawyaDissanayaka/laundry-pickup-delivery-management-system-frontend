@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Truck, MapPin, Clock, DollarSign, LogOut, CheckCircle, Navigation, Phone, Menu, X, Wallet } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { mockOrders } from '../data/mockOrders';
+import { orderService } from '../services/orderService';
+import api from '../services/api';
 
 const RiderDashboard = () => {
     const { user, logout } = useAuth();
@@ -10,25 +11,59 @@ const RiderDashboard = () => {
     const [isAvailable, setIsAvailable] = useState(true);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    // Dynamic Data
-    const assignedOrders = mockOrders.filter(order => order.driverId === user?.id)
-        .map(order => ({
-            id: order.id,
-            type: order.id === 'ORD-002' ? 'Pickup' : 'Delivery', // Simple logic for demo, ideally order object has type
-            address: order.address,
-            time: new Date(order.deliveryDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            status: order.status,
-            customer: order.customerName,
-            phone: '077 123 4567' // Fallback or needs to be in order data
-        }));
+    const [assignedOrders, setAssignedOrders] = useState([]);
+    const [stats, setStats] = useState({
+        deliveries: 0,
+        today: 0,
+        earnings: 0
+    });
 
-    const stats = {
-        deliveries: 145, // Historical Total
-        today: assignedOrders.length,
-        earnings: 45000,
-        base: 75000,
-        projected: 93750
-    };
+    useEffect(() => {
+        const loadData = async () => {
+            if (user?.id) {
+                try {
+                    // Load orders
+                    const orders = await orderService.getOrdersByRider(user.id);
+                    const formatted = orders.map(order => ({
+                        id: order.id,
+                        type: order.status === 'READY' || order.status === 'DELIVERED' ? 'Delivery' : 'Pickup',
+                        address: order.address || 'Address not provided',
+                        time: order.createdAt
+                            ? new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                            : 'N/A',
+                        status: order.statusLabel || order.status,
+                        statusCode: order.status,
+                        customer: order.customerName || 'Unknown',
+                        phone: '077 123 4567' // TODO: Get from customer data
+                    }));
+                    setAssignedOrders(formatted);
+                    
+                    // Load dashboard stats (commission, pending orders)
+                    const statsResponse = await api.get('/rider/dashboard/stats');
+                    const statsData = statsResponse.data;
+                    const completedCount = orders.filter(o => o.status === 'COMPLETED').length;
+
+                    setStats({
+                        deliveries: completedCount,
+                        today: formatted.length,
+                        earnings: statsData.commission || 0
+                    });
+                } catch (error) {
+                    console.error('Error loading rider data:', error);
+                    // Set empty state on error
+                    setAssignedOrders([]);
+                    setStats({
+                        deliveries: 0,
+                        today: 0,
+                        earnings: 0
+                    });
+                }
+            }
+        };
+        loadData();
+        const interval = setInterval(loadData, 10000); // Poll every 10 seconds
+        return () => clearInterval(interval);
+    }, [user?.id]);
 
     return (
         <div className="min-h-screen bg-slate-50 font-sans pb-20 md:pb-0">
@@ -147,7 +182,9 @@ const RiderDashboard = () => {
                                             <div>
                                                 <div className="flex items-center gap-2 mb-1">
                                                     <h3 className="font-bold text-slate-900 text-lg">{order.type} Service</h3>
-                                                    <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-0.5 rounded-full font-medium border border-yellow-200">{order.status}</span>
+                                                    <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-0.5 rounded-full font-medium border border-yellow-200">
+                                                        {order.status}
+                                                    </span>
                                                 </div>
                                                 <div className="space-y-1">
                                                     <p className="text-slate-600 text-sm flex items-center gap-1.5">
@@ -192,8 +229,13 @@ const RiderDashboard = () => {
 
                             <div className="space-y-4">
                                 <div className="flex justify-between items-center p-3 bg-slate-50 rounded-xl">
-                                    <span className="text-slate-500 text-sm font-medium">Monthly Base</span>
-                                    <span className="font-bold text-slate-900">LKR {stats.base.toLocaleString()}</span>
+                                    <span className="text-slate-500 text-sm font-medium">Completed Deliveries</span>
+                                    <span className="font-bold text-slate-900">{stats.deliveries}</span>
+                                </div>
+
+                                <div className="flex justify-between items-center p-3 bg-slate-50 rounded-xl">
+                                    <span className="text-slate-500 text-sm font-medium">Commission Earned</span>
+                                    <span className="font-bold text-emerald-600">LKR {stats.earnings.toLocaleString()}</span>
                                 </div>
 
                                 <div className="border-t border-slate-100 pt-4">
@@ -207,18 +249,7 @@ const RiderDashboard = () => {
                                     <p className="text-right text-xs text-slate-400 mt-1">Goal: 200 Deliveries</p>
                                 </div>
 
-                                <div className="pt-2">
-                                    <div className="flex justify-between items-end">
-                                        <div>
-                                            <p className="text-slate-500 text-xs uppercase font-bold tracking-wider">Estimated Total</p>
-                                            <p className="text-xs text-slate-400">Base + Comm.</p>
-                                        </div>
-                                        <p className="text-2xl font-black text-slate-900">
-                                            <span className="text-lg text-emerald-600 align-top mr-1">LKR</span>
-                                            {stats.projected.toLocaleString()}
-                                        </p>
-                                    </div>
-                                </div>
+                                {/* We only show real commission-based earnings here; base salary can be added when available in backend */}
                             </div>
 
                             <button className="w-full mt-6 py-3 border border-slate-200 text-slate-600 font-semibold rounded-xl hover:bg-slate-50 transition-colors text-sm">
