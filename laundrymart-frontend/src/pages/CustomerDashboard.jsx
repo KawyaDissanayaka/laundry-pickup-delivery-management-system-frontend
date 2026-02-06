@@ -25,6 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { orderService } from '../services/orderService';
+import api from '../services/api';
 
 // --- Utility Components ---
 
@@ -237,7 +238,9 @@ const OverviewTab = ({ stats, recentOrders, setActiveTab, activeOrders }) => (
                                 <td className="px-6 py-4">
                                     <StatusBadge status={order.pickupStatus === 'PICKED' ? 'PICKED' : 'PENDING'} />
                                 </td>
-                                <td className="px-6 py-4 text-sm font-bold text-slate-900 text-right">LKR {order.total.toLocaleString()}</td>
+                                <td className="px-6 py-4 text-sm font-bold text-slate-900 text-right">
+                                    LKR {order.totalAmountAmount?.toLocaleString() || '0.00'}
+                                </td>
                             </tr>
                         ))}
                     </tbody>
@@ -274,7 +277,7 @@ const OrdersTab = ({ recentOrders }) => (
                             </td>
                             <td className="px-6 py-4 text-sm font-medium text-slate-900">{order.serviceType || order.service}</td>
                             <td className="px-6 py-4"><StatusBadge status={order.status} /></td>
-                            <td className="px-6 py-4 text-sm font-bold text-slate-900 text-right">LKR {order.total.toLocaleString()}</td>
+                            <td className="px-6 py-4 text-sm font-bold text-slate-900 text-right">LKR {order.totalAmount.toLocaleString()}</td>
                         </tr>
                     ))}
                 </tbody>
