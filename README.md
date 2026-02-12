@@ -48,16 +48,12 @@ The system allows customers to schedule pickups, track orders, and manage laundr
 
 ## 🚀 Getting Started
 
-### 1. Clone the repository
 
-git clone https://github.com/yourusername/laundry-frontend.git
-cd laundry-frontend
-
-### 2. Install dependencies
+### 1. Install dependencies
 
 - npm install
 
- ### 3. Run the application
+ ### 2. Run the application
 
  - npm start
 
@@ -65,11 +61,20 @@ cd laundry-frontend
 
   - http://localhost:3000
   
- ### 📁 Project Structure
 
+
+🔗 Backend Integration
+
+The frontend connects to the backend REST API:
+
+http://localhost:8080/api
+
+### 1. Clone the repository
 ```bash
 git clone https://github.com/yourusername/laundry-frontend.git
 cd laundry-frontend
+
+### 📁 Project Structure
 
 laundry-frontend/
 ├─ public/
@@ -82,3 +87,23 @@ laundry-frontend/
 │  └─ index.js
 ├─ package.json
 └─ README.md
+
+
+
+📝 License
+
+This project is licensed under the MIT License.
+You are free to use, modify, and distribute this software.
+
+💡 Future Improvements
+
+Online payment integration
+
+Real-time delivery tracking
+
+SMS / Email notifications
+
+Admin analytics dashboard
+
+Mobile app integration
+
