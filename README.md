@@ -71,7 +71,8 @@ The system allows customers to schedule pickups, track orders, and manage laundr
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/laundry-frontend.git
+git clone https://github.com/KawyaDissanayaka/laundry-pickup-delivery-management-system-frontend
+.git
 cd laundry-frontend
 ```
 
