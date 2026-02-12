@@ -50,6 +50,8 @@ The system allows customers to schedule pickups, track orders, and manage laundr
 
 ### 1. Clone the repository
 
+git clone https://github.com/yourusername/laundry-frontend.git
+cd laundry-frontend
 
 ### 2. Install dependencies
 
@@ -59,12 +61,24 @@ The system allows customers to schedule pickups, track orders, and manage laundr
 
  - npm start
 
-   ### Application runs at:
+### Application runs at:
 
-   - http://localhost:3000
+  - http://localhost:3000
   
-  ### 📁 Project Structure
+ ### 📁 Project Structure
 
 ```bash
 git clone https://github.com/yourusername/laundry-frontend.git
 cd laundry-frontend
+
+laundry-frontend/
+├─ public/
+├─ src/
+│  ├─ components/        # Reusable UI components
+│  ├─ pages/             # Application pages
+│  ├─ services/          # API calls
+│  ├─ assets/            # Images and styles
+│  ├─ App.js
+│  └─ index.js
+├─ package.json
+└─ README.md
