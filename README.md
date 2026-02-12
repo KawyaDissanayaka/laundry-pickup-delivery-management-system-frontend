@@ -46,6 +46,24 @@ The system allows customers to schedule pickups, track orders, and manage laundr
 
 ---
 
+## 📸 Screenshots
+
+> Create a folder called `screenshots` inside our project and add images there.
+
+### 🏠 Home Page
+![Home Page](screenshots/home.png)
+
+### 📦 Order Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+### ➕ Schedule Pickup
+![Pickup](screenshots/pickup.png)
+
+### 📋 Order Management (Admin)
+![Admin Panel](screenshots/admin.png)
+
+---
+
 ## 🚀 Getting Started
 
 ### 1. Clone the repository
@@ -109,13 +127,10 @@ You are free to use, modify, and distribute this software.
 
 ### 💡 Future Improvements
 
-Online payment integration
-
-Real-time delivery tracking
-
-SMS / Email notifications
-
-Admin analytics dashboard
-
-Mobile app integration
+```
+💳 Online Payments
+📍 Live Order Tracking
+📱 Mobile App Version
+📊 Advanced Analytics Dashboard
+```
 
