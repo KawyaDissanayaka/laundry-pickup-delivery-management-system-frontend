@@ -25,7 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { orderService } from '../services/orderService';
-
+import api from '../services/api';
 // --- Utility Components ---
 
 const StatusBadge = ({ status }) => {

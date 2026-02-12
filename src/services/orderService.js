@@ -66,7 +66,7 @@ const transformOrder = (order) => {
         customerId: order.customer?.id ?? null,
         customerName: order.customer?.fullName || order.customer?.username || 'Unknown',
         items: order.items || [],
-        totalAmount: order.totalAmount ?? 0,
+        total: order.totalAmount ?? 0,
         // statusCode is used for logic/filters, statusLabel for display
         status: statusCode,
         statusLabel,
