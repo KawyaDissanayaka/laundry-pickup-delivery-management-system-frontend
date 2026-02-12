@@ -1,8 +1,11 @@
 # 🧺 Laundry Pickup & Delivery Management System – Frontend
 
-![GitHub last commit](https://img.shields.io/github/last-commit/yourusername/laundry-frontend)
-![GitHub repo size](https://img.shields.io/github/repo-size/yourusername/laundry-frontend)
-![GitHub issues](https://img.shields.io/github/issues/yourusername/laundry-frontend)
+![GitHub last commit](https://img.shields.io/github/last-commit/KawyaDissanayaka/laundry-pickup-delivery-management-system-frontend
+)
+![GitHub repo size](https://img.shields.io/github/repo-size/KawyaDissanayaka/laundry-pickup-delivery-management-system-frontend
+)
+![GitHub issues](https://img.shields.io/github/issues/KawyaDissanayaka/laundry-pickup-delivery-management-system-frontend
+)
 
 A **React-based frontend application** designed to manage laundry pickup and delivery services.  
 The system allows customers to schedule pickups, track orders, and manage laundry requests through a clean and responsive user interface.
