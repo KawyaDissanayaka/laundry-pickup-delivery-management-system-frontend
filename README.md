@@ -73,7 +73,7 @@ The system allows customers to schedule pickups, track orders, and manage laundr
 ```bash
 git clone https://github.com/KawyaDissanayaka/laundry-pickup-delivery-management-system-frontend
 .git
-cd laundry-frontend
+cd laundrymart-frontend
 ```
 
 ### 1. Install dependencies
