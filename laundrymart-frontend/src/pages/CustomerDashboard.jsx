@@ -92,7 +92,7 @@ const LiveTracker = ({ activeOrders }) => {
     const activeStepIndex = currentStepIndex === -1 ? 0 : currentStepIndex;
 
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-8 relative overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 mb-8 relative overflow-hidden min-h-[200px] max-h-[300px] overflow-y-auto">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-violet-500 to-emerald-500"></div>
 
             <div className="flex justify-between items-center mb-8">

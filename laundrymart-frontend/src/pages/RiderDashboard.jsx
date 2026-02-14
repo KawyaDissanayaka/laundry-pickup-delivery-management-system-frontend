@@ -12,17 +12,65 @@ const RiderDashboard = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const [assignedOrders, setAssignedOrders] = useState([]);
+    const [pendingPickupOrders, setPendingPickupOrders] = useState([]);
     const [stats, setStats] = useState({
         deliveries: 0,
         today: 0,
         earnings: 0
     });
 
+    const confirmPickup = async (orderId) => {
+        try {
+            await api.post(`/rider/orders/${orderId}/confirm-pickup`);
+            // Refresh data after confirming pickup
+            const loadData = async () => {
+                if (user?.id) {
+                    // Load assigned orders
+                    const orders = await orderService.getOrdersByRider(user.id);
+                    const formatted = orders.map(order => ({
+                        id: order.id,
+                        type: order.status === 'READY' || order.status === 'DELIVERED' ? 'Delivery' : 'Pickup',
+                        address: order.address || 'Address not provided',
+                        time: order.createdAt
+                            ? new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                            : 'N/A',
+                        status: order.statusLabel || order.status,
+                        statusCode: order.status,
+                        customer: order.customerName || 'Unknown',
+                        phone: '077 123 4567'
+                    }));
+                    setAssignedOrders(formatted);
+                    
+                    // Load unassigned PLACED orders
+                    const pendingResponse = await api.get('/rider/dashboard/pending-pickup');
+                    const pendingOrders = pendingResponse.data.map(order => ({
+                        id: order.id,
+                        type: 'Pickup',
+                        address: order.address || 'Address not provided',
+                        time: order.createdAt
+                            ? new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                            : 'N/A',
+                        status: order.status,
+                        statusCode: order.status,
+                        customer: order.customer?.fullName || 'Unknown',
+                        phone: order.customer?.phone || '077 123 4567',
+                        isUnassigned: true
+                    }));
+                    setPendingPickupOrders(pendingOrders);
+                }
+            };
+            loadData();
+        } catch (error) {
+            console.error('Error confirming pickup:', error);
+            alert('Failed to confirm pickup. Please try again.');
+        }
+    };
+
     useEffect(() => {
         const loadData = async () => {
             if (user?.id) {
                 try {
-                    // Load orders
+                    // Load assigned orders
                     const orders = await orderService.getOrdersByRider(user.id);
                     const formatted = orders.map(order => ({
                         id: order.id,
@@ -38,6 +86,23 @@ const RiderDashboard = () => {
                     }));
                     setAssignedOrders(formatted);
                     
+                    // Load unassigned PLACED orders (available for pickup)
+                    const pendingResponse = await api.get('/rider/dashboard/pending-pickup');
+                    const pendingOrders = pendingResponse.data.map(order => ({
+                        id: order.id,
+                        type: 'Pickup',
+                        address: order.address || 'Address not provided',
+                        time: order.createdAt
+                            ? new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                            : 'N/A',
+                        status: order.status,
+                        statusCode: order.status,
+                        customer: order.customer?.fullName || 'Unknown',
+                        phone: order.customer?.phone || '077 123 4567',
+                        isUnassigned: true
+                    }));
+                    setPendingPickupOrders(pendingOrders);
+                    
                     // Load dashboard stats (commission, pending orders)
                     const statsResponse = await api.get('/rider/dashboard/stats');
                     const statsData = statsResponse.data;
@@ -45,13 +110,14 @@ const RiderDashboard = () => {
 
                     setStats({
                         deliveries: completedCount,
-                        today: formatted.length,
+                        today: formatted.length + pendingOrders.length,
                         earnings: statsData.commission || 0
                     });
                 } catch (error) {
                     console.error('Error loading rider data:', error);
                     // Set empty state on error
                     setAssignedOrders([]);
+                    setPendingPickupOrders([]);
                     setStats({
                         deliveries: 0,
                         today: 0,
@@ -160,61 +226,125 @@ const RiderDashboard = () => {
 
                 <div className="grid lg:grid-cols-3 gap-8">
                     {/* Task List Section */}
-                    <div className="lg:col-span-2 space-y-4">
-                        <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-                            Assignments <span className="text-slate-400 text-sm font-normal">({assignedOrders.length} active)</span>
-                        </h2>
+                    <div className="lg:col-span-2 space-y-6">
+                        {/* Pending Pickups */}
+                        <div>
+                            <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2 mb-4">
+                                Pending Pickups <span className="text-slate-400 text-sm font-normal">({pendingPickupOrders.length} available)</span>
+                            </h2>
 
-                        {assignedOrders.length === 0 ? (
-                            <div className="bg-white rounded-2xl p-8 text-center text-slate-400 border border-slate-100 border-dashed">
-                                <p>No active tasks right now.</p>
-                            </div>
-                        ) : (
-                            assignedOrders.map((order) => (
-                                <div key={order.id} className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 relative group overflow-hidden">
-                                    <div className={`absolute top-0 left-0 w-1.5 h-full ${order.type === 'Pickup' ? 'bg-blue-500' : 'bg-orange-500'}`}></div>
+                            {pendingPickupOrders.length === 0 ? (
+                                <div className="bg-white rounded-2xl p-8 text-center text-slate-400 border border-slate-100 border-dashed mb-4">
+                                    <p>No pending pickups available.</p>
+                                </div>
+                            ) : (
+                                pendingPickupOrders.map((order) => (
+                                    <div key={order.id} className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 relative group overflow-hidden mb-4">
+                                        <div className="absolute top-0 left-0 w-1.5 h-full bg-green-500"></div>
 
-                                    <div className="flex flex-col md:flex-row gap-4 justify-between md:items-center relative z-10">
-                                        <div className="flex items-start gap-4">
-                                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${order.type === 'Pickup' ? 'bg-blue-50 text-blue-600' : 'bg-orange-50 text-orange-600'}`}>
-                                                <Truck className="w-6 h-6" />
-                                            </div>
-                                            <div>
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <h3 className="font-bold text-slate-900 text-lg">{order.type} Service</h3>
-                                                    <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-0.5 rounded-full font-medium border border-yellow-200">
-                                                        {order.status}
-                                                    </span>
+                                        <div className="flex flex-col md:flex-row gap-4 justify-between md:items-center relative z-10">
+                                            <div className="flex items-start gap-4">
+                                                <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 bg-green-50 text-green-600">
+                                                    <Truck className="w-6 h-6" />
                                                 </div>
-                                                <div className="space-y-1">
-                                                    <p className="text-slate-600 text-sm flex items-center gap-1.5">
-                                                        <MapPin className="w-3.5 h-3.5 text-slate-400" /> {order.address}
-                                                    </p>
-                                                    <p className="text-slate-600 text-sm flex items-center gap-1.5">
-                                                        <Clock className="w-3.5 h-3.5 text-slate-400" /> Due: <span className="font-semibold text-slate-900">{order.time}</span>
-                                                    </p>
-                                                    <p className="text-slate-500 text-xs flex items-center gap-1.5 pt-1">
-                                                        Cust: {order.customer}
-                                                    </p>
+                                                <div>
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <h3 className="font-bold text-slate-900 text-lg">New Pickup</h3>
+                                                        <span className="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded-full font-medium border border-green-200">
+                                                            Available
+                                                        </span>
+                                                    </div>
+                                                    <div className="space-y-1">
+                                                        <p className="text-slate-600 text-sm flex items-center gap-1.5">
+                                                            <MapPin className="w-3.5 h-3.5 text-slate-400" /> {order.address}
+                                                        </p>
+                                                        <p className="text-slate-600 text-sm flex items-center gap-1.5">
+                                                            <Clock className="w-3.5 h-3.5 text-slate-400" /> Due: <span className="font-semibold text-slate-900">{order.time}</span>
+                                                        </p>
+                                                        <p className="text-slate-500 text-xs flex items-center gap-1.5 pt-1">
+                                                            Cust: {order.customer}
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        {/* Action Buttons */}
-                                        <div className="flex flex-row md:flex-col gap-2 w-full md:w-auto mt-2 md:mt-0">
-                                            <button className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-slate-900 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-800 active:scale-95 transition-all">
-                                                <Navigation className="w-4 h-4" />
-                                                Go
-                                            </button>
-                                            <a href={`tel:${order.phone.replace(/ /g, '')}`} className="flex-1 md:flex-none flex items-center justify-center gap-2 border border-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-50 transition-all">
-                                                <Phone className="w-4 h-4" />
-                                                Call
-                                            </a>
+                                            {/* Action Buttons */}
+                                            <div className="flex flex-row md:flex-col gap-2 w-full md:w-auto mt-2 md:mt-0">
+                                                <button 
+                                                    onClick={() => confirmPickup(order.id)}
+                                                    className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-green-600 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-green-700 active:scale-95 transition-all"
+                                                >
+                                                    <CheckCircle className="w-4 h-4" />
+                                                    Confirm Pickup
+                                                </button>
+                                                <a href={`tel:${order.phone.replace(/ /g, '')}`} className="flex-1 md:flex-none flex items-center justify-center gap-2 border border-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-50 transition-all">
+                                                    <Phone className="w-4 h-4" />
+                                                    Call
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
+                                ))
+                            )}
+                        </div>
+
+                        {/* Assigned Orders */}
+                        <div>
+                            <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                                My Assignments <span className="text-slate-400 text-sm font-normal">({assignedOrders.length} active)</span>
+                            </h2>
+
+                            {assignedOrders.length === 0 ? (
+                                <div className="bg-white rounded-2xl p-8 text-center text-slate-400 border border-slate-100 border-dashed">
+                                    <p>No active assignments right now.</p>
                                 </div>
-                            ))
-                        )}
+                            ) : (
+                                assignedOrders.map((order) => (
+                                    <div key={order.id} className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 relative group overflow-hidden">
+                                        <div className={`absolute top-0 left-0 w-1.5 h-full ${order.type === 'Pickup' ? 'bg-blue-500' : 'bg-orange-500'}`}></div>
+
+                                        <div className="flex flex-col md:flex-row gap-4 justify-between md:items-center relative z-10">
+                                            <div className="flex items-start gap-4">
+                                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${order.type === 'Pickup' ? 'bg-blue-50 text-blue-600' : 'bg-orange-50 text-orange-600'}`}>
+                                                    <Truck className="w-6 h-6" />
+                                                </div>
+                                                <div>
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <h3 className="font-bold text-slate-900 text-lg">{order.type} Service</h3>
+                                                        <span className="bg-yellow-100 text-yellow-800 text-xs px-2 py-0.5 rounded-full font-medium border border-yellow-200">
+                                                            {order.status}
+                                                        </span>
+                                                    </div>
+                                                    <div className="space-y-1">
+                                                        <p className="text-slate-600 text-sm flex items-center gap-1.5">
+                                                            <MapPin className="w-3.5 h-3.5 text-slate-400" /> {order.address}
+                                                        </p>
+                                                        <p className="text-slate-600 text-sm flex items-center gap-1.5">
+                                                            <Clock className="w-3.5 h-3.5 text-slate-400" /> Due: <span className="font-semibold text-slate-900">{order.time}</span>
+                                                        </p>
+                                                        <p className="text-slate-500 text-xs flex items-center gap-1.5 pt-1">
+                                                            Cust: {order.customer}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Action Buttons */}
+                                            <div className="flex flex-row md:flex-col gap-2 w-full md:w-auto mt-2 md:mt-0">
+                                                <button className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-slate-900 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-800 active:scale-95 transition-all">
+                                                    <Navigation className="w-4 h-4" />
+                                                    Go
+                                                </button>
+                                                <a href={`tel:${order.phone.replace(/ /g, '')}`} className="flex-1 md:flex-none flex items-center justify-center gap-2 border border-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-50 transition-all">
+                                                    <Phone className="w-4 h-4" />
+                                                    Call
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                        </div>
                     </div>
 
                     {/* Financial Summary Card */}
