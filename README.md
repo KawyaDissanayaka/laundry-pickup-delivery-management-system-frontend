@@ -173,10 +173,6 @@
 
 </div>
 
----
-
-### 🔥 Development Activity Timeline
-
 
 ---
 
