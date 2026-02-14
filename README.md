@@ -152,6 +152,16 @@ laundry-frontend/
 | Contributor 9 | X | X | - | - | X | X |
 | Contributor 10 | X | X | - | - | X | X |
 
+## 📊 Top Contributors
+
+| 👤 Contributor | Frontend | Backend | UI Design | Postman | Total |
+|---------------|----------|---------|-----------|---------|-------|
+| <img src="https://avatars.githubusercontent.com/u/223992388?v=4" width="30"/> [@KawyaDissanayaka](https://github.com/KawyaDissanayaka) | 24+ | 20+ | ✓ | ✓ | **44+** |
+| <img src="https://avatars.githubusercontent.com/u/214608833?v=4" width="30"/> [@shanilka1](https://github.com/shanilka1) | 4+ | - | ✓ | - | **4+** |
+| <img src="https://avatars.githubusercontent.com/u/214707803?v=4" width="30"/> [@DarshanaChinthaka](https://github.com/DarshanaChinthaka) | - | 6+ | ✓ | - | **6+** |
+| <img src="https://github.com/nimashagayathri.png" width="30"/> [@nimashagayathri](https://github.com/nimashagayathri) | - | - | ✓ | - | **-** |
+| <img src="https://github.com/minidu1.png" width="30"/> [@minidu1](https://github.com/minidu1) | - | - | - | - | **-** |
+
 ### 📝 License
 
 This project is licensed under the MIT License.
