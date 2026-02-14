@@ -63,7 +63,7 @@ The system allows customers to schedule pickups, track orders, and manage laundr
 ![Pickup](screenshots/pickup.jpeg)
 
 ### 📋 Order Management (Admin)
-![Admin Panel](screenshots/admin.png)
+![Admin Panel](screenshots/admin.jpeg)
 
 ---
 
