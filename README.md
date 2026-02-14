@@ -122,7 +122,35 @@ laundry-frontend/
 └─ README.md
 ```
 
+## 👥 Top Contributors
 
+| Rank | Contributor | Frontend Commits | Backend Commits | UI Design | Postman | Total Contributions |
+|------|-------------|-----------------|----------------|-----------|---------|-------------------|
+| 1 | [@KawyaDissanayaka](https://github.com/KawyaDissanayaka) | 83 | 50 | - | - | 133 |
+| 2 | [@shanilka1](https://github.com/shanilka1) | 21 | 0 | - | - | 21 |
+| 3 | [@DarshanaChinthaka](https://github.com/DarshanaChinthaka) | 0 | 7 | - | - | 7 |
+| 4 | - | - | - | - | - | - |
+| 5 | - | - | - | - | - | - |
+| 6 | - | - | - | - | - | - |
+| 7 | - | - | - | - | - | - |
+| 8 | - | - | - | - | - | - |
+| 9 | - | - | - | - | - | - |
+| 10 | - | - | - | - | - | - |
+
+## Branch Contributors
+
+| Contributor | Frontend Commits | Backend Commits | UI Design | Postman Testing | Branch Commits | Total Contributions |
+|------------|------------------|----------------|-----------|----------------|----------------|---------------------|
+| [@KawyaDissanayaka](https://github.com/KawyaDissanayaka) | X | X | ✓ | ✓ | X | X |
+| [@DarshanaChinthaka](https://github.com/DarshanaChinthaka) | X | X | ✓ | - | X | X |
+| [@shanilka1](https://github.com/shanilka1) | X | X | ✓ | - | X | X |
+| [@nimashagayathri](https://github.com/nimashagayathri) | X | X | ✓ | - | X | X |
+| [@minidu1](https://github.com/minidu1) | X | X | - | - | X | X |
+| Contributor 6 | X | X | - | - | X | X |
+| Contributor 7 | X | X | - | - | X | X |
+| Contributor 8 | X | X | - | - | X | X |
+| Contributor 9 | X | X | - | - | X | X |
+| Contributor 10 | X | X | - | - | X | X |
 
 ### 📝 License
 
