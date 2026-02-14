@@ -443,3 +443,16 @@ You are free to use, modify, and distribute this software.
 📊 Advanced Analytics Dashboard
 ```
 
+## 📞 Contact
+
+**Kawya Dissanayaka**
+- GitHub: [@KawyaDissanayaka](https://github.com/KawyaDissanayaka)
+- Repository: [Frontend](https://github.com/KawyaDissanayaka/laundry-pickup-delivery-management-system-frontend) | [Backend](https://github.com/KawyaDissanayaka/laundry-pickup-delivery-management-system-backend)
+
+---
+
+## 🔗 Related Repositories
+
+- **Backend API**: [laundry-pickup-delivery-management-system-backend](https://github.com/KawyaDissanayaka/laundry-pickup-delivery-management-system-backend)
+
+---
