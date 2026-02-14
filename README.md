@@ -54,7 +54,7 @@ The system allows customers to schedule pickups, track orders, and manage laundr
 > Create a folder called `screenshots` inside our project and add images there.
 
 ### 🏠 Home Page
-![Home Page](screenshots/home.PNG)
+![Home Page](screenshots/home1.PNG)
 
 ### 📦 Order Dashboard
 ![Dashboard](screenshots/dashboard.png)
