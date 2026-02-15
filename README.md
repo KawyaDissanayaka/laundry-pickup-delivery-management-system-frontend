@@ -92,6 +92,7 @@ The system allows customers to schedule pickups, track orders, and manage laundr
 ### 💰 Pricing Page
 ![Pricing](screenshots/pricing.jpeg)
 
+- Service-based pricing (Wash, Dry Clean, Iron)  
 
 ---
 
