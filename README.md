@@ -84,6 +84,13 @@ The system allows customers to schedule pickups, track orders, and manage laundr
 ### 👥 Customer Management (Admin)
 ![Customer Management](screenshots/customermanagement.jpeg)
 
+- View registered customers  
+- Edit customer information  
+- Monitor customer orders  
+- Manage account status  
+
+
+
 ---
 
 ## 🚀 Getting Started
