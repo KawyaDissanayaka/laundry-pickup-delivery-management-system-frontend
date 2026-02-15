@@ -51,7 +51,7 @@ export default function PublicNavbar() {
                         >
                             Login
                         </button>
-                        <Link to="/login" className="px-6 py-2.5 bg-blue-600 text-white font-bold rounded-full hover:bg-blue-700 hover:shadow-lg transition-all transform hover:-translate-y-0.5">
+                        <Link to="/register" className="px-6 py-2.5 bg-blue-600 text-white font-bold rounded-full hover:bg-blue-700 hover:shadow-lg transition-all transform hover:-translate-y-0.5">
                             Register
                         </Link>
                     </div>
@@ -86,7 +86,7 @@ export default function PublicNavbar() {
                         >
                             Login
                         </button>
-                        <Link to="/login" className="text-center w-full py-3 bg-blue-600 text-white font-bold rounded-lg">Register</Link>
+                        <Link to="/register" className="text-center w-full py-3 bg-blue-600 text-white font-bold rounded-lg">Register</Link>
                     </div>
                 </div>
             )}
