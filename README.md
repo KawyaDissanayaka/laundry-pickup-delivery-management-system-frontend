@@ -65,6 +65,9 @@ The system allows customers to schedule pickups, track orders, and manage laundr
 ### 📋 Order Management (Admin)
 ![Admin Panel](screenshots/admin.jpeg)
 
+### 👨‍💼 Employee Management (Admin)
+![Employee Management](screenshots/employeemanagement.jpeg)
+
 ---
 
 ## 🚀 Getting Started
