@@ -98,6 +98,11 @@ The system allows customers to schedule pickups, track orders, and manage laundr
 
 ### 📍 Live Tracking
 ![Live Tracking](screenshots/livetracking.jpeg)
+
+- Real-time order status updates  
+- Pickup & delivery progress tracking  
+- Estimated delivery time  
+
 ---
 
 ## 🚀 Getting Started
