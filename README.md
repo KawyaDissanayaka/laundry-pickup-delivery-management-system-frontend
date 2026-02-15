@@ -81,7 +81,8 @@ The system allows customers to schedule pickups, track orders, and manage laundr
 - Update delivery status  
 - View rider performance  
 
-
+### 👥 Customer Management (Admin)
+![Customer Management](screenshots/customermanagement.jpeg)
 
 ---
 
