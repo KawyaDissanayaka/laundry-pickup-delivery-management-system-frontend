@@ -89,6 +89,8 @@ The system allows customers to schedule pickups, track orders, and manage laundr
 - Monitor customer orders  
 - Manage account status  
 
+### 💰 Pricing Page
+![Pricing](screenshots/pricing.jpeg)
 
 
 ---
