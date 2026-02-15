@@ -68,6 +68,12 @@ The system allows customers to schedule pickups, track orders, and manage laundr
 ### 👨‍💼 Employee Management (Admin)
 ![Employee Management](screenshots/employeemanagement.jpeg)
 
+- Add / Edit / Delete Employees  
+- Assign roles (Admin, Staff)  
+- View employee activity  
+- Manage employee status  
+
+
 ---
 
 ## 🚀 Getting Started
