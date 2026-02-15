@@ -106,6 +106,12 @@ The system allows customers to schedule pickups, track orders, and manage laundr
 ### 📞 Customer Service
 ![Customer Service](screenshots/customerservice.jpeg)
 
+- Contact support form  
+- FAQ section  
+- Complaint submission  
+- Customer inquiry management 
+
+
 ---
 
 ## 🚀 Getting Started
