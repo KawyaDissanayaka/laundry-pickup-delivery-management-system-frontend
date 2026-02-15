@@ -101,7 +101,10 @@ The system allows customers to schedule pickups, track orders, and manage laundr
 
 - Real-time order status updates  
 - Pickup & delivery progress tracking  
-- Estimated delivery time  
+- Estimated delivery time 
+
+### 📞 Customer Service
+![Customer Service](screenshots/customerservice.jpeg)
 
 ---
 
