@@ -96,6 +96,8 @@ The system allows customers to schedule pickups, track orders, and manage laundr
 - Transparent cost breakdown  
 - Easy price comparison 
 
+### 📍 Live Tracking
+![Live Tracking](screenshots/livetracking.jpeg)
 ---
 
 ## 🚀 Getting Started
