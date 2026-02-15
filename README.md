@@ -74,9 +74,12 @@ The system allows customers to schedule pickups, track orders, and manage laundr
 - Manage employee status  
 
 ### 🛵 Rider Management (Admin)
-![Rider Management](screenshots/### 🛵 Rider Management (Admin)
-![Rider Management](screenshots/ridermanagement.jpeg).jpeg)
+![Rider Management](screenshots/ridermanagement.jpeg)
 
+- Assign riders to orders  
+- Track rider availability  
+- Update delivery status  
+- View rider performance  
 
 
 
